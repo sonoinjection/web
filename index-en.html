@@ -33,18 +33,19 @@ const T = {
 
 /* ── COURSES DATA ────────────────────────────── */
 const COURSES = [
-  { id: 1, title: 'Shoulder & Rotator Cuff Injections', joints: ['Glenohumeral', 'AC Joint', 'Subacromial'], level: 'Advanced', city: 'Istanbul', country: 'TR', date: 'Oct 14–15, 2025', cme: 14, price: 10000, spots: 3, color: T.navy },
-  { id: 2, title: 'Lower Extremity Cadaver Workshop', joints: ['Hip', 'Knee', 'Ankle', 'Foot'], level: 'Intermediate', city: 'Berlin', country: 'DE', date: 'Nov 8, 2025', cme: 8, price: 10000, spots: 6, color: T.navy2 },
-  { id: 3, title: 'Upper Extremity Full Course', joints: ['Shoulder', 'Elbow', 'Wrist', 'Hand'], level: 'Intermediate', city: 'Istanbul', country: 'TR', date: 'Dec 5–6, 2025', cme: 14, price: 10000, spots: 8, color: '#097878' },
-  { id: 4, title: 'Spine & Axial Procedures', joints: ['Lumbar Facet', 'SI Joint', 'Piriformis'], level: 'Advanced', city: 'Vienna', country: 'AT', date: 'Jan 24, 2026', cme: 8, price: 10000, spots: 0, color: '#1a3060' },
-  { id: 5, title: 'MSK Ultrasound Foundations', joints: ['All major joints — diagnostic focus'], level: 'Foundational', city: 'Berlin', country: 'DE', date: 'Feb 14–15, 2026', cme: 16, price: 10000, spots: 12, color: '#254280' },
-  { id: 6, title: 'Nerve Hydrodissection Workshop', joints: ['Median', 'Ulnar', 'Common Peroneal', 'Tibial'], level: 'Advanced', city: 'Istanbul', country: 'TR', date: 'Mar 7, 2026', cme: 8, price: 10000, spots: 4, color: T.navy3 },
+  { id: 1, title: 'Shoulder & Rotator Cuff Injections', joints: ['Glenohumeral', 'AC Joint', 'Subacromial'], level: 'Advanced', city: 'Coming Soon', country: 'TR', date: 'Coming Soon', cme: 14, price: null, spots: 10, color: T.navy },
+  { id: 2, title: 'Lower Extremity Cadaver Workshop', joints: ['Hip', 'Knee', 'Ankle', 'Foot'], level: 'Intermediate', city: 'Coming Soon', country: 'TR', date: 'Coming Soon', cme: 8, price: null, spots: 10, color: T.navy2 },
+  { id: 3, title: 'Upper Extremity Full Course', joints: ['Shoulder', 'Elbow', 'Wrist', 'Hand'], level: 'Intermediate', city: 'Coming Soon', country: 'TR', date: 'Coming Soon', cme: 14, price: null, spots: 10, color: '#097878' },
+  { id: 4, title: 'Spine & Axial Procedures', joints: ['Lumbar Facet', 'SI Joint', 'Piriformis'], level: 'Advanced', city: 'Coming Soon', country: 'TR', date: 'Coming Soon', cme: 8, price: null, spots: 10, color: '#1a3060' },
+  { id: 5, title: 'MSK Ultrasound Foundations', joints: ['All major joints — diagnostic focus'], level: 'Foundational', city: 'Coming Soon', country: 'TR', date: 'Coming Soon', cme: 16, price: null, spots: 10, color: '#254280' },
+  { id: 6, title: 'Nerve Hydrodissection Workshop', joints: ['Median', 'Ulnar', 'Common Peroneal', 'Tibial'], level: 'Advanced', city: 'Coming Soon', country: 'TR', date: 'Coming Soon', cme: 8, price: null, spots: 10, color: T.navy3 },
 ];
 
 const FACULTY = [
   { initials: 'MT', name: 'Assoc. Prof. Dr. Mahir Topaloğlu', title: 'Physical Medicine & Rehabilitation', inst: 'Koç University Hospital', city: 'Istanbul, Turkey', role: 'Faculty' },
-  { initials: 'MZ', name: 'Assoc. Prof. Dr. Mert Züre', title: 'Physical Medicine & Rehabilitation', inst: 'Kanuni Sultan Süleyman Training & Research Hospital', city: 'Istanbul, Turkey', role: 'Faculty' },
-  { initials: 'EE', name: 'Dr. Enes Efe İş', title: 'Physical Medicine & Rehabilitation', inst: 'Şişli Hamidiye Etfal Training & Research Hospital', city: 'Istanbul, Turkey', role: 'Faculty' },
+  { initials: 'MZ', name: 'Asst. Prof. Dr. Mert Züre', title: 'Physical Medicine & Rehabilitation', inst: 'Kanuni Sultan Süleyman Training & Research Hospital', city: 'Istanbul, Turkey', role: 'Faculty' },
+  { initials: 'EE', name: 'Assoc. Prof. Dr. Enes Efe İş', title: 'Physical Medicine & Rehabilitation', inst: 'Şişli Hamidiye Etfal Training & Research Hospital', city: 'Istanbul, Turkey', role: 'Faculty' },
+  { initials: 'SS', name: 'Selim Sezikli', title: 'Physical Medicine & Rehabilitation', inst: 'Istanbul Physical Therapy and Rehabilitation Training & Research Hospital', city: 'Istanbul, Turkey', role: 'Faculty' },
 ];
 
 /* ── LOGO MARK ───────────────────────────────── */
@@ -135,10 +136,7 @@ function HomePage({ setPage, setSelectedCourse }) {
           </div>
         </div>
         {/* Decorative needle */}
-        <div style={{ position: 'absolute', right: 80, top: '50%', transform: 'translateY(-50%) rotate(-35deg)', opacity: 0.12 }}>
-          <div style={{ width: 3, height: 220, background: T.amber, borderRadius: 2 }} />
-          <div style={{ width: 0, height: 0, borderLeft: '8px solid transparent', borderRight: '8px solid transparent', borderBottom: `16px solid ${T.amber}`, marginLeft: -6.5, marginTop: -1 }} />
-        </div>
+
       </section>
 
       {/* Stats bar */}
@@ -227,7 +225,7 @@ function CourseCard({ course: c, onClick }) {
         </div>
       </div>
       <div style={{ padding: '12px 20px', borderTop: `1px solid ${T.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 16, fontWeight: 700, color: T.navy }}>₺ {c.price.toLocaleString('tr-TR')}</span>
+        <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 16, fontWeight: 700, color: T.navy }}>{c.price ? `₺ ${c.price.toLocaleString('tr-TR')}` : 'Coming Soon'}</span>
         <button style={{ background: full ? T.muted : T.teal, color: full ? T.fg4 : '#fff', border: 'none', borderRadius: 7, padding: '7px 14px', fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: 600, cursor: full ? 'not-allowed' : 'pointer' }}>{full ? 'Join Waitlist' : 'Enroll →'}</button>
       </div>
     </div>
@@ -355,7 +353,7 @@ function CourseDetailPage({ course: c, setPage }) {
         {/* Sidebar */}
         <div>
           <div style={{ background: '#fff', border: `1px solid ${T.border}`, borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(12,27,51,0.08)', position: 'sticky', top: 80 }}>
-            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 34, fontWeight: 700, color: T.navy, marginBottom: 4 }}>₺ {c.price.toLocaleString('tr-TR')}</div>
+            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 34, fontWeight: 700, color: T.navy, marginBottom: 4 }}>{c.price ? `₺ ${c.price.toLocaleString('tr-TR')}` : 'Coming Soon'}</div>
             <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: T.fg3, marginBottom: 24 }}>per participant · VAT included</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
               {[['📅', c.date], ['📍', `${c.city}`], ['👥', `Max 16 participants`], ['⏱', `Full day · 08:00–18:00`]].map(([icon, text]) => (
