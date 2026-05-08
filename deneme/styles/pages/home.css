@@ -1,0 +1,104 @@
+/* ============================================================
+   home.css — homepage-specific layout
+   ============================================================ */
+
+.hero {
+  background: var(--color-bg-dark);
+  color: var(--color-fg-inverse);
+  padding: var(--space-24) 0 var(--space-16);
+  position: relative;
+  overflow: hidden;
+}
+.hero__inner { position: relative; z-index: 1; }
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: var(--font-weight-bold);
+  color: var(--white);
+  line-height: 1.06;
+  letter-spacing: var(--tracking-tight);
+  max-width: 700px;
+  margin-bottom: var(--space-6);
+}
+.hero__title .accent { color: var(--teal-400); }
+
+.hero__subtitle {
+  font-family: var(--font-body);
+  font-size: clamp(15px, 1.6vw, 18px);
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.65;
+  max-width: 540px;
+  margin-bottom: var(--space-12);
+}
+
+.hero__cta {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-12);
+}
+
+/* Faculty inline strip in hero */
+.hero__faculty {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.hero__faculty-row {
+  display: inline-flex;
+  align-items: center;
+}
+.hero__faculty-row img {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 20%;
+  border: 2px solid var(--navy-900);
+  margin-left: -10px;
+}
+.hero__faculty-row img:first-child { margin-left: 0; }
+.hero__faculty-label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.4;
+}
+.hero__faculty-label strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Featured CTA band */
+.cta-band {
+  background: var(--navy-900);
+  color: var(--white);
+  padding: var(--space-16) 0;
+  position: relative;
+  overflow: hidden;
+}
+.cta-band__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-8);
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+.cta-band h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--tracking-tight);
+  color: var(--white);
+  margin-bottom: var(--space-3);
+}
+.cta-band p {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 480px;
+  line-height: 1.6;
+}

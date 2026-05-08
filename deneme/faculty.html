@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="tr" data-lang="tr" data-base="">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eğitmenler — SonoInjection</title>
+  <meta name="description" content="SonoInjection ultrason eşliğinde kadavra enjeksiyon kurslarının uzman eğitmen kadrosu." />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="styles/tokens.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+  <link rel="stylesheet" href="styles/pages/course-detail.css" />
+</head>
+<body>
+
+<nav class="nav" data-nav>
+  <div class="nav__inner">
+    <a class="logo" href="index.html" aria-label="SonoInjection">
+      <span class="logo__bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
+      <span><span class="logo__word">SonoInjection</span><span class="logo__url">sonoinjection.com</span></span>
+    </a>
+    <div class="nav__links">
+      <a class="nav__link" href="courses.html">Kurslar</a>
+      <a class="nav__link is-active" href="faculty.html">Eğitmenler</a>
+      <a class="nav__link" href="about.html">Hakkımızda</a>
+      <a class="nav__link" href="index.html#contact">İletişim</a>
+    </div>
+    <div class="nav__actions">
+      <span class="nav__lang">
+        <span class="is-active">TR</span>
+        <span class="nav__lang-sep">|</span>
+        <a href="faculty-en.html">EN</a>
+      </span>
+      <span class="nav__divider"></span>
+      <a class="btn btn--primary btn--sm" href="index.html#contact">Kayıt Ol</a>
+      <button class="nav__toggle" data-nav-toggle aria-expanded="false" aria-label="Menüyü aç">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="wave-bg"></div>
+  <div class="container page-hero__inner">
+    <div class="eyebrow">Ekibimiz</div>
+    <h1>Uzman Eğitmenler</h1>
+    <p>SonoInjection eğitmenleri her gün aktif olarak ultrason eşliğinde girişimsel işlemler yapan klinisyenlerdir. Her istasyona gerçek dünyadan hassasiyet ve deneyim taşırlar.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid--3" data-faculty-grid></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <a class="logo" href="index.html" aria-label="SonoInjection">
+        <span class="logo__bars" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
+        <span class="logo__word" style="color:#fff;">SonoInjection</span>
+      </a>
+      <p>MSK patolojileri için ultrason eşliğinde kadavra enjeksiyon kursları.</p>
+      <a href="https://sonoinjection.com">sonoinjection.com</a>
+    </div>
+    <div class="footer__cols">
+      <div class="footer__col">
+        <div class="footer__col-title">Kurslar</div>
+        <a href="courses.html">Tümünü Gör</a>
+        <a href="courses/2026-06-rmk-aimes.html">RMK AIMES Haziran 2026</a>
+      </div>
+      <div class="footer__col">
+        <div class="footer__col-title">Kurum</div>
+        <a href="about.html">Hakkımızda</a>
+        <a href="faculty.html">Eğitmenler</a>
+        <a href="index.html#contact">İletişim</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>© 2026 SonoInjection — Tüm hakları saklıdır.</span>
+    <a href="https://sonoinjection.com">sonoinjection.com</a>
+  </div>
+</footer>
+
+<script type="module" src="scripts/render-faculty.js"></script>
+<script type="module" src="scripts/nav.js"></script>
+</body>
+</html>

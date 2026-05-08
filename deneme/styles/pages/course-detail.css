@@ -1,0 +1,208 @@
+/* ============================================================
+   course-detail.css — single-course detail page layout
+   ============================================================ */
+
+.course-hero {
+  background: var(--color-bg-dark);
+  color: var(--color-fg-inverse);
+  padding: var(--space-12) 0 var(--space-16);
+  position: relative;
+  overflow: hidden;
+}
+.course-hero__inner { position: relative; z-index: 1; }
+
+.course-hero__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  margin-bottom: var(--space-6);
+  transition: var(--transition-default);
+}
+.course-hero__back:hover { background: rgba(255, 255, 255, 0.14); color: var(--white); }
+
+.course-hero__tags {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
+.course-hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.5vw, 48px);
+  font-weight: var(--font-weight-bold);
+  color: var(--white);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.1;
+  max-width: 700px;
+  margin-bottom: var(--space-4);
+}
+.course-hero__meta {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.course-hero__meta-item { display: inline-flex; align-items: center; gap: 6px; }
+.course-hero__meta-item svg { width: 16px; height: 16px; color: var(--teal-400); }
+
+.course-layout {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding: var(--space-16) var(--space-12);
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-12);
+}
+@media (max-width: 1024px) {
+  .course-layout { grid-template-columns: 1fr; }
+}
+
+.course-block { margin-bottom: var(--space-12); }
+.course-block:last-child { margin-bottom: 0; }
+.course-block h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--navy-900);
+  margin-bottom: var(--space-4);
+}
+.course-block p {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-fg-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-3);
+}
+.course-block p:last-child { margin-bottom: 0; }
+.course-block .signature {
+  font-style: italic;
+  font-size: var(--text-sm);
+  color: var(--color-fg-muted);
+  margin-top: var(--space-4);
+}
+
+.joints-list { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+
+/* Day programme */
+.schedule { display: flex; flex-direction: column; gap: var(--space-2); }
+.schedule__row { display: flex; gap: var(--space-4); align-items: flex-start; }
+.schedule__time {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-fg-muted);
+  width: 100px;
+  flex-shrink: 0;
+  padding-top: 12px;
+}
+.schedule__item {
+  flex: 1;
+  border-radius: var(--radius-md);
+  padding: 10px 16px;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+}
+.schedule__item--lecture { background: var(--teal-50); color: var(--teal-700); }
+.schedule__item--cadaver { background: var(--navy-50); color: var(--navy-800); }
+.schedule__item--admin { background: var(--slate-100); color: var(--color-fg-secondary); }
+
+@media (max-width: 640px) {
+  .schedule__row { flex-direction: column; gap: var(--space-2); }
+  .schedule__time { width: auto; padding-top: 0; }
+}
+
+/* Sticky enrol sidebar */
+.enrol-card {
+  position: sticky;
+  top: 88px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-3);
+}
+.enrol-card__price {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--navy-900);
+  line-height: 1;
+}
+.enrol-card__price-note {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-fg-secondary);
+  margin-top: var(--space-1);
+  margin-bottom: var(--space-8);
+}
+.enrol-card__facts { display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-8); }
+.enrol-card__fact { display: flex; gap: var(--space-3); align-items: center; font-family: var(--font-body); font-size: var(--text-base); color: var(--color-fg-secondary); }
+.enrol-card__fact svg { width: 18px; height: 18px; color: var(--color-fg-accent); flex-shrink: 0; }
+.enrol-card__buttons { display: flex; flex-direction: column; gap: var(--space-3); }
+.enrol-card__note {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-fg-muted);
+  text-align: center;
+  margin-top: var(--space-4);
+  line-height: 1.5;
+}
+
+/* Inner page hero (used by Faculty / About / Courses listing) */
+.page-hero {
+  background: var(--color-bg-dark);
+  color: var(--color-fg-inverse);
+  padding: var(--space-12) 0;
+  position: relative;
+  overflow: hidden;
+}
+.page-hero__inner { position: relative; z-index: 1; }
+.page-hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 4.5vw, 44px);
+  font-weight: var(--font-weight-bold);
+  color: var(--white);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.1;
+  margin-bottom: var(--space-3);
+}
+.page-hero p {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+  max-width: 560px;
+}
+
+/* About content column */
+.prose {
+  max-width: 720px;
+  margin-inline: auto;
+}
+.prose h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--navy-900);
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-3);
+}
+.prose h2:first-child { margin-top: 0; }
+.prose p {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  color: var(--color-fg-secondary);
+  line-height: 1.7;
+  margin-bottom: var(--space-4);
+}
