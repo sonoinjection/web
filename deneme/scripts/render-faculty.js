@@ -41,17 +41,18 @@ function roleBadgeClass(f) {
 }
 
 function renderFacultyCard(f) {
+  const title = f.title && f.title[lang];
   const inst = f.institution && f.institution[lang];
   const city = f.city && f.city[lang];
+  const lines = [];
+  if (title) lines.push(escape(title));
+  if (inst) lines.push(`<strong>${escape(inst)}</strong>`);
+  if (city) lines.push(escape(city));
   return `
     <div class="faculty-card">
       <img class="faculty-card__photo" src="${escape(base + f.photo)}" alt="${escape(nameFor(f))}" loading="lazy" />
       <div class="faculty-card__name">${escape(nameFor(f))}</div>
-      <div class="faculty-card__title">
-        ${escape(f.title[lang])}
-        ${inst ? `<br/><strong>${escape(inst)}</strong>` : ''}
-        ${city ? `<br/>${escape(city)}` : ''}
-      </div>
+      <div class="faculty-card__title">${lines.join('<br/>')}</div>
       <span class="badge ${roleBadgeClass(f)}">${escape(roleLabel(f))}</span>
     </div>
   `;

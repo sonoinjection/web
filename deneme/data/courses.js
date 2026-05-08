@@ -46,21 +46,23 @@ export const COURSES = [
     },
     description: {
       tr: [
-        '<strong>Ultrason Eşliğinde Kadavrik Omuz ve Alt Ekstremite Enjeksiyon Kursu</strong>, 20 Haziran\'da RMK AIMES (Rahmi M. Koç Girişimsel Tıp, Eğitim ve Simülasyon Akademisi) ev sahipliğinde başlıyor.',
-        'Kas-iskelet sistemi girişimsel pratiğindeki güncel yaklaşımlar etrafında tasarlanan program, teorik içeriği ileri düzey pratik deneyim için kadavrik uygulamalı oturumlarla bir araya getiriyor. Omuz ve alt ekstremitedeki enjeksiyon teknikleri, çoklu açılı gösterimler, birebir uygulama ve eğitmen eşliğindeki interaktif oturumlarla ultrason rehberliğinde adım adım işlenecek.',
+        '<strong>"Kadavrada Ultrasonografi Eşliğinde Omuz ve Alt Ekstremite Enjeksiyon Kursu"</strong>, 20 Haziran tarihinde RMK AIMES\'te (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation) kapılarını açıyor.',
+        'Kas-iskelet sistemi girişimsel uygulamalarındaki güncel yaklaşımlar doğrultusunda hazırlanan kursumuzda; teorik içeriğin ardından kadavra üzerinde gerçekleştirilecek uygulamalı oturumlarla ileri düzey pratik deneyim kazanma fırsatı sunuyoruz. Omuz ve alt ekstremiteye yönelik enjeksiyon teknikleri, ultrasonografi rehberliğinde adım adım ele alınacak ve interaktif bir öğrenme ortamı sağlanacaktır.',
+        'Programımızı; çok açılı demonstrasyonlar, birebir uygulama imkânı ve eğitmenlerle etkileşimli oturumlarla zenginleştirdik. Alanında deneyimli eğitmenler eşliğinde, günlük klinik pratiğinize doğrudan katkı sunacak verimli bir buluşma hazırlamak için tüm hazırlıklarımızı titizlikle sürdürüyoruz.',
       ],
       en: [
-        'The <strong>Ultrasound-Guided Cadaveric Shoulder &amp; Lower Extremity Injection Course</strong> opens its doors on June 20 at RMK AIMES (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation).',
-        'Designed around current approaches in musculoskeletal interventional practice, the program pairs theoretical content with cadaveric hands-on sessions for advanced practical experience. Injection techniques for the shoulder and lower extremity will be covered step by step under ultrasound guidance, with multi-angle demonstrations, one-on-one practice, and faculty-led interactive sessions.',
+        '<strong>"Cadaveric Ultrasound-Guided Shoulder and Lower Extremity Injection Course"</strong> opens its doors on June 20 at RMK AIMES (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation).',
+        'Designed in line with current approaches in musculoskeletal interventional practice, our course offers the opportunity to gain advanced practical experience through hands-on cadaveric sessions that follow the theoretical content. Injection techniques targeting the shoulder and lower extremity will be addressed step by step under ultrasonographic guidance, in an interactive learning environment.',
+        'We have enriched the program with multi-angle demonstrations, one-on-one practice opportunities, and interactive sessions with the faculty. Alongside experienced instructors in the field, we are meticulously preparing a productive gathering that will directly contribute to your daily clinical practice.',
       ],
     },
     signature: {
-      tr: '20 Haziran\'da RMK AIMES\'te sizleri ağırlamayı dört gözle bekliyoruz.',
-      en: 'We look forward to welcoming you on June 20 at RMK AIMES.',
+      tr: '20 Haziran\'da RMK AIMES\'te sizleri aramızda görmekten büyük mutluluk duyacağız.',
+      en: 'We will be delighted to welcome you at RMK AIMES on June 20.',
     },
     signatureBy: {
-      tr: '— Organizasyon Komitesi adına, Doç. Dr. Mahir Topaloğlu',
-      en: '— On behalf of the Organising Committee, Assoc. Prof. Dr. Mahir Topaloğlu',
+      tr: 'Düzenleme Kurulu Adına Doç. Dr. Mahir TOPALOĞLU',
+      en: 'On behalf of the Organising Committee, Assoc. Prof. Dr. Mahir TOPALOĞLU',
     },
     schedule: {
       tr: [

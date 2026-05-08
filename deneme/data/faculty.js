@@ -123,10 +123,7 @@ export const FACULTY = [
     photo: 'assets/faculty/deniz-sarikaya.jpeg',
     name: 'Asst. Dr. Deniz Sarıkaya',
     nameEn: 'Asst. Dr. Deniz Sarıkaya',
-    title: {
-      tr: 'Fiziksel Tıp ve Rehabilitasyon',
-      en: 'Physical Medicine & Rehabilitation',
-    },
+    title: { tr: '', en: '' },
     institution: {
       tr: 'Erlangen Üniversitesi Hastanesi',
       en: 'Erlangen University Hospital',
