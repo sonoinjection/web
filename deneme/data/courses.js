@@ -79,7 +79,7 @@ export const COURSES = [
           'Diz eklemi', 'Pes anserin', 'Geniküler sinir', 'Gastrosoleus bursa',
           'Tibiotalar eklem', '1. MTF Eklem', 'Tarsal tünel', 'Aşil tendonu', 'Plantar fasya',
         ] },
-        { time: '16:00–16:30', type: 'admin', title: 'Kapanış ve Değerlendirme' },
+        { time: '16:00–17:00', type: 'admin', title: 'Kapanış ve Değerlendirme' },
       ],
       en: [
         { time: '09:00–09:30', type: 'lecture', title: 'Introduction to Musculoskeletal Ultrasound & Core Principles', speaker: 'Assoc. Prof. Dr. Mahir Topaloğlu' },
@@ -95,7 +95,7 @@ export const COURSES = [
           'Knee joint', 'Pes anserine', 'Genicular nerve', 'Gastrosoleus bursa',
           'Tibiotalar joint', '1st MTP joint', 'Tarsal tunnel', 'Achilles tendon', 'Plantar fascia',
         ] },
-        { time: '16:00–16:30', type: 'admin', title: 'Closing & Evaluation' },
+        { time: '16:00–17:00', type: 'admin', title: 'Closing & Evaluation' },
       ],
     },
     facultyIds: ['mahir-topaloglu', 'mert-zure', 'enes-efe-is', 'havvanur-albayrak'],
