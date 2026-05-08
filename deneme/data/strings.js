@@ -64,7 +64,7 @@ export const STRINGS = {
       fullDay: 'Tam gün · 09:00–16:30',
       role: 'Eğitmen',
       directorRole: 'Kurs Direktörü',
-      jokerRole: 'Joker',
+      coordinationRole: 'Koordinasyon',
     },
     listing: {
       eyebrow: 'Tüm Kurslar',
@@ -162,7 +162,7 @@ export const STRINGS = {
       fullDay: 'Full day · 09:00–16:30',
       role: 'Faculty',
       directorRole: 'Course Director',
-      jokerRole: 'Joker',
+      coordinationRole: 'Coordination',
     },
     listing: {
       eyebrow: 'All Courses',

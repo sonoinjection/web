@@ -24,11 +24,11 @@ function nameFor(f) {
 
 const ROLE_LABEL_KEY = {
   director: 'directorRole',
-  joker: 'jokerRole',
+  coordination: 'coordinationRole',
 };
 const ROLE_BADGE_CLASS = {
   director: 'badge--solid-navy',
-  joker: 'badge--amber',
+  coordination: 'badge--amber',
 };
 
 function roleLabel(f) {

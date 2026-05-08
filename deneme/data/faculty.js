@@ -135,7 +135,7 @@ export const FACULTY = [
       tr: 'Erlangen, Almanya',
       en: 'Erlangen, Germany',
     },
-    role: 'joker',
+    role: 'coordination',
   },
   {
     id: 'omer-batin-gozubuyuk',
