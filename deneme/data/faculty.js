@@ -12,7 +12,7 @@ export const FACULTY = [
     id: 'mahir-topaloglu',
     photo: 'assets/faculty/mahir-topaloglu.jpeg',
     name: 'Doç. Dr. Mahir Topaloğlu',
-    nameEn: 'Assoc. Prof. Dr. Mahir Topaloğlu',
+    nameEn: 'Dr. Mahir Topaloğlu',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
       en: 'Physical Medicine & Rehabilitation',
@@ -31,7 +31,7 @@ export const FACULTY = [
     id: 'enes-efe-is',
     photo: 'assets/faculty/enes-efe-is.jpeg',
     name: 'Doç. Dr. Enes Efe İş',
-    nameEn: 'Assoc. Prof. Dr. Enes Efe İş',
+    nameEn: 'Dr. Enes Efe İş',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
       en: 'Physical Medicine & Rehabilitation',
@@ -52,7 +52,7 @@ export const FACULTY = [
     id: 'sergen-devran',
     photo: 'assets/faculty/sergen-devran.jpeg',
     name: 'Dr. Öğr. Üy. Sergen Devran',
-    nameEn: 'Asst. Prof. Dr. Sergen Devran',
+    nameEn: 'Dr. Sergen Devran',
     title: {
       tr: 'Spor Hekimliği',
       en: 'Sports Medicine',
@@ -71,7 +71,7 @@ export const FACULTY = [
     id: 'mert-zure',
     photo: 'assets/faculty/mert-zure.jpeg',
     name: 'Dr. Öğr. Üyesi Mert Zure',
-    nameEn: 'Asst. Prof. Dr. Mert Zure',
+    nameEn: 'Dr. Mert Zure',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
       en: 'Physical Medicine & Rehabilitation',
