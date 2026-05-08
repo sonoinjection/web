@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Elevation & Shadows — SonoInjection</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'JetBrains Mono', monospace; background: #eef1f6; padding: 24px; display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+  .card { background: #fff; border-radius: 12px; padding: 16px 20px; width: 110px; }
+  .level { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 600; color: #0c1b33; margin-bottom: 4px; }
+  .token { font-size: 9px; color: #9ca3af; margin-bottom: 2px; }
+  .desc  { font-size: 9px; color: #6b7280; line-height: 1.4; }
+</style>
+</head>
+<body>
+  <div class="card" style="box-shadow:none; border: 1px solid #e5e7eb;">
+    <div class="level">Level 0</div>
+    <div class="token">--shadow-0</div>
+    <div class="desc">Flat / no shadow</div>
+  </div>
+  <div class="card" style="box-shadow: 0 1px 4px rgba(12,27,51,0.06);">
+    <div class="level">Level 1</div>
+    <div class="token">--shadow-1</div>
+    <div class="desc">Subtle resting state</div>
+  </div>
+  <div class="card" style="box-shadow: 0 2px 12px rgba(12,27,51,0.08);">
+    <div class="level">Level 2</div>
+    <div class="token">--shadow-2</div>
+    <div class="desc">Default card</div>
+  </div>
+  <div class="card" style="box-shadow: 0 8px 32px rgba(12,27,51,0.14);">
+    <div class="level">Level 3</div>
+    <div class="token">--shadow-3</div>
+    <div class="desc">Hover / raised</div>
+  </div>
+  <div class="card" style="box-shadow: 0 16px 48px rgba(12,27,51,0.20);">
+    <div class="level">Level 4</div>
+    <div class="token">--shadow-4</div>
+    <div class="desc">Modal / dropdown</div>
+  </div>
+</body>
+</html>

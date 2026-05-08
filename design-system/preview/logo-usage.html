@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Logo Usage — SonoInjection</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #f7f9fc; padding: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .logo-cell { border-radius: 10px; padding: 24px 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .logo-mark { display: flex; align-items: center; gap: 10px; }
+  .waves { display: flex; align-items: center; gap: 3px; }
+  .waves span { width: 3px; border-radius: 2px; background: #0aada8; }
+  .wordmark { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -0.02em; }
+  .needle { width: 14px; height: 2px; background: #e8a84a; transform: rotate(-40deg); margin-left: 4px; }
+  .cell-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  /* Icon only */
+  .icon-only { display: flex; align-items: center; gap: 3px; }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <!-- Light bg -->
+    <div class="logo-cell" style="background:#fff; border: 1px solid #e5e7eb;">
+      <div class="logo-mark">
+        <div class="waves">
+          <span style="height:10px"></span><span style="height:18px"></span><span style="height:24px"></span><span style="height:18px"></span><span style="height:10px"></span>
+        </div>
+        <div class="wordmark" style="color:#0c1b33">SonoInjection</div>
+      </div>
+      <div class="cell-label" style="color:#9ca3af">On Light</div>
+    </div>
+    <!-- Dark bg -->
+    <div class="logo-cell" style="background:#0c1b33;">
+      <div class="logo-mark">
+        <div class="waves">
+          <span style="height:10px"></span><span style="height:18px"></span><span style="height:24px"></span><span style="height:18px"></span><span style="height:10px"></span>
+        </div>
+        <div class="wordmark" style="color:#fff">SonoInjection</div>
+      </div>
+      <div class="cell-label" style="color:rgba(255,255,255,0.4)">On Dark</div>
+    </div>
+    <!-- Teal bg -->
+    <div class="logo-cell" style="background:#0aada8;">
+      <div class="logo-mark">
+        <div class="waves">
+          <span style="height:10px;background:#fff"></span><span style="height:18px;background:#fff"></span><span style="height:24px;background:#fff"></span><span style="height:18px;background:#fff"></span><span style="height:10px;background:#fff"></span>
+        </div>
+        <div class="wordmark" style="color:#fff">SonoInjection</div>
+      </div>
+      <div class="cell-label" style="color:rgba(255,255,255,0.6)">On Brand</div>
+    </div>
+    <!-- Favicon / icon mark -->
+    <div class="logo-cell" style="background:#fff; border:1px solid #e5e7eb; align-items:center; padding: 20px;">
+      <div style="background:#0c1b33; border-radius:10px; padding:12px 14px; display:inline-flex; align-items:center; gap:3px;">
+        <span style="width:3px;height:10px;background:#0aada8;border-radius:2px"></span>
+        <span style="width:3px;height:18px;background:#0aada8;border-radius:2px"></span>
+        <span style="width:3px;height:24px;background:#0aada8;border-radius:2px"></span>
+        <span style="width:3px;height:18px;background:#0aada8;border-radius:2px"></span>
+        <span style="width:3px;height:10px;background:#0aada8;border-radius:2px"></span>
+      </div>
+      <div class="cell-label" style="color:#9ca3af;">Icon / Favicon</div>
+    </div>
+    <!-- Wordmark only -->
+    <div class="logo-cell" style="background:#f7f9fc; border:1px solid #e5e7eb; justify-content:center;">
+      <div class="wordmark" style="color:#0c1b33; font-size:28px;">SonoInjection</div>
+      <div class="cell-label" style="color:#9ca3af;">Wordmark Only</div>
+    </div>
+    <!-- Minimum size -->
+    <div class="logo-cell" style="background:#fff; border:1px solid #e5e7eb; justify-content:center; align-items:center;">
+      <div class="logo-mark" style="transform:scale(0.6);transform-origin:left center;">
+        <div class="waves">
+          <span style="height:10px"></span><span style="height:18px"></span><span style="height:24px"></span><span style="height:18px"></span><span style="height:10px"></span>
+        </div>
+        <div class="wordmark" style="color:#0c1b33">SonoInjection</div>
+      </div>
+      <div class="cell-label" style="color:#9ca3af;">Min Size (~80px)</div>
+    </div>
+  </div>
+</body>
+</html>

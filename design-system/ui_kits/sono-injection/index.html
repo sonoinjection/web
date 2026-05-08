@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sonoinjection.com — Kas-İskelet Ultrason Eğitim Kursları</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: #f7f9fc; color: #0c1b33; -webkit-font-smoothing: antialiased; }
+::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #f3f4f6; } ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+/* ── TOKENS ─────────────────────────────────── */
+const T = {
+  navy: '#0c1b33', navy2: '#122347', navy3: '#1a3060',
+  teal: '#0aada8', teal2: '#0c9898', tealLight: '#edfafa', tealBorder: '#bef5f3',
+  amber: '#e8a84a', amberDark: '#d47e18',
+  fg1: '#0c1b33', fg2: '#4b5563', fg3: '#6b7280', fg4: '#9ca3af',
+  bg: '#f7f9fc', surface: '#fff', muted: '#f3f4f6',
+  border: '#e5e7eb', border2: '#d1d5db',
+  success: '#16a34a', successBg: '#dcfce7',
+};
+
+/* ── KURS VERİLERİ ───────────────────────────── */
+const KURSLAR = [
+  { id: 1, title: 'Omuz ve Alt Ekstremite Enjeksiyon Kursu', joints: ['Omuz', 'Kalça', 'Diz', 'Ayak Bileği'], level: 'Uygulamalı Kurs', city: 'RMK AIMES', country: 'TR', date: '20 Haziran 2026', price: null, spots: 40, color: T.navy },
+];
+
+const EGITMENLER = [
+  { initials: 'MT', photo: '../../assets/faculty/mahir-topaloglu.jpeg', name: 'Doç. Dr. Mahir Topaloğlu', title: 'Fiziksel Tıp ve Rehabilitasyon', inst: 'Koç Üniversitesi Hastanesi', city: 'İstanbul', role: 'Eğitmen' },
+  { initials: 'MZ', photo: '../../assets/faculty/mert-zure.jpeg', name: 'Dr. Öğr. Üyesi Mert Züre', title: 'Fiziksel Tıp ve Rehabilitasyon', inst: 'Kanuni Sultan Süleyman Eğitim ve Araştırma Hastanesi', city: 'İstanbul', role: 'Eğitmen' },
+  { initials: 'EE', photo: '../../assets/faculty/enes-efe-is.jpeg', name: 'Doç. Dr. Enes Efe İş', title: 'Fiziksel Tıp ve Rehabilitasyon', inst: 'Şişli Hamidiye Etfal Eğitim ve Araştırma Hastanesi', city: 'İstanbul', role: 'Eğitmen' },
+  { initials: 'HA', photo: '../../assets/faculty/havvanur-albayrak.jpeg', name: 'Dr. Havvanur Albayrak', title: 'Fiziksel Tıp ve Rehabilitasyon', inst: 'Koç Üniversitesi Hastanesi', city: 'İstanbul', role: 'Eğitmen' },
+];
+
+/* ── LOGO ────────────────────────────────────── */
+function LogoMark({ size = 26, color = T.teal, wordColor = T.navy }) {
+  const bars = [10, 17, 22, 17, 10].map((h, i) => (
+    <div key={i} style={{ width: 3, height: h, background: color, borderRadius: 2, margin: '0 1.5px' }} />
+  ));
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+      <div style={{ display: 'flex', alignItems: 'center' }}>{bars}</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: size, color: wordColor, letterSpacing: '-0.02em', lineHeight: 1.1 }}>SonoInjection</span>
+        {size <= 20 && <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 9, color: T.teal, letterSpacing: '0.04em', opacity: 0.8 }}>sonoinjection.com</span>}
+      </div>
+    </div>
+  );
+}
+
+/* ── NAV ─────────────────────────────────────── */
+function Nav({ page, setPage }) {
+  const dark = page === 'home';
+  const bg = dark ? T.navy : '#fff';
+  const linkColor = dark ? 'rgba(255,255,255,0.65)' : T.fg2;
+  const links = [['kurslar','Kurslar'], ['egitmenler','Eğitmenler'], ['hakkinda','Hakkında']];
+  return (
+    <nav style={{ background: bg, borderBottom: dark ? '1px solid rgba(255,255,255,0.08)' : `1px solid ${T.border}`, padding: '0 48px', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100, boxShadow: dark ? 'none' : '0 1px 4px rgba(12,27,51,0.06)' }}>
+      <div onClick={() => setPage('home')} style={{ cursor: 'pointer' }}>
+        <LogoMark size={20} color={T.teal} wordColor={dark ? '#fff' : T.navy} />
+      </div>
+      <div style={{ display: 'flex', gap: 32 }}>
+        {links.map(([id, label]) => (
+          <button key={id} onClick={() => setPage(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 500, color: page === id ? T.teal : linkColor, padding: '4px 0' }}>{label}</button>
+        ))}
+      </div>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        {/* Lang switcher */}
+        <a href="index-en.html" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: dark ? 'rgba(255,255,255,0.35)' : T.fg4, textDecoration: 'none', letterSpacing: '0.04em' }}>EN</a>
+        <span style={{ color: dark ? 'rgba(255,255,255,0.2)' : T.border, fontSize: 12 }}>|</span>
+        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: T.teal, letterSpacing: '0.04em', fontWeight: 600 }}>TR</span>
+        <div style={{ width: 1, height: 20, background: dark ? 'rgba(255,255,255,0.12)' : T.border, margin: '0 4px' }} />
+        <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 500, color: dark ? 'rgba(255,255,255,0.6)' : T.fg2 }}>Giriş Yap</button>
+        <button onClick={() => setPage('kurslar')} style={{ background: T.teal, color: '#fff', border: 'none', borderRadius: 8, padding: '9px 20px', fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Kayıt Ol</button>
+      </div>
+    </nav>
+  );
+}
+
+/* ── DALGA DESENİ ────────────────────────────── */
+function WavePattern() {
+  return (
+    <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.06 }} preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="waves" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+          <rect x="6" y="0" width="2" height="40" fill="#0aada8"/>
+          <rect x="18" y="0" width="2" height="40" fill="#0aada8"/>
+          <rect x="30" y="0" width="2" height="40" fill="#0aada8"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#waves)"/>
+    </svg>
+  );
+}
+
+/* ── ANA SAYFA ───────────────────────────────── */
+function AnaSayfa({ setPage, setSeciliKurs }) {
+  return (
+    <div>
+      {/* Hero */}
+      <section style={{ background: T.navy, position: 'relative', overflow: 'hidden', padding: '96px 48px 80px' }}>
+        <WavePattern />
+        <div style={{ position: 'relative', maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(10,173,168,0.15)', border: '1px solid rgba(10,173,168,0.3)', borderRadius: 999, padding: '5px 14px', marginBottom: 28 }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: T.teal }} />
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, fontWeight: 500, color: T.teal, letterSpacing: '0.06em' }}>sonoinjection.com</span>
+            <span style={{ width: 1, height: 12, background: 'rgba(10,173,168,0.3)' }}></span>
+            <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: 600, color: T.teal, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Kadavra Tabanlı · MSK Ultrason</span>
+          </div>
+          <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 56, fontWeight: 700, color: '#fff', lineHeight: 1.08, letterSpacing: '-0.03em', maxWidth: 700, marginBottom: 24 }}>
+            Hassasiyeti Pratik Yaparak Kazan.<br/><span style={{ color: T.teal }}>Güveni İnşa Et.</span><br/>Emin Adımlarla Tedavi Et.
+          </h1>
+          <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 18, color: 'rgba(255,255,255,0.65)', lineHeight: 1.65, maxWidth: 540, marginBottom: 40 }}>
+            SonoInjection, uzman eğitmenler ve gerçek kadavra anatomisini bir araya getirerek tüm büyük eklemlerde ultrason eşliğinde enjeksiyon becerilerinizi hızlandırır.
+          </p>
+          <div style={{ display: 'flex', gap: 14 }}>
+            <button onClick={() => setPage('kurslar')} style={{ background: T.teal, color: '#fff', border: 'none', borderRadius: 10, padding: '14px 32px', fontFamily: "'DM Sans',sans-serif", fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>Kurslara Göz At</button>
+            <button onClick={() => setPage('egitmenler')} style={{ background: 'transparent', color: '#fff', border: '1.5px solid rgba(255,255,255,0.25)', borderRadius: 10, padding: '14px 28px', fontFamily: "'DM Sans',sans-serif", fontSize: 15, fontWeight: 500, cursor: 'pointer' }}>Eğitmenleri Tanıyın</button>
+          </div>
+        </div>
+        {/* Dekoratif iğne */}
+
+      </section>
+
+      {/* İstatistik şeridi */}
+      <section style={{ background: T.teal, padding: '28px 48px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 0 }}>
+          {[['4:1','Eğitmen-katılımcı oranı'], ['6+','Atölye başına eklem'], ['%100','Uygulamalı kadavra süresi'], ['16','Kurs başına maks katılımcı']].map(([n, l], i) => (
+            <div key={l} style={{ textAlign: 'center', padding: '0 24px', borderRight: i < 3 ? '1px solid rgba(255,255,255,0.2)' : 'none' }}>
+              <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 32, fontWeight: 700, color: '#fff', lineHeight: 1 }}>{n}</div>
+              <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.75)', marginTop: 4, lineHeight: 1.4 }}>{l}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Öne çıkan kurslar */}
+      <section style={{ padding: '72px 48px', background: T.bg }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ marginBottom: 40 }}>
+            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.teal, marginBottom: 8 }}>Yaklaşan Tarihler</div>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 36, fontWeight: 700, color: T.navy, letterSpacing: '-0.02em' }}>Öne Çıkan Kurslar</h2>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+            {KURSLAR.slice(0,3).map(k => (
+              <KursKart key={k.id} kurs={k} onClick={() => { setSeciliKurs(k); setPage('detay'); }} />
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: 40 }}>
+            <button onClick={() => setPage('kurslar')} style={{ background: 'transparent', color: T.teal, border: `1.5px solid ${T.teal}`, borderRadius: 8, padding: '11px 28px', fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Tüm Kurslara Bak →</button>
+          </div>
+        </div>
+      </section>
+
+      {/* Eğitmen tanıtım */}
+      <section style={{ padding: '72px 48px', background: '#fff' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 40 }}>
+            <div>
+              <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.teal, marginBottom: 8 }}>Uzman Kadro</div>
+              <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 36, fontWeight: 700, color: T.navy, letterSpacing: '-0.02em' }}>Eğitim Kadrosuyla Tanışın</h2>
+            </div>
+            <button onClick={() => setPage('egitmenler')} style={{ background: 'none', border: 'none', color: T.teal, fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Tüm Eğitmenler →</button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16 }}>
+            {EGITMENLER.slice(0,4).map(e => <EgitmenKart key={e.initials} egitmen={e} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{ background: T.navy, padding: '72px 48px', position: 'relative', overflow: 'hidden' }}>
+        <WavePattern />
+        <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 36, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', marginBottom: 12 }}>Pratiğinizi geliştirmeye hazır mısınız?</h2>
+            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 16, color: 'rgba(255,255,255,0.6)', maxWidth: 460 }}>Türkiye, Almanya, Avusturya ve ötesinden klinisyenlerle bir sonraki SonoInjection kadavra atölyesinde buluşun.</p>
+          </div>
+          <button onClick={() => setPage('kurslar')} style={{ background: T.amber, color: T.navy, border: 'none', borderRadius: 10, padding: '16px 36px', fontFamily: "'DM Sans',sans-serif", fontSize: 15, fontWeight: 700, cursor: 'pointer', flexShrink: 0 }}>Kursa Kayıt Ol</button>
+        </div>
+      </section>
+
+      <Altbilgi />
+    </div>
+  );
+}
+
+/* ── KURS KARTI ──────────────────────────────── */
+function KursKart({ kurs: k, onClick }) {
+  const [hov, setHov] = useState(false);
+  const dolu = k.spots === 0;
+  return (
+    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      style={{ background: '#fff', border: `1px solid ${T.border}`, borderRadius: 12, overflow: 'hidden', cursor: 'pointer', boxShadow: hov ? '0 8px 32px rgba(12,27,51,0.14)' : '0 2px 12px rgba(12,27,51,0.07)', transform: hov ? 'translateY(-2px)' : 'none', transition: 'all 200ms ease' }}>
+      <div style={{ background: k.color, height: 88, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(10,173,168,0.15) 5px, rgba(10,173,168,0.15) 6px)' }} />
+        <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 16, fontWeight: 700, color: T.teal, zIndex: 1, textAlign: 'center', padding: '0 16px' }}>{k.title.split(' ').slice(0,3).join(' ')}</span>
+      </div>
+      <div style={{ padding: 20 }}>
+        <div style={{ display: 'flex', gap: 6, marginBottom: 10, flexWrap: 'wrap' }}>
+          <span style={{ background: T.tealLight, color: T.teal, border: `1px solid ${T.tealBorder}`, borderRadius: 999, fontSize: 10, fontWeight: 600, padding: '2px 9px' }}>{k.level}</span>
+          {dolu && <span style={{ background: '#fee2e2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: 999, fontSize: 10, fontWeight: 600, padding: '2px 9px' }}>Dolu</span>}
+          {!dolu && k.spots <= 4 && <span style={{ background: '#fdf1e0', color: '#b8660e', border: '1px solid #fae4bf', borderRadius: 999, fontSize: 10, fontWeight: 600, padding: '2px 9px' }}>{k.spots} yer kaldı</span>}
+        </div>
+        <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 15, fontWeight: 600, color: T.navy, marginBottom: 8, lineHeight: 1.3 }}>{k.title}</div>
+        <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: T.fg3, lineHeight: 1.5 }}>
+          📍 {k.city} &nbsp;·&nbsp; {k.date}
+        </div>
+      </div>
+      <div style={{ padding: '12px 20px', borderTop: `1px solid ${T.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 16, fontWeight: 700, color: T.navy }}>{k.price ? `₺ ${k.price.toLocaleString('tr-TR')}` : 'Pek Yakında'}</span>
+        <button style={{ background: dolu ? T.muted : T.teal, color: dolu ? T.fg4 : '#fff', border: 'none', borderRadius: 7, padding: '7px 14px', fontFamily: "'DM Sans',sans-serif", fontSize: 12, fontWeight: 600, cursor: dolu ? 'not-allowed' : 'pointer' }}>{dolu ? 'Bekleme Listesi' : 'Kayıt →'}</button>
+      </div>
+    </div>
+  );
+}
+
+/* ── EĞİTMEN KARTI ───────────────────────────── */
+function EgitmenKart({ egitmen: e }) {
+  const colors = [T.teal, '#3359a5', '#097878', '#254280', T.navy2, T.navy3];
+  const bg = colors[e.initials.charCodeAt(0) % colors.length];
+  const rolRenk = e.role === 'Kurs Direktörü' ? { bg: T.navy, fg: '#fff' } : e.role === 'Eğitmen' ? { bg: T.teal, fg: '#fff' } : { bg: T.muted, fg: T.fg2 };
+  return (
+    <div style={{ background: '#fff', border: `1px solid ${T.border}`, borderRadius: 12, padding: '24px 16px', textAlign: 'center', boxShadow: '0 2px 12px rgba(12,27,51,0.06)' }}>
+      {e.photo ? (
+        <img src={e.photo} alt={e.name} style={{ width: 72, height: 72, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center 20%', margin: '0 auto 12px', display: 'block', border: `2px solid ${T.border}` }} />
+      ) : (
+        <div style={{ width: 72, height: 72, borderRadius: '50%', background: bg, margin: '0 auto 12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 22, color: '#fff' }}>{e.initials}</div>
+      )}
+      <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 13, fontWeight: 600, color: T.navy, marginBottom: 4, lineHeight: 1.3 }}>{e.name}</div>
+      <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, color: T.fg3, lineHeight: 1.5, marginBottom: 8 }}>{e.title}<br/>{e.inst}{e.city ? <><br/>{e.city}</> : null}</div>
+      <span style={{ background: rolRenk.bg, color: rolRenk.fg, borderRadius: 999, fontSize: 10, fontWeight: 600, padding: '3px 10px' }}>{e.role}</span>
+    </div>
+  );
+}
+
+/* ── KURSLAR SAYFASI ─────────────────────────── */
+function KurslarSayfasi({ setPage, setSeciliKurs }) {
+  const [filtre, setFiltre] = useState('Tümü');
+  const seviyeler = ['Tümü'];
+  const filtrelenmis = KURSLAR;
+  return (
+    <div style={{ minHeight: '100vh', background: T.bg }}>
+      <div style={{ background: T.navy, padding: '48px 48px 40px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.teal, marginBottom: 8 }}>Tüm Kurslar</div>
+          <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 42, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', marginBottom: 24 }}>Yaklaşan Kurslar</h1>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {seviyeler.map(s => (
+              <button key={s} onClick={() => setFiltre(s)} style={{ background: filtre === s ? T.teal : 'rgba(255,255,255,0.08)', color: filtre === s ? '#fff' : 'rgba(255,255,255,0.6)', border: 'none', borderRadius: 999, padding: '7px 18px', fontFamily: "'DM Sans',sans-serif", fontSize: 13, fontWeight: 500, cursor: 'pointer', transition: 'all 150ms' }}>{s}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 48px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+          {filtrelenmis.map(k => <KursKart key={k.id} kurs={k} onClick={() => { setSeciliKurs(k); setPage('detay'); }} />)}
+        </div>
+        {filtrelenmis.length === 0 && <div style={{ textAlign: 'center', padding: '48px 0', color: T.fg3, fontFamily: "'DM Sans',sans-serif" }}>Bu seviyede şu anda planlanmış kurs bulunmamaktadır.</div>}
+      </div>
+      <Altbilgi />
+    </div>
+  );
+}
+
+/* ── KURS DETAY ──────────────────────────────── */
+function KursDetaySayfasi({ kurs: k, setPage }) {
+  if (!k) { setPage('kurslar'); return null; }
+  const program = [
+    { time: '09:00–09:30', title: 'Kas-İskelet Sistemi Ultrasonografisine Giriş ve Temel Prensipler', type: 'lecture', hoca: 'Doç. Dr. Mahir Topaloğlu' },
+    { time: '09:30–10:00', title: 'Omuz Bölgesinin Ultrasonografisi ve Enjeksiyonları', type: 'lecture', hoca: 'Doç. Dr. Mahir Topaloğlu' },
+    { time: '10:00–10:30', title: 'Kalça Bölgesinin Ultrasonografisi ve Enjeksiyonları', type: 'lecture', hoca: 'Doç. Dr. Enes Efe İş' },
+    { time: '10:30–11:00', title: 'Kahve Arası', type: 'admin' },
+    { time: '11:00–11:30', title: 'Diz Bölgesinin Ultrasonografisi ve Enjeksiyonları', type: 'lecture', hoca: 'Dr. Öğr. Üyesi Mert Züre' },
+    { time: '11:30–12:00', title: 'Ayak Bileği ve Ayak Bölgesinin Ultrasonografisi ve Enjeksiyonları', type: 'lecture', hoca: 'Dr. Havvanur Albayrak' },
+    { time: '12:00–13:00', title: 'Öğle Arası', type: 'admin' },
+    { time: '13:00–16:00', title: 'Kadavra Üzerinde Enjeksiyon Pratikleri', type: 'cadaver', items: ['Glenohumeral eklem', 'Subakromial bursa', 'Biseps tendonu', 'Akromioklavikular eklem', 'Supraskapular blok', 'Kalça eklemi', 'Trokanterik bursa', 'Piriformis kası', 'Diz eklemi', 'Pes anserin', 'Geniküler sinir', 'Gastrosoleus bursa', 'Tibiotalar eklem', '1. MTF Eklem', 'Tarsal tünel', 'Aşil tendonu', 'Plantar fasya'] },
+    { time: '16:00–16:30', title: 'Kapanış ve Değerlendirme', type: 'admin' },
+  ];
+  const tipRenk = { lecture: T.tealLight, cadaver: '#dde6f5', admin: T.muted };
+  const tipYazi = { lecture: T.teal, cadaver: T.navy, admin: T.fg3 };
+  return (
+    <div style={{ background: T.bg, minHeight: '100vh' }}>
+      <div style={{ background: T.navy, padding: '48px 48px 40px', position: 'relative', overflow: 'hidden' }}>
+        <WavePattern />
+        <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative' }}>
+          <button onClick={() => setPage('kurslar')} style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: 'rgba(255,255,255,0.6)', borderRadius: 6, padding: '6px 14px', fontFamily: "'DM Sans',sans-serif", fontSize: 13, cursor: 'pointer', marginBottom: 24 }}>← Tüm Kurslar</button>
+          <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+            <span style={{ background: 'rgba(10,173,168,0.2)', color: T.teal, borderRadius: 999, fontSize: 11, fontWeight: 600, padding: '3px 12px' }}>{k.level}</span>
+            {k.spots > 0 && <span style={{ background: 'rgba(22,163,74,0.2)', color: '#4ade80', borderRadius: 999, fontSize: 11, fontWeight: 600, padding: '3px 12px' }}>● {k.spots} yer mevcut</span>}
+            {k.spots === 0 && <span style={{ background: 'rgba(220,38,38,0.2)', color: '#f87171', borderRadius: 999, fontSize: 11, fontWeight: 600, padding: '3px 12px' }}>● Kontenjan Dolu</span>}
+          </div>
+          <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 42, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', lineHeight: 1.1, maxWidth: 640, marginBottom: 16 }}>{k.title}</h1>
+          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }}>📍 {k.city} &nbsp;·&nbsp; {k.date} &nbsp;·&nbsp; 40 katılımcı</div>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 48px', display: 'grid', gridTemplateColumns: '1fr 340px', gap: 40 }}>
+        <div>
+          <section style={{ marginBottom: 40 }}>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 22, fontWeight: 600, color: T.navy, marginBottom: 16 }}>Ele Alınan Eklemler ve Yapılar</h2>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {k.joints.map(j => <span key={j} style={{ background: T.tealLight, color: T.teal, border: `1px solid ${T.tealBorder}`, borderRadius: 8, fontSize: 13, fontWeight: 500, padding: '6px 14px' }}>{j}</span>)}
+            </div>
+          </section>
+
+          <section style={{ marginBottom: 40 }}>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 22, fontWeight: 600, color: T.navy, marginBottom: 12 }}>Kurs Hakkında</h2>
+            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 15, color: T.fg2, lineHeight: 1.7 }}>
+              <b>Kadavrada Ultrasonografi Eşliğinde Omuz ve Alt Ekstremite Enjeksiyon Kursu</b>, 20 Haziran tarihinde RMK AIMES'te (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation) kapılarını açıyor.
+            </p>
+            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 15, color: T.fg2, lineHeight: 1.7, marginTop: 12 }}>
+              Kas-iskelet sistemi girişimsel uygulamalarındaki güncel yaklaşımlar doğrultusunda hazırlanan kursumuzda; teorik içeriğin ardından kadavra üzerinde gerçekleştirilecek uygulamalı oturumlarla ileri düzey pratik deneyim kazanma fırsatı sunuyoruz. Omuz ve alt ekstremiteye yönelik enjeksiyon teknikleri, ultrasonografi rehberliğinde adım adım ele alınacak ve interaktif bir öğrenme ortamı sağlanacaktır.
+            </p>
+            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 15, color: T.fg2, lineHeight: 1.7, marginTop: 12 }}>
+              Programımızı; çok açılı demonstrasyonlar, birebir uygulama imkânı ve eğitmenlerle etkileşimli oturumlarla zenginleştirdik. Alanında deneyimli eğitmenler eşliğinde, günlük klinik pratiğinize doğrudan katkı sunacak verimli bir buluşma hazırlamak için tüm hazırlıklarımızı titizlikle sürdürüyoruz.
+            </p>
+            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 15, color: T.fg2, lineHeight: 1.7, marginTop: 12, fontStyle: 'italic' }}>
+              20 Haziran'da RMK AIMES'te sizleri aramızda görmekten büyük mutluluk duyacağız.<br/>
+              <span style={{ color: T.fg3, fontSize: 13 }}>— Düzenleme Kurulu Adına Doç. Dr. Mahir Topaloğlu</span>
+            </p>
+          </section>
+
+          <section style={{ marginBottom: 40 }}>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 22, fontWeight: 600, color: T.navy, marginBottom: 16 }}>Günlük Program</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {program.map((p, i) => (
+                <div key={i} style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: T.fg4, width: 100, flexShrink: 0, paddingTop: 10 }}>{p.time}</div>
+                  <div style={{ flex: 1, background: tipRenk[p.type], borderRadius: 8, padding: '10px 16px' }}>
+                    <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 500, color: tipYazi[p.type] }}>{p.title}</div>
+                    {p.hoca && (
+                      <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: tipYazi[p.type], opacity: 0.75, marginTop: 4, letterSpacing: '0.01em' }}>{p.hoca}</div>
+                    )}
+                    {p.items && (
+                      <ul style={{ margin: '8px 0 0', paddingLeft: 18, columns: 2, columnGap: 24, fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: tipYazi[p.type], lineHeight: 1.6 }}>
+                        {p.items.map(it => <li key={it}>{it}</li>)}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 22, fontWeight: 600, color: T.navy, marginBottom: 16 }}>Eğitmenler</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 14 }}>
+              {EGITMENLER.slice(0,2).map(e => <EgitmenKart key={e.initials} egitmen={e} />)}
+            </div>
+          </section>
+        </div>
+
+        {/* Kenar çubuğu */}
+        <div>
+          <div style={{ background: '#fff', border: `1px solid ${T.border}`, borderRadius: 16, padding: 28, boxShadow: '0 4px 24px rgba(12,27,51,0.08)', position: 'sticky', top: 80 }}>
+            <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 34, fontWeight: 700, color: T.navy, marginBottom: 4 }}>{k.price ? `₺ ${k.price.toLocaleString('tr-TR')}` : 'Pek Yakında'}</div>
+            <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: T.fg3, marginBottom: 24 }}>katılımcı başına · KDV dahil</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+              {[['📅', k.date], ['📍', k.city], ['👥', '40 katılımcı'], ['⏱', 'Tam gün · 09:00–16:30']].map(([icon, text]) => (
+                <div key={text} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+                  <span style={{ fontSize: 14 }}>{icon}</span>
+                  <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 14, color: T.fg2 }}>{text}</span>
+                </div>
+              ))}
+            </div>
+            <button style={{ width: '100%', background: k.spots === 0 ? T.muted : T.teal, color: k.spots === 0 ? T.fg4 : '#fff', border: 'none', borderRadius: 10, padding: '14px 0', fontFamily: "'DM Sans',sans-serif", fontSize: 15, fontWeight: 600, cursor: k.spots === 0 ? 'not-allowed' : 'pointer', marginBottom: 10 }}>
+              {k.spots === 0 ? 'Bekleme Listesine Katıl' : 'Şimdi Kayıt Ol'}
+            </button>
+            {k.spots > 0 && <button style={{ width: '100%', background: 'transparent', color: T.teal, border: `1.5px solid ${T.teal}`, borderRadius: 10, padding: '13px 0', fontFamily: "'DM Sans',sans-serif", fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Fatura Talep Et</button>}
+            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, color: T.fg4, textAlign: 'center', marginTop: 16, lineHeight: 1.5 }}>Kurs tarihinden 30 gün öncesine kadar ücretsiz iptal. Tam iade garantisi.</p>
+          </div>
+        </div>
+      </div>
+      <Altbilgi />
+    </div>
+  );
+}
+
+/* ── EĞİTMENLER SAYFASI ──────────────────────── */
+function EgitmenlerSayfasi() {
+  return (
+    <div style={{ background: T.bg, minHeight: '100vh' }}>
+      <div style={{ background: T.navy, padding: '48px 48px 40px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.teal, marginBottom: 8 }}>Ekibimiz</div>
+          <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 42, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' }}>Uzman Eğitmenler</h1>
+          <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 16, color: 'rgba(255,255,255,0.6)', marginTop: 12, maxWidth: 520 }}>SonoInjection eğitmenleri, her gün ultrason eşliğinde girişim uygulayan aktif klinisyenlerdir. Gerçek dünya deneyimini her istasyona taşırlar.</p>
+        </div>
+      </div>
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 48px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+          {EGITMENLER.map(e => <EgitmenKart key={e.initials} egitmen={e} />)}
+        </div>
+      </div>
+      <Altbilgi />
+    </div>
+  );
+}
+
+/* ── HAKKINDA SAYFASI ────────────────────────── */
+function HakkindaSayfasi() {
+  return (
+    <div style={{ background: T.bg, minHeight: '100vh' }}>
+      <div style={{ background: T.navy, padding: '48px 48px 40px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: T.teal, marginBottom: 8 }}>Hakkında</div>
+          <h1 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 42, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' }}>SonoInjection Hakkında</h1>
+        </div>
+      </div>
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '56px 48px' }}>
+        {[
+          ['Neden SonoInjection?', 'Ultrason eşliğinde enjeksiyon uygulamalı bir beceridir — videolardan öğrenilemez. SonoInjection; fiziatristlerin, ortopedi uzmanlarının ve fizyoterapistlerin gerçek kadavra örnekleri, gerçek ultrason cihazları ve anlık uzman geri bildirimiyle pratik yapabilecekleri bir ortam oluşturmak amacıyla kurulmuştur.'],
+          ['Yöntemimiz', 'Her SonoInjection kursu katı bir 4:1 katılımcı-eğitmen oranıyla yürütülür. Kadavra istasyonlarında rotasyon yaparak her hedef yapı için prob konumlandırma, iğne görüntüleme ve enjeksiyon doğruluğu konularında bireysel koçluk alırsınız.'],
+          ['Sertifika', 'Tamamlayan tüm katılımcılara katılım sertifikası verilir. SonoInjection kursları; fiziatristler, ortopedi uzmanları ve fizyoterapistlerin mesleki gelişim gereksinimlerini karşılamak üzere tasarlanmıştır.'],
+        ].map(([baslik, icerik]) => (
+          <div key={baslik} style={{ marginBottom: 40 }}>
+            <h2 style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 24, fontWeight: 600, color: T.navy, marginBottom: 12 }}>{baslik}</h2>
+            <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 16, color: T.fg2, lineHeight: 1.7 }}>{icerik}</p>
+          </div>
+        ))}
+      </div>
+      <Altbilgi />
+    </div>
+  );
+}
+
+/* ── ALTBİLGİ ────────────────────────────────── */
+function Altbilgi() {
+  return (
+    <footer style={{ background: T.navy, borderTop: '1px solid rgba(255,255,255,0.08)', padding: '40px 48px 32px' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <LogoMark size={18} color={T.teal} wordColor="#fff" />
+          <p style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.4)', marginTop: 10, maxWidth: 280, lineHeight: 1.6 }}>Kas-iskelet patolojileri için ultrason eşliğinde kadavra enjeksiyon kursları.</p>
+          <a href="https://sonoinjection.com" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: T.teal, opacity: 0.55, textDecoration: 'none', marginTop: 6, display: 'inline-block' }}>sonoinjection.com</a>
+        </div>
+        <div style={{ display: 'flex', gap: 48 }}>
+          {[['Kurslar', ['Tümüne Bak', 'Temel', 'Orta Düzey', 'İleri Düzey']], ['Kurumsal', ['Hakkında', 'Eğitmenler', 'Sertifika', 'İletişim']]].map(([bolum, linkler]) => (
+            <div key={bolum}>
+              <div style={{ fontFamily: "'Space Grotesk',sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: 12 }}>{bolum}</div>
+              {linkler.map(l => <div key={l} style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 13, color: 'rgba(255,255,255,0.5)', marginBottom: 8, cursor: 'pointer' }}>{l}</div>)}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ maxWidth: 1100, margin: '24px auto 0', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontFamily: "'DM Sans',sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.25)' }}>© 2026 SonoInjection — Tüm hakları saklıdır.</span>
+        <a href="https://sonoinjection.com" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 11, color: T.teal, opacity: 0.6, textDecoration: 'none', letterSpacing: '0.04em' }}>sonoinjection.com</a>
+      </div>
+    </footer>
+  );
+}
+
+/* ── UYGULAMA ────────────────────────────────── */
+function App() {
+  const [page, setPage] = useState('home');
+  const [seciliKurs, setSeciliKurs] = useState(null);
+
+  const renderSayfa = () => {
+    switch (page) {
+      case 'home':       return <AnaSayfa setPage={setPage} setSeciliKurs={setSeciliKurs} />;
+      case 'kurslar':    return <KurslarSayfasi setPage={setPage} setSeciliKurs={setSeciliKurs} />;
+      case 'detay':      return <KursDetaySayfasi kurs={seciliKurs} setPage={setPage} />;
+      case 'egitmenler': return <EgitmenlerSayfasi />;
+      case 'hakkinda':   return <HakkindaSayfasi />;
+      default:           return <AnaSayfa setPage={setPage} setSeciliKurs={setSeciliKurs} />;
+    }
+  };
+
+  useEffect(() => { window.scrollTo({ top: 0 }); }, [page]);
+
+  return (
+    <div>
+      <Nav page={page} setPage={setPage} />
+      {renderSayfa()}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

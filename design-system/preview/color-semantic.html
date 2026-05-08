@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Semantic Colors — SonoInjection</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #f7f9fc; padding: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .chip { border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); }
+  .chip-swatch { height: 44px; }
+  .chip-body { padding: 8px 10px; background: #fff; }
+  .chip-role { font-size: 10px; font-weight: 700; color: #374151; font-family: 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: 0.08em; }
+  .chip-var  { font-size: 9px; color: #9ca3af; font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
+  .chip-hex  { font-size: 9px; color: #6b7280; font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div class="chip"><div class="chip-swatch" style="background:#0aada8"></div><div class="chip-body"><div class="chip-role">Brand Primary</div><div class="chip-var">--color-brand-primary</div><div class="chip-hex">#0aada8</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#0c1b33"></div><div class="chip-body"><div class="chip-role">Brand Secondary</div><div class="chip-var">--color-brand-secondary</div><div class="chip-hex">#0c1b33</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#e8a84a"></div><div class="chip-body"><div class="chip-role">Brand Accent</div><div class="chip-var">--color-brand-accent</div><div class="chip-hex">#e8a84a</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#f7f9fc; border:1px solid #e5e7eb;"></div><div class="chip-body"><div class="chip-role">BG Base</div><div class="chip-var">--color-bg-base</div><div class="chip-hex">#f7f9fc</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#ffffff; border:1px solid #e5e7eb;"></div><div class="chip-body"><div class="chip-role">BG Surface</div><div class="chip-var">--color-bg-surface</div><div class="chip-hex">#ffffff</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#f3f4f6; border:1px solid #e5e7eb;"></div><div class="chip-body"><div class="chip-role">BG Muted</div><div class="chip-var">--color-bg-muted</div><div class="chip-hex">#f3f4f6</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#0c1b33"></div><div class="chip-body"><div class="chip-role">BG Dark</div><div class="chip-var">--color-bg-dark</div><div class="chip-hex">#0c1b33</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#0c1b33"></div><div class="chip-body"><div class="chip-role">FG Primary</div><div class="chip-var">--color-fg-primary</div><div class="chip-hex">#0c1b33</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#4b5563"></div><div class="chip-body"><div class="chip-role">FG Secondary</div><div class="chip-var">--color-fg-secondary</div><div class="chip-hex">#4b5563</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#9ca3af"></div><div class="chip-body"><div class="chip-role">FG Muted</div><div class="chip-var">--color-fg-muted</div><div class="chip-hex">#9ca3af</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#16a34a"></div><div class="chip-body"><div class="chip-role">Status Success</div><div class="chip-var">--color-success</div><div class="chip-hex">#16a34a</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#d97706"></div><div class="chip-body"><div class="chip-role">Status Warning</div><div class="chip-var">--color-warning</div><div class="chip-hex">#d97706</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#dc2626"></div><div class="chip-body"><div class="chip-role">Status Error</div><div class="chip-var">--color-error</div><div class="chip-hex">#dc2626</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#0aada8"></div><div class="chip-body"><div class="chip-role">Status Info</div><div class="chip-var">--color-info</div><div class="chip-hex">#0aada8</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#e5e7eb; border:1px solid #e5e7eb;"></div><div class="chip-body"><div class="chip-role">Border Default</div><div class="chip-var">--color-border-default</div><div class="chip-hex">#e5e7eb</div></div></div>
+  <div class="chip"><div class="chip-swatch" style="background:#3dd8d3"></div><div class="chip-body"><div class="chip-role">Border Brand</div><div class="chip-var">--color-border-brand</div><div class="chip-hex">#3dd8d3</div></div></div>
+</div>
+</body>
+</html>
