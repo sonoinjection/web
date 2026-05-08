@@ -74,7 +74,7 @@ export const STRINGS = {
     stats: [
       ['1:5.7', 'Eğitmen başına katılımcı oranı'],
       ['40', 'Kurs başına maks. katılımcı'],
-      ['6+', 'Atölye başına işlenen eklem'],
+      ['17+', 'Atölye başına işlenen teknik'],
       ['100%', 'Kadavra üzerinde uygulamalı süre'],
     ],
     footer: {
@@ -172,7 +172,7 @@ export const STRINGS = {
     stats: [
       ['1:5.7', 'Participants per faculty'],
       ['40', 'Max participants per course'],
-      ['6+', 'Joints covered per workshop'],
+      ['17+', 'Techniques covered per workshop'],
       ['100%', 'Hands-on cadaver time'],
     ],
     footer: {
