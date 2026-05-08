@@ -86,7 +86,7 @@ export const COURSES = [
         { time: '09:30–10:00', type: 'lecture', title: 'Shoulder Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Dr. Mahir Topaloğlu' },
         { time: '10:00–10:30', type: 'lecture', title: 'Hip Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Dr. Enes Efe İş' },
         { time: '10:30–11:00', type: 'admin', title: 'Coffee Break' },
-        { time: '11:00–11:30', type: 'lecture', title: 'Knee Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Dr. Mert Zure' },
+        { time: '11:00–11:30', type: 'lecture', title: 'Knee Region — Ultrasonography & Injections', speaker: 'Asst. Prof. Dr. Mert Zure' },
         { time: '11:30–12:00', type: 'lecture', title: 'Foot & Ankle Region — Ultrasonography & Injections', speaker: 'Dr. Havvanur Albayrak' },
         { time: '12:00–13:00', type: 'admin', title: 'Lunch Break' },
         { time: '13:00–16:00', type: 'cadaver', title: 'Cadaveric Injection Practice', items: [
