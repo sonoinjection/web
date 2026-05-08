@@ -121,9 +121,12 @@ export const FACULTY = [
   {
     id: 'deniz-sarikaya',
     photo: 'assets/faculty/deniz-sarikaya.jpeg',
-    name: 'Asst. Dr. Deniz Sarıkaya',
-    nameEn: 'Asst. Dr. Deniz Sarıkaya',
-    title: { tr: '', en: '' },
+    name: 'Dr. Deniz Sarıkaya',
+    nameEn: 'Dr. Deniz Sarıkaya',
+    title: {
+      tr: 'Araştırma ve Koordinasyon',
+      en: 'Research and Coordination',
+    },
     institution: {
       tr: 'Erlangen Üniversitesi Hastanesi',
       en: 'Erlangen University Hospital',
