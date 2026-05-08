@@ -18,8 +18,8 @@ export const COURSES = [
     },
     thumbColor: 'var(--navy-900)',
     title: {
-      tr: 'Ultrason Eşliğinde Kadavrik Omuz ve Alt Ekstremite Enjeksiyon Kursu',
-      en: 'Ultrasound-Guided Cadaveric Shoulder & Lower Extremity Injection Course',
+      tr: 'Kadavrada Ultrasonografi Eşliğinde Omuz ve Alt Ekstremite Enjeksiyon Kursu',
+      en: 'Cadaveric Ultrasound-Guided Shoulder and Lower Extremity Injection Course',
     },
     level: {
       tr: 'Uygulamalı Kurs',
