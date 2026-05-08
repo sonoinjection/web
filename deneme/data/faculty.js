@@ -12,7 +12,7 @@ export const FACULTY = [
     id: 'mahir-topaloglu',
     photo: 'assets/faculty/mahir-topaloglu.jpeg',
     name: 'Doç. Dr. Mahir Topaloğlu',
-    nameEn: 'Dr. Mahir Topaloğlu',
+    nameEn: 'Assoc. Prof. Mahir Topaloğlu',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
       en: 'Physical Medicine & Rehabilitation',
@@ -31,7 +31,7 @@ export const FACULTY = [
     id: 'enes-efe-is',
     photo: 'assets/faculty/enes-efe-is.jpeg',
     name: 'Doç. Dr. Enes Efe İş',
-    nameEn: 'Dr. Enes Efe İş',
+    nameEn: 'Assoc. Prof. Enes Efe İş',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
       en: 'Physical Medicine & Rehabilitation',

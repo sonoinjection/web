@@ -62,7 +62,7 @@ export const COURSES = [
     },
     signatureBy: {
       tr: 'Düzenleme Kurulu Adına Doç. Dr. Mahir TOPALOĞLU',
-      en: 'On behalf of the Organising Committee, Dr. Mahir TOPALOĞLU',
+      en: 'On behalf of the Organising Committee, Assoc. Prof. Mahir TOPALOĞLU',
     },
     schedule: {
       tr: [
@@ -82,9 +82,9 @@ export const COURSES = [
         { time: '16:00–17:00', type: 'admin', title: 'Kapanış ve Değerlendirme' },
       ],
       en: [
-        { time: '09:00–09:30', type: 'lecture', title: 'Introduction to Musculoskeletal Ultrasound & Core Principles', speaker: 'Dr. Mahir Topaloğlu' },
-        { time: '09:30–10:00', type: 'lecture', title: 'Shoulder Region — Ultrasonography & Injections', speaker: 'Dr. Mahir Topaloğlu' },
-        { time: '10:00–10:30', type: 'lecture', title: 'Hip Region — Ultrasonography & Injections', speaker: 'Dr. Enes Efe İş' },
+        { time: '09:00–09:30', type: 'lecture', title: 'Introduction to Musculoskeletal Ultrasound & Core Principles', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
+        { time: '09:30–10:00', type: 'lecture', title: 'Shoulder Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
+        { time: '10:00–10:30', type: 'lecture', title: 'Hip Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Enes Efe İş' },
         { time: '10:30–11:00', type: 'admin', title: 'Coffee Break' },
         { time: '11:00–11:30', type: 'lecture', title: 'Knee Region — Ultrasonography & Injections', speaker: 'Dr. Mert Zure' },
         { time: '11:30–12:00', type: 'lecture', title: 'Foot & Ankle Region — Ultrasonography & Injections', speaker: 'Dr. Havvanur Albayrak' },
