@@ -22,12 +22,22 @@ function nameFor(f) {
   return lang === 'en' ? (f.nameEn || f.name) : f.name;
 }
 
+const ROLE_LABEL_KEY = {
+  director: 'directorRole',
+  joker: 'jokerRole',
+};
+const ROLE_BADGE_CLASS = {
+  director: 'badge--solid-navy',
+  joker: 'badge--amber',
+};
+
 function roleLabel(f) {
-  return f.role === 'director' ? t.courseDetail.directorRole : t.courseDetail.role;
+  const key = ROLE_LABEL_KEY[f.role];
+  return key ? t.courseDetail[key] : t.courseDetail.role;
 }
 
 function roleBadgeClass(f) {
-  return f.role === 'director' ? 'badge--solid-navy' : 'badge--neutral';
+  return ROLE_BADGE_CLASS[f.role] || 'badge--neutral';
 }
 
 function renderFacultyCard(f) {

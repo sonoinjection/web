@@ -117,6 +117,46 @@
 .schedule__item--cadaver { background: var(--navy-50); color: var(--navy-800); }
 .schedule__item--admin { background: var(--slate-100); color: var(--color-fg-secondary); }
 
+.schedule__speaker {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-fg-secondary);
+  letter-spacing: var(--tracking-normal);
+}
+
+.schedule__sublist {
+  list-style: none;
+  margin-top: var(--space-3);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-regular);
+  color: var(--navy-700);
+}
+.schedule__sublist li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.schedule__sublist li::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--teal-500);
+  flex-shrink: 0;
+  transform: translateY(-2px);
+}
+@media (max-width: 640px) {
+  .schedule__sublist { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 640px) {
   .schedule__row { flex-direction: column; gap: var(--space-2); }
   .schedule__time { width: auto; padding-top: 0; }

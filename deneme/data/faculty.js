@@ -27,7 +27,7 @@ export const FACULTY = [
     id: 'mert-zure',
     photo: 'assets/faculty/mert-zure.jpeg',
     name: 'Dr. Öğr. Üyesi Mert Züre',
-    nameEn: 'Asst. Prof. Dr. Mert Züre',
+    nameEn: 'Assoc. Prof. Dr. Mert Züre',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
       en: 'Physical Medicine & Rehabilitation',
@@ -117,6 +117,25 @@ export const FACULTY = [
       en: 'Istanbul, Turkey',
     },
     role: 'faculty',
+  },
+  {
+    id: 'deniz-sarikaya',
+    photo: 'assets/faculty/deniz-sarikaya.jpeg',
+    name: 'Asst. Dr. Deniz Sarıkaya',
+    nameEn: 'Asst. Dr. Deniz Sarıkaya',
+    title: {
+      tr: 'Fiziksel Tıp ve Rehabilitasyon',
+      en: 'Physical Medicine & Rehabilitation',
+    },
+    institution: {
+      tr: 'Erlangen Üniversitesi Hastanesi',
+      en: 'Erlangen University Hospital',
+    },
+    city: {
+      tr: 'Erlangen, Almanya',
+      en: 'Erlangen, Germany',
+    },
+    role: 'joker',
   },
   {
     id: 'omer-batin-gozubuyuk',
