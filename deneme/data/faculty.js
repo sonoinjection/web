@@ -1,9 +1,13 @@
 /* ============================================================
    faculty.js — instructor roster
-   To add: append an entry to FACULTY. Photo lives in assets/faculty/<id>.jpeg.
+   Order: by academic rank (Doç. > Dr. Öğr. Üyesi > Uzm. Dr. > Dr.).
+   Director takes the top of their tier. Alphabetical by surname
+   within each tier as a tie-breaker.
+   To add: append an entry. Photo lives in assets/faculty/<id>.jpeg.
    ============================================================ */
 
 export const FACULTY = [
+  // ── Doç. Dr. ────────────────────────────────────────────────
   {
     id: 'mahir-topaloglu',
     photo: 'assets/faculty/mahir-topaloglu.jpeg',
@@ -24,25 +28,6 @@ export const FACULTY = [
     role: 'director',
   },
   {
-    id: 'mert-zure',
-    photo: 'assets/faculty/mert-zure.jpeg',
-    name: 'Dr. Öğr. Üyesi Mert Zure',
-    nameEn: 'Assoc. Prof. Dr. Mert Zure',
-    title: {
-      tr: 'Fiziksel Tıp ve Rehabilitasyon',
-      en: 'Physical Medicine & Rehabilitation',
-    },
-    institution: {
-      tr: 'Kanuni Sultan Süleyman Eğitim ve Araştırma Hastanesi',
-      en: 'Kanuni Sultan Süleyman Training & Research Hospital',
-    },
-    city: {
-      tr: 'İstanbul, Türkiye',
-      en: 'Istanbul, Turkey',
-    },
-    role: 'faculty',
-  },
-  {
     id: 'enes-efe-is',
     photo: 'assets/faculty/enes-efe-is.jpeg',
     name: 'Doç. Dr. Enes Efe İş',
@@ -61,6 +46,48 @@ export const FACULTY = [
     },
     role: 'faculty',
   },
+
+  // ── Dr. Öğr. Üyesi ──────────────────────────────────────────
+  {
+    id: 'sergen-devran',
+    photo: 'assets/faculty/sergen-devran.jpeg',
+    name: 'Dr. Öğr. Üy. Sergen Devran',
+    nameEn: 'Asst. Prof. Dr. Sergen Devran',
+    title: {
+      tr: 'Spor Hekimliği',
+      en: 'Sports Medicine',
+    },
+    institution: {
+      tr: 'İstanbul Tıp Fakültesi',
+      en: 'Istanbul Faculty of Medicine',
+    },
+    city: {
+      tr: 'İstanbul, Türkiye',
+      en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
+  {
+    id: 'mert-zure',
+    photo: 'assets/faculty/mert-zure.jpeg',
+    name: 'Dr. Öğr. Üyesi Mert Zure',
+    nameEn: 'Assoc. Prof. Dr. Mert Zure',
+    title: {
+      tr: 'Fiziksel Tıp ve Rehabilitasyon',
+      en: 'Physical Medicine & Rehabilitation',
+    },
+    institution: {
+      tr: 'Kanuni Sultan Süleyman Eğitim ve Araştırma Hastanesi',
+      en: 'Kanuni Sultan Süleyman Training & Research Hospital',
+    },
+    city: {
+      tr: 'İstanbul, Türkiye',
+      en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
+
+  // ── Uzm. Dr. ────────────────────────────────────────────────
   {
     id: 'havvanur-albayrak',
     photo: 'assets/faculty/havvanur-albayrak.jpeg',
@@ -77,6 +104,22 @@ export const FACULTY = [
     city: {
       tr: 'İstanbul, Türkiye',
       en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
+  {
+    id: 'omer-batin-gozubuyuk',
+    photo: 'assets/faculty/omer-batin-gozubuyuk.jpeg',
+    name: 'Uzm. Dr. Ömer Batın Gözübüyük',
+    nameEn: 'Dr. Ömer Batın Gözübüyük',
+    title: {
+      tr: 'Spor Hekimliği',
+      en: 'Sports Medicine',
+    },
+    institution: { tr: '', en: '' },
+    city: {
+      tr: 'Melbourne, Avustralya',
+      en: 'Melbourne, Australia',
     },
     role: 'faculty',
   },
@@ -99,25 +142,8 @@ export const FACULTY = [
     },
     role: 'faculty',
   },
-  {
-    id: 'sergen-devran',
-    photo: 'assets/faculty/sergen-devran.jpeg',
-    name: 'Dr. Öğr. Üy. Sergen Devran',
-    nameEn: 'Asst. Prof. Dr. Sergen Devran',
-    title: {
-      tr: 'Spor Hekimliği',
-      en: 'Sports Medicine',
-    },
-    institution: {
-      tr: 'İstanbul Tıp Fakültesi',
-      en: 'Istanbul Faculty of Medicine',
-    },
-    city: {
-      tr: 'İstanbul, Türkiye',
-      en: 'Istanbul, Turkey',
-    },
-    role: 'faculty',
-  },
+
+  // ── Koordinasyon ────────────────────────────────────────────
   {
     id: 'deniz-sarikaya',
     photo: 'assets/faculty/deniz-sarikaya.jpeg',
@@ -136,22 +162,6 @@ export const FACULTY = [
       en: 'Erlangen, Germany',
     },
     role: 'coordination',
-  },
-  {
-    id: 'omer-batin-gozubuyuk',
-    photo: 'assets/faculty/omer-batin-gozubuyuk.jpeg',
-    name: 'Uzm. Dr. Ömer Batın Gözübüyük',
-    nameEn: 'Dr. Ömer Batın Gözübüyük',
-    title: {
-      tr: 'Spor Hekimliği',
-      en: 'Sports Medicine',
-    },
-    institution: { tr: '', en: '' },
-    city: {
-      tr: 'Melbourne, Avustralya',
-      en: 'Melbourne, Australia',
-    },
-    role: 'faculty',
   },
 ];
 
