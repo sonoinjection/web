@@ -31,14 +31,16 @@ function roleBadgeClass(f) {
 }
 
 function renderFacultyCard(f) {
+  const inst = f.institution && f.institution[lang];
+  const city = f.city && f.city[lang];
   return `
     <div class="faculty-card">
       <img class="faculty-card__photo" src="${escape(base + f.photo)}" alt="${escape(nameFor(f))}" loading="lazy" />
       <div class="faculty-card__name">${escape(nameFor(f))}</div>
       <div class="faculty-card__title">
-        ${escape(f.title[lang])}<br/>
-        <strong>${escape(f.institution[lang])}</strong>
-        ${f.city ? `<br/>${escape(f.city[lang])}` : ''}
+        ${escape(f.title[lang])}
+        ${inst ? `<br/><strong>${escape(inst)}</strong>` : ''}
+        ${city ? `<br/>${escape(city)}` : ''}
       </div>
       <span class="badge ${roleBadgeClass(f)}">${escape(roleLabel(f))}</span>
     </div>

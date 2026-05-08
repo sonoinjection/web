@@ -64,7 +64,7 @@ export const FACULTY = [
   {
     id: 'havvanur-albayrak',
     photo: 'assets/faculty/havvanur-albayrak.jpeg',
-    name: 'Dr. Havvanur Albayrak',
+    name: 'Uzm. Dr. Havvanur Albayrak',
     nameEn: 'Dr. Havvanur Albayrak',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
@@ -77,6 +77,60 @@ export const FACULTY = [
     city: {
       tr: 'İstanbul, Türkiye',
       en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
+  {
+    id: 'selim-sezikli',
+    photo: 'assets/faculty/selim-sezikli.jpeg',
+    name: 'Uzm. Dr. Selim Sezikli',
+    nameEn: 'Dr. Selim Sezikli',
+    title: {
+      tr: 'Fiziksel Tıp ve Rehabilitasyon',
+      en: 'Physical Medicine & Rehabilitation',
+    },
+    institution: {
+      tr: 'İstanbul Fizik Tedavi ve Rehabilitasyon Eğitim ve Araştırma Hastanesi',
+      en: 'Istanbul Physical Therapy & Rehabilitation Training & Research Hospital',
+    },
+    city: {
+      tr: 'İstanbul, Türkiye',
+      en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
+  {
+    id: 'sergen-devran',
+    photo: 'assets/faculty/sergen-devran.jpeg',
+    name: 'Dr. Öğr. Üy. Sergen Devran',
+    nameEn: 'Asst. Prof. Dr. Sergen Devran',
+    title: {
+      tr: 'Spor Hekimliği',
+      en: 'Sports Medicine',
+    },
+    institution: {
+      tr: 'İstanbul Tıp Fakültesi',
+      en: 'Istanbul Faculty of Medicine',
+    },
+    city: {
+      tr: 'İstanbul, Türkiye',
+      en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
+  {
+    id: 'omer-batin-gozubuyuk',
+    photo: 'assets/faculty/omer-batin-gozubuyuk.jpeg',
+    name: 'Uzm. Dr. Ömer Batın Gözübüyük',
+    nameEn: 'Dr. Ömer Batın Gözübüyük',
+    title: {
+      tr: 'Spor Hekimliği',
+      en: 'Sports Medicine',
+    },
+    institution: { tr: '', en: '' },
+    city: {
+      tr: 'Melbourne, Avustralya',
+      en: 'Melbourne, Australia',
     },
     role: 'faculty',
   },
