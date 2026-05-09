@@ -148,7 +148,7 @@ All emails sent via Resend. Each event row has its own `bank_details_tr` so per-
 
 1. **Registration received** → registrant's email
    *Trigger:* successful `POST /api/register` insert (immediate).
-   *Body:* confirms the registration was received, embeds `bank_details_tr` from the event row, instructs them to email proof of payment to `kayit@sonoinjection.com`.
+   *Body:* confirms the registration was received, embeds the per-event pricing breakdown (net price, KDV at `kdv_rate`, gross total — formatted per §7's Turkish number conventions) and `bank_details_tr` from the event row, instructs them to email proof of payment to `kayit@sonoinjection.com`.
 
 2. **Admin notification** → `kayit@sonoinjection.com`
    *Trigger:* same insert (immediate).
@@ -174,6 +174,26 @@ All emails sent via Resend. Each event row has its own `bank_details_tr` so per-
 - **Turkish only for v1.** All form copy, validation messages, success/error states, admin UI labels are Turkish. The schema's `*_tr` columns are intentionally suffixed so we can add `*_en` (and `*_de`) columns later without renaming.
 - **No emoji in form copy.** Lucide line icons via CDN where icons are needed.
 
+### Turkish number formatting
+
+Monetary values render with Turkish locale grouping (`.` thousands separator, `,` decimal) and the suffix ` TL`. Always two fraction digits.
+
+```js
+function formatTRY(value) {
+  return new Intl.NumberFormat('tr-TR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value) + ' TL';
+}
+// formatTRY(25000)      → "25.000,00 TL"
+// formatTRY(25000.5)    → "25.000,50 TL"
+// formatTRY(1234567.89) → "1.234.567,89 TL"
+```
+
+Do **not** use `Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' })` — its symbol placement and abbreviation (`₺25.000,00` or `25.000,00 ₺`) is inconsistent across runtimes. The decimal+suffix form above is the canonical SonoInjection presentation.
+
+Pricing breakdowns in Email 1 use this formatter for `price_net_try`, the KDV amount, and `price_gross_try`. Any future UI surface that displays pricing (course detail enrol card, admin table, invoice receipts) uses the same formatter.
+
 ## 8. Database schema (Supabase)
 
 Authoritative reference. SQL kept inline here until we're ready for a real migration file under `db/`. The schema below is the **current applied state** — `reminder_sent_at` and `reserved_for_external` were added via manual `ALTER` (see "Applied migrations" below).
@@ -186,9 +206,13 @@ create table events (
   event_date             date not null,
   location_tr            text not null,
   capacity               int,
-  reserved_for_external  int not null default 0,   -- seats held off-platform; subtracted from public availability
-  price_try              numeric(10,2),
-  price_eur              numeric(10,2),
+  reserved_for_external  int not null default 0,    -- seats held off-platform; effective online capacity = capacity - reserved_for_external
+  price_net_try          numeric(10,2),             -- KDV-exclusive net price in TRY
+  kdv_rate               numeric(5,2)  not null default 20.00,  -- VAT rate in percent (20.00 = 20%)
+  price_gross_try        numeric(10,2) generated always as (
+    round(price_net_try * (1 + kdv_rate / 100), 2)
+  ) stored,                                         -- KDV-inclusive gross; auto-computed by Postgres
+  price_eur              numeric(10,2),             -- optional EUR equivalent for international participants
   bank_details_tr        text,
   is_active              boolean not null default false,
   created_at             timestamptz not null default now()
@@ -244,6 +268,13 @@ alter table registrations add column last_name  text not null;
 -- 2026-05-09 — pre-course reminder + external-seat tracking
 alter table registrations add column reminder_sent_at timestamptz;
 alter table events        add column reserved_for_external int not null default 0;
+
+-- 2026-05-09 — pricing restructure: net price + KDV rate, generated gross
+alter table events drop column price_try;
+alter table events add column price_net_try   numeric(10,2);
+alter table events add column kdv_rate        numeric(5,2) not null default 20.00;
+alter table events add column price_gross_try numeric(10,2)
+  generated always as (round(price_net_try * (1 + kdv_rate / 100), 2)) stored;
 ```
 
 ### Seed (the only event for v1)
@@ -256,7 +287,7 @@ insert into events (
   is_active,
   description_tr,
   capacity,
-  price_try,
+  price_net_try,
   price_eur,
   bank_details_tr
 ) values (
@@ -266,10 +297,13 @@ insert into events (
   true,
   null,            -- TODO: description_tr
   null,            -- TODO: capacity
-  null,            -- TODO: price_try
+  null,            -- TODO: price_net_try (price_gross_try computed automatically; kdv_rate defaults to 20.00)
   null,            -- TODO: price_eur
   null             -- TODO: bank_details_tr
 );
+
+-- The seed only specifies price_net_try; price_gross_try is computed by
+-- the generated column. kdv_rate defaults to 20.00 unless overridden.
 ```
 
 ## 9. Styling rules
