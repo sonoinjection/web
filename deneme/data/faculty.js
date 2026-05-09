@@ -47,6 +47,25 @@ export const FACULTY = [
     role: 'faculty',
   },
   {
+    id: 'ergun-mendes',
+    photo: 'assets/faculty/ergun-mendes.jpeg',
+    name: 'Doç. Dr. Ergün Mendeş',
+    nameEn: 'Assoc. Prof. Ergün Mendeş',
+    title: {
+      tr: 'Anesteziyoloji ve Reanimasyon',
+      en: 'Anesthesiology & Reanimation',
+    },
+    institution: {
+      tr: 'Koç Üniversitesi Hastanesi',
+      en: 'Koç University Hospital',
+    },
+    city: {
+      tr: 'İstanbul, Türkiye',
+      en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
+  {
     id: 'rana-kaynar-terlemez',
     photo: 'assets/faculty/rana-kaynar-terlemez.jpeg',
     name: 'Doç. Dr. Rana Kaynar Terlemez',
