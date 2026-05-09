@@ -52,7 +52,6 @@ export const STRINGS = {
       spotsLeft: (n) => `${n} kontenjan kaldı`,
       full: 'Dolu',
       back: '← Tüm Kurslar',
-      requestInvoice: 'Fatura Talep Et',
     },
     courseDetail: {
       jointsTitle: 'Kapsanan Eklemler ve Yapılar',
@@ -150,7 +149,6 @@ export const STRINGS = {
       spotsLeft: (n) => `${n} spots left`,
       full: 'Full',
       back: '← All Courses',
-      requestInvoice: 'Request Invoice',
     },
     courseDetail: {
       jointsTitle: 'Joints & Structures Covered',
