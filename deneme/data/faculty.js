@@ -46,6 +46,25 @@ export const FACULTY = [
     },
     role: 'faculty',
   },
+  {
+    id: 'rana-kaynar-terlemez',
+    photo: 'assets/faculty/rana-kaynar-terlemez.jpeg',
+    name: 'Doç. Dr. Rana Kaynar Terlemez',
+    nameEn: 'Assoc. Prof. Rana Kaynar Terlemez',
+    title: {
+      tr: 'Fiziksel Tıp ve Rehabilitasyon',
+      en: 'Physical Medicine & Rehabilitation',
+    },
+    institution: {
+      tr: 'İstanbul Üniversitesi Cerrahpaşa',
+      en: 'Istanbul University Cerrahpaşa',
+    },
+    city: {
+      tr: 'İstanbul, Türkiye',
+      en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
 
   // ── Dr. Öğr. Üyesi ──────────────────────────────────────────
   {
