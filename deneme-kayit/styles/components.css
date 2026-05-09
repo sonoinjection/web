@@ -670,6 +670,44 @@
 .status-pill--cancelled { background: var(--slate-100); color: var(--slate-600); border: 1px solid var(--slate-200); }
 .status-pill--refunded  { background: #fee2e2;        color: #b91c1c;          border: 1px solid #fecaca; }
 
+/* ── Filter status (checkbox group) ─────────────── */
+.filter-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+.filter-status__option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-fg-secondary);
+  cursor: pointer;
+  transition: var(--transition-default);
+}
+.filter-status__option:hover {
+  border-color: var(--color-border-strong);
+  color: var(--navy-900);
+}
+.filter-status__option input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  cursor: pointer;
+}
+.filter-status__option:has(input:checked) {
+  background: var(--navy-50);
+  border-color: var(--navy-300);
+  color: var(--navy-900);
+  font-weight: var(--font-weight-medium);
+}
+
 /* ── Filter bar — search input ──────────────────── */
 .filter-bar__input {
   font-family: var(--font-body);

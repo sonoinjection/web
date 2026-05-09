@@ -64,6 +64,14 @@ async function boot() {
     state.filters.search = e.target.value || '';
     renderTable();
   });
+  // Status filter is a checkbox group inside [data-filter-status].
+  els.filterStatus?.addEventListener('change', (e) => {
+    if (!e.target.matches('input[type="checkbox"]')) return;
+    const checked = els.filterStatus.querySelectorAll('input[type="checkbox"]:checked');
+    state.filters.statuses = new Set(Array.from(checked).map((cb) => cb.value));
+    renderStats();
+    renderTable();
+  });
   els.detailModal?.addEventListener('click', (e) => {
     if (e.target === els.detailModal) closeDetail();
   });
@@ -326,6 +334,7 @@ function renderStats() {
         state.filters.statuses = new Set([value]);
       }
       syncStatusFilterUI();
+      renderStats();
       renderTable();
     });
   });
@@ -352,8 +361,8 @@ function countByStatus(rows) {
 
 function syncStatusFilterUI() {
   if (!els.filterStatus) return;
-  Array.from(els.filterStatus.options).forEach((opt) => {
-    opt.selected = state.filters.statuses.has(opt.value);
+  els.filterStatus.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+    cb.checked = state.filters.statuses.has(cb.value);
   });
 }
 
