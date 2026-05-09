@@ -92,7 +92,7 @@ deneme-kayit/
     base.css                         ← reset + element defaults
     components.css                   ← form, button, table, status pills, mock-mode banner
   scripts/
-    shared.js                        ← deadline calc, validators, label dictionaries
+    shared.js                        ← validators, label dictionaries, datetime formatter
     register.js                      ← form handler; constants on top
     admin.js                         ← table render, filters, action handlers (mock)
     mock-data.js                     ← seed registrations for admin testing
@@ -121,16 +121,17 @@ Admin page is mock-mode only: an amber banner reads *"Mock modu — Google OAuth
 Target stack:
 
 - **Vercel** for hosting + serverless API routes. The two HTML sandboxes become static-rendered pages of a Next.js (or similar) app.
-- **Supabase** for Postgres + Auth (Google OAuth). Schema in §9. Row-level security policies will gate the admin views; for now the allowlist is enforced at the application layer.
+- **Supabase** for Postgres + Auth (Google OAuth). Schema in §8. Row-level security policies will gate the admin views; for now the allowlist is enforced at the application layer.
 - **Resend** for transactional email. Four email types, see §6.
 
 ### Routes after migration
 
-- `POST /api/register` — receive a registration, insert into `registrations` with `status = 'pending'` and `expires_at` computed via §7. Accepts `first_name` and `last_name` as separate fields; both must be non-empty trimmed strings and are inserted as separate columns. Triggers email #1 (registrant) and email #2 (admins).
-- `POST /api/admin/registrations/:id/confirm` — admin action; flips status to `confirmed`. DB trigger (or this handler) sends email #4.
+- `POST /api/register` — receive a registration, insert into `registrations` with `status = 'pending'`. Accepts `first_name` and `last_name` as separate fields; both must be non-empty trimmed strings and are inserted as separate columns. Triggers email #1 (registrant) and email #2 (admins).
+- `POST /api/admin/registrations/:id/confirm` — admin action; flips status to `confirmed`. DB trigger (or this handler) sends email #3 (payment confirmation).
 - `POST /api/admin/registrations/:id/cancel` — admin action; flips status to `cancelled` with reason.
-- `POST /api/admin/registrations/:id/reactivate` — admin action; flips an `expired` row back to `pending` and re-computes `expires_at`.
-- A scheduled task / Supabase cron flips pending → expired when `expires_at` passes and triggers email #3.
+- A daily cron / scheduled task selects rows where `status = 'confirmed'` AND `event_date - 7 days = today` AND `reminder_sent_at IS NULL`, sends email #4, and stamps `reminder_sent_at`.
+
+There is **no automatic expiry** of pending registrations. Cancellations are admin-driven only.
 
 ### Admin allowlist (current)
 
@@ -141,37 +142,29 @@ Only the following emails are permitted to sign in to the admin UI. The admin pa
 
 To add an admin: append the email to this list (and to the equivalent allowlist constant in the deployed app code). Removal is the same operation in reverse.
 
-## 6. Four-email pipeline
+## 6. Email pipeline
 
 All emails sent via Resend. Each event row has its own `bank_details_tr` so per-event details (price, IBAN, account holder, reference number rule) can vary.
 
-1. **Reservation received** → registrant's email
-   *Trigger:* successful `POST /api/register` insert.
-   *Body:* confirms registration received, states the deadline (formatted in Turkish, see §7), embeds `bank_details_tr` from the event row, instructs them to email proof of payment.
+1. **Registration received** → registrant's email
+   *Trigger:* successful `POST /api/register` insert (immediate).
+   *Body:* confirms the registration was received, embeds `bank_details_tr` from the event row, instructs them to email proof of payment to `kayit@sonoinjection.com`.
 
-2. **Admin notification** → all addresses in the allowlist (§5)
-   *Trigger:* same insert.
+2. **Admin notification** → `kayit@sonoinjection.com`
+   *Trigger:* same insert (immediate).
    *Body:* new pending registration arrived (name, email, phone, specialty, position, institution); deep-link to the admin row.
 
-3. **Reservation expired** → registrant's email
-   *Trigger:* scheduled task that finds rows where `status = 'pending'` AND `now() > expires_at`. Update `status = 'expired'` and send.
-   *Body:* deadline passed, reservation released; instructs them to re-register if still interested.
-
-4. **Payment confirmed** → registrant's email
-   *Trigger:* admin sets `status = 'confirmed'`. Either a DB trigger or the API handler dispatches.
+3. **Payment confirmation** → registrant's email
+   *Trigger:* admin sets `status = 'confirmed'` from the admin panel. Either a DB trigger or the API handler dispatches.
    *Body:* confirmation, course logistics summary (date, venue, what to bring), receipt info.
 
-## 7. Reservation clock rule
+4. **Pre-course reminder** → registrants whose `status = 'confirmed'`
+   *Trigger:* a daily cron / scheduled task that finds rows where `status = 'confirmed'` AND `event_date - 7 days = today` AND `reminder_sent_at IS NULL`. After sending, sets `reminder_sent_at = now()` so the row is gated against re-sends. Idempotent.
+   *Body:* reminder copy, address with directions, what to bring.
 
-`expires_at = midnight at end of registration day (Europe/Berlin) + 48h − 1s`
+**No automatic expiry.** Pending registrations stay pending until an admin manually confirms or cancels them. The legacy `expires_at` column on `registrations` (see §8) is preserved for backward compatibility but is no longer enforced anywhere.
 
-Operationally: take the registration day in **Europe/Berlin** local time → compute the end-of-day boundary (00:00 of next day) → add 48 hours → subtract one second. The result lands at **23:59:59 of (registration day + 2)** in Berlin local time. The label in the user-facing copy says "CET" colloquially; the actual rule is "Europe/Berlin", which is CET (UTC+1) in winter and CEST (UTC+2) in summer — DST is automatic.
-
-**Worked example (today's date, 2026-05-09).** A registrant submits the form at any time on **9 May 2026** (CEST = UTC+2). The deadline is **23:59:59 on 11 May 2026 CEST** = `2026-05-11T23:59:59+02:00` = `2026-05-11T21:59:59Z`. Stored as that UTC instant; rendered to the user in Turkish with the Berlin-local time and the `CEST` (or `CET` in winter) label.
-
-Implementation lives in `deneme-kayit/scripts/shared.js::calculateDeadline`, with a sibling formatter `formatDeadlineTr` for display.
-
-## 8. Audience and language policy
+## 7. Audience and language policy
 
 - **Physicians-only audience.** Enforced softly by:
   - Name is collected as two separate fields — *Ad* (`first_name`) and *Soyad* (`last_name`) — both required, both validated as non-empty trimmed strings client-side and server-side.
@@ -181,23 +174,24 @@ Implementation lives in `deneme-kayit/scripts/shared.js::calculateDeadline`, wit
 - **Turkish only for v1.** All form copy, validation messages, success/error states, admin UI labels are Turkish. The schema's `*_tr` columns are intentionally suffixed so we can add `*_en` (and `*_de`) columns later without renaming.
 - **No emoji in form copy.** Lucide line icons via CDN where icons are needed.
 
-## 9. Database schema (Supabase, post-migration)
+## 8. Database schema (Supabase)
 
-Authoritative reference. SQL kept inline here until we're ready for a real migration file under `db/`.
+Authoritative reference. SQL kept inline here until we're ready for a real migration file under `db/`. The schema below is the **current applied state** — `reminder_sent_at` and `reserved_for_external` were added via manual `ALTER` (see "Applied migrations" below).
 
 ```sql
 create table events (
-  id              uuid primary key default gen_random_uuid(),
-  title_tr        text not null,
-  description_tr  text,
-  event_date      date not null,
-  location_tr     text not null,
-  capacity        int,
-  price_try       numeric(10,2),
-  price_eur       numeric(10,2),
-  bank_details_tr text,
-  is_active       boolean not null default false,
-  created_at      timestamptz not null default now()
+  id                     uuid primary key default gen_random_uuid(),
+  title_tr               text not null,
+  description_tr         text,
+  event_date             date not null,
+  location_tr            text not null,
+  capacity               int,
+  reserved_for_external  int not null default 0,   -- seats held off-platform; subtracted from public availability
+  price_try              numeric(10,2),
+  price_eur              numeric(10,2),
+  bank_details_tr        text,
+  is_active              boolean not null default false,
+  created_at             timestamptz not null default now()
 );
 
 create type specialty_t as enum
@@ -205,6 +199,8 @@ create type specialty_t as enum
 create type position_t as enum ('uzman','asistan');
 create type registration_status_t as enum
   ('pending','confirmed','expired','cancelled');
+-- 'expired' is retained in the enum for backward compatibility; no flow
+-- writes it any more (see §6 — no automatic expiry).
 
 create table registrations (
   id                  uuid primary key default gen_random_uuid(),
@@ -219,18 +215,35 @@ create table registrations (
   notes               text,
   status              registration_status_t not null default 'pending',
   registered_at       timestamptz not null default now(),
-  expires_at          timestamptz not null,
+  expires_at          timestamptz not null,           -- LEGACY: not enforced; kept for backward compatibility
   confirmed_at        timestamptz,
   confirmed_by        text,
   cancelled_at        timestamptz,
   cancellation_reason text,
-  payment_reference   text
+  payment_reference   text,
+  reminder_sent_at    timestamptz                       -- set when email #4 (pre-course reminder) fires; gates re-sends
 );
 
 create index on registrations (event_id, status);
 create index on registrations (email);
 create index on registrations (last_name);
-create index on registrations (expires_at) where status = 'pending';
+create index on registrations (expires_at) where status = 'pending';   -- legacy; safe to drop later
+create index on registrations (event_id, status) where reminder_sent_at is null;
+```
+
+### Applied migrations
+
+These have already been applied to the live Supabase database manually. Tracked here so the schema block above stays self-explanatory and so a future migration file under `db/` can be reconstructed from history.
+
+```sql
+-- 2026-05-09 — split full_name into first_name + last_name (table was empty)
+alter table registrations drop column full_name;
+alter table registrations add column first_name text not null;
+alter table registrations add column last_name  text not null;
+
+-- 2026-05-09 — pre-course reminder + external-seat tracking
+alter table registrations add column reminder_sent_at timestamptz;
+alter table events        add column reserved_for_external int not null default 0;
 ```
 
 ### Seed (the only event for v1)
@@ -259,14 +272,14 @@ insert into events (
 );
 ```
 
-## 10. Styling rules
+## 9. Styling rules
 
 - **Use design tokens, not raw values.** All colors, spacing, font sizes, radii, shadows, and durations come from the CSS custom properties in `design-system/colors_and_type.css` (e.g. `var(--teal-500)`, `var(--space-6)`, `var(--shadow-2)`).
 - **Exceptions.** A small number of `rgba(255,255,255, 0.X)` overlays on dark sections are inlined where needed. If a new color is required, add it as a token first.
 - Component classes use loose BEM: `.block`, `.block__element`, `.block--modifier`. New shared components belong in `components.css`. Page-specific layouts go under `styles/pages/`.
 - Don't add a CSS file or stylesheet `<link>` without a clear reason. Prefer extending `components.css`.
 
-## 11. Testing locally
+## 10. Testing locally
 
 ```sh
 cd /Users/denizsarikaya/SonoInjection/web
@@ -283,13 +296,13 @@ Pre-commit checklist for `/deneme/`:
 - DevTools console is clean
 
 Pre-commit checklist for `/deneme-kayit/`:
-- Public form submits in mock mode and shows the success state with the formatted deadline
+- Public form submits in mock mode and shows the success state
 - All required fields enforce validation; `Seçiniz` placeholders cannot be left selected
 - Admin page renders the mock data, filters work, and per-row actions update the row in place
 - Mock-mode banner is visible on `/deneme-kayit/admin/`
 - Console is clean
 
-## 12. Deployment
+## 11. Deployment
 
 GitHub Pages serves the `main` branch from `/`. New commits to `main` deploy automatically.
 
@@ -299,7 +312,7 @@ Live URLs:
 - `sonoinjection.com/deneme-kayit/` — registration sandbox preview
 - `sonoinjection.com/deneme-kayit/admin/` — admin sandbox preview
 
-## 13. Voice & copy
+## 12. Voice & copy
 
 - Course name is always written `SonoInjection` (one word, capital S and I).
 - Brand voice: professional, confidence-building, second person ("you will…"). See `design-system/README.md`.

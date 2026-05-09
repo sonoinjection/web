@@ -5,8 +5,6 @@
    ============================================================ */
 
 import {
-  calculateDeadline,
-  formatDeadlineTr,
   isValidEmail,
   isValidPhone,
   isNonEmpty,
@@ -26,7 +24,6 @@ const submitSpinner = document.querySelector('[data-register-submit-spinner]');
 const errorBanner = document.querySelector('[data-form-error]');
 const successCard = document.querySelector('[data-success-card]');
 const formCard = document.querySelector('[data-form-card]');
-const deadlineSlot = document.querySelector('[data-success-deadline]');
 
 const FIELDS = [
   { name: 'first_name',  required: true,  validate: isNonEmpty,   error: 'Lütfen adınızı girin.' },
@@ -79,16 +76,12 @@ async function onSubmit(event) {
     return;
   }
 
-  // Compute the deadline now so the success state has it ready.
-  const registeredAt = new Date();
-  const deadline = calculateDeadline(registeredAt);
-
   setPending(true);
 
   try {
     if (USE_MOCK_RESPONSE) {
-      // Simulate the network round-trip so the success copy and
-      // formatted deadline can be verified end-to-end without a backend.
+      // Simulate the network round-trip so the success state can be
+      // verified end-to-end without a backend.
       // TODO: flip USE_MOCK_RESPONSE to false once /api/register is live.
       await new Promise((resolve) => setTimeout(resolve, MOCK_LATENCY_MS));
     } else {
@@ -114,7 +107,7 @@ async function onSubmit(event) {
       }
     }
 
-    showSuccess(deadline);
+    showSuccess();
   } catch (err) {
     showErrorBanner(err.message || 'Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.');
     setPending(false);
@@ -157,9 +150,8 @@ function hideErrorBanner() {
   errorBanner.textContent = '';
 }
 
-function showSuccess(deadline) {
+function showSuccess() {
   if (formCard) formCard.style.display = 'none';
   if (successCard) successCard.classList.add('is-active');
-  if (deadlineSlot) deadlineSlot.textContent = formatDeadlineTr(deadline);
   successCard?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

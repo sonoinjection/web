@@ -11,7 +11,6 @@ import {
   POSITION_LABELS_TR,
   STATUS_LABELS_TR,
   formatDateTimeTr,
-  calculateDeadline,
 } from './shared.js';
 
 // Simulated logged-in admin (the real value will come from Supabase Auth).
@@ -62,10 +61,7 @@ function rowActions(r) {
   if (r.status === 'pending') {
     buttons.push(`<button class="btn btn--primary btn--sm" data-action="confirm" data-id="${r.id}">Onayla</button>`);
     buttons.push(`<button class="btn btn--ghost btn--sm" data-action="cancel" data-id="${r.id}">İptal Et</button>`);
-  } else if (r.status === 'expired') {
-    buttons.push(`<button class="btn btn--outline btn--sm" data-action="reactivate" data-id="${r.id}">Yeniden Aktive Et</button>`);
-    buttons.push(`<button class="btn btn--ghost btn--sm" data-action="cancel" data-id="${r.id}">İptal Et</button>`);
-  } else if (r.status === 'confirmed') {
+  } else if (r.status === 'confirmed' || r.status === 'expired') {
     buttons.push(`<button class="btn btn--ghost btn--sm" data-action="cancel" data-id="${r.id}">İptal Et</button>`);
   }
   // cancelled rows have no actions
@@ -130,15 +126,6 @@ function onTableClick(event) {
     row.status = 'cancelled';
     row.cancelled_at = new Date().toISOString();
     row.cancellation_reason = reason || 'Yönetici tarafından iptal edildi.';
-  } else if (action === 'reactivate') {
-    if (!confirm(`${displayName} adlı katılımcının süresi dolan kaydını yeniden aktive etmek istediğinizden emin misiniz?`)) return;
-    row.status = 'pending';
-    row.registered_at = new Date().toISOString();
-    row.expires_at = calculateDeadline(new Date()).toISOString();
-    row.confirmed_at = null;
-    row.confirmed_by = null;
-    row.cancelled_at = null;
-    row.cancellation_reason = null;
   }
 
   render();
