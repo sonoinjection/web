@@ -45,6 +45,7 @@ export const STRINGS = {
     },
     courseCard: {
       enroll: 'Kayıt Ol',
+      register: 'Kayıt',
       waitlist: 'Bekleme Listesi',
       details: 'Detaylar →',
       comingSoon: 'Yakında',
@@ -142,6 +143,7 @@ export const STRINGS = {
     },
     courseCard: {
       enroll: 'Enroll',
+      register: 'Register',
       waitlist: 'Join Waitlist',
       details: 'Details →',
       comingSoon: 'Coming Soon',

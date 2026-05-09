@@ -39,7 +39,9 @@ export const COURSES = [
     iso: '2026-06-20',
     spots: 40,
     maxSpots: 40,
-    price: null,
+    priceNetTry: 29000,
+    kdvRate: 20,
+    registerUrl: '/deneme-kayit/',
     joints: {
       tr: ['Omuz', 'Kalça', 'Diz', 'Ayak Bileği'],
       en: ['Shoulder', 'Hip', 'Knee', 'Ankle'],
