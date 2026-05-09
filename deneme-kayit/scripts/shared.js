@@ -102,11 +102,45 @@ export const POSITION_LABELS_TR = {
   asistan: 'Asistan',
 };
 
+// Mirrors api/admin/_transitions.js::STATUS_LABELS_TR.
+// Status enum: applied | paid | cancelled | refunded.
 export const STATUS_LABELS_TR = {
-  pending: 'Bekliyor',
-  confirmed: 'Onaylandı',
-  expired: 'Süresi Doldu',
-  cancelled: 'İptal Edildi',
+  applied: 'Başvurdu',
+  paid: 'Ödendi',
+  cancelled: 'İptal',
+  refunded: 'İade',
+};
+
+export const ENTRY_TYPE_LABELS_TR = {
+  status_change: 'Durum değişikliği',
+  admin_note: 'Yönetici notu',
+  contact: 'İletişim kaydı',
+  email_sent: 'E-posta',
+  system: 'Sistem',
+};
+
+export const CONTACT_METHOD_LABELS_TR = {
+  phone: 'Telefon',
+  email: 'E-posta',
+  in_person: 'Yüz yüze',
+};
+
+// Allowed transitions, mirroring the server-side state machine.
+export const ALLOWED_TRANSITIONS = {
+  applied:   ['paid', 'cancelled'],
+  paid:      ['cancelled', 'refunded'],
+  cancelled: ['applied'],
+  refunded:  ['paid'],
+};
+
+// (oldStatus, newStatus) → action label.
+export const TRANSITION_ACTION_LABELS_TR = {
+  'applied→paid':       'Ödeme Onayla',
+  'applied→cancelled':  'İptal Et',
+  'paid→cancelled':     'İptal Et',
+  'paid→refunded':      'İade Et',
+  'cancelled→applied':  'Yeniden Aktive Et',
+  'refunded→paid':      'Yeniden Aktive Et',
 };
 
 /* ── Datetime formatters (admin table) ─────────────
@@ -120,4 +154,43 @@ export function formatDateTimeTr(value) {
     hour: '2-digit', minute: '2-digit',
     hour12: false,
   }).format(d);
+}
+
+/* ── Long-form Turkish date for event dates ────────
+   "20 Haziran 2026" — anchored in Europe/Istanbul.
+   ────────────────────────────────────────────────── */
+export function formatEventDateTr(dateValue) {
+  if (!dateValue) return '';
+  const datePart = String(dateValue).slice(0, 10);
+  const [y, m, d] = datePart.split('-').map(Number);
+  if (!y || !m || !d) return '';
+  const date = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  return new Intl.DateTimeFormat('tr-TR', {
+    day: 'numeric', month: 'long', year: 'numeric',
+    timeZone: 'Europe/Istanbul',
+  }).format(date);
+}
+
+/* ── Currency (TRY) ────────────────────────────────
+   See CLAUDE.md §7 — tr-TR + " TL", never the
+   { style: 'currency' } form (inconsistent symbol placement).
+   ────────────────────────────────────────────────── */
+const TR_NUMBER = new Intl.NumberFormat('tr-TR', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export function formatTRY(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const n = Number(value);
+  if (!Number.isFinite(n)) return null;
+  return `${TR_NUMBER.format(n)} TL`;
+}
+
+/* ── HTML escape (used by admin renderers) ─────────
+   ────────────────────────────────────────────────── */
+export function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[c]);
 }

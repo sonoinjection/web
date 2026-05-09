@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Yönetici Paneli — SonoInjection Kayıt Sandbox</title>
+  <title>Yönetici Paneli — SonoInjection Kayıt</title>
   <meta name="robots" content="noindex" />
   <link rel="icon" type="image/svg+xml" href="../../deneme/assets/favicon.svg" />
 
@@ -36,40 +36,36 @@
 <section class="section section--tight">
   <div class="container">
 
-    <div style="margin-bottom: var(--space-8);">
+    <div class="admin-head">
       <div class="eyebrow">Başvurular</div>
-      <h1 style="font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--navy-900); letter-spacing: var(--tracking-tight); line-height: 1.15; margin-bottom: var(--space-2);">Kayıt Yönetimi</h1>
-      <p class="muted" style="font-size: var(--text-sm); line-height: 1.6; max-width: 680px;">
-        20 Haziran 2026 — Kadavrada Ultrasonografi Eşliğinde Omuz ve Alt Ekstremite Enjeksiyon Kursu.
-        Ödeme dekontu doğrulanan başvuruları onaylayın; süresi dolan kayıtları gerekirse yeniden aktive edin.
-      </p>
+      <h1 class="admin-head__title">Kayıt Yönetimi</h1>
     </div>
+
+    <div class="admin-event-select">
+      <label class="form-label" for="admin-event-select">Etkinlik</label>
+      <select class="form-select" id="admin-event-select" data-event-select>
+        <option value="">Yükleniyor…</option>
+      </select>
+    </div>
+
+    <div data-event-panel></div>
+
+    <div class="admin-stats" data-stats></div>
 
     <div class="filter-bar">
       <div class="filter-bar__field">
         <label class="filter-bar__label" for="filter-status">Durum</label>
-        <select class="filter-bar__select" id="filter-status" data-filter-status>
-          <option value="all">Tümü</option>
-          <option value="pending">Bekliyor</option>
-          <option value="confirmed">Onaylandı</option>
-          <option value="expired">Süresi Doldu</option>
-          <option value="cancelled">İptal Edildi</option>
+        <select class="filter-bar__select" id="filter-status" data-filter-status multiple size="4">
+          <option value="applied" selected>Başvurdu</option>
+          <option value="paid" selected>Ödendi</option>
+          <option value="cancelled" selected>İptal</option>
+          <option value="refunded" selected>İade</option>
         </select>
       </div>
-
-      <div class="filter-bar__field">
-        <label class="filter-bar__label" for="filter-specialty">Uzmanlık</label>
-        <select class="filter-bar__select" id="filter-specialty" data-filter-specialty>
-          <option value="all">Tümü</option>
-          <option value="ftr">Fiziksel Tıp ve Rehabilitasyon</option>
-          <option value="ortopedi">Ortopedi ve Travmatoloji</option>
-          <option value="romatoloji">Romatoloji</option>
-          <option value="spor_hekimligi">Spor Hekimliği</option>
-          <option value="algoloji">Algoloji</option>
-          <option value="diger">Diğer</option>
-        </select>
+      <div class="filter-bar__field" style="flex:1; max-width: 320px;">
+        <label class="filter-bar__label" for="filter-search">Ara (ad, e-posta, kurum)</label>
+        <input class="filter-bar__input" id="filter-search" type="search" data-filter-search placeholder="Ara…" />
       </div>
-
       <div class="filter-bar__count" data-row-count>—</div>
     </div>
 
@@ -79,18 +75,17 @@
           <thead>
             <tr>
               <th>Ad Soyad</th>
+              <th>E-posta</th>
               <th>Telefon</th>
               <th>Uzmanlık</th>
               <th>Pozisyon</th>
               <th>Kurum</th>
               <th>Durum</th>
-              <th>Kayıt</th>
-              <th>Son Tarih</th>
-              <th style="text-align: right;">İşlem</th>
+              <th>Kayıt Tarihi</th>
             </tr>
           </thead>
           <tbody data-table-body>
-            <!-- Rows rendered by admin.js -->
+            <tr><td colspan="8" class="table-empty">Yükleniyor…</td></tr>
           </tbody>
         </table>
       </div>
@@ -98,6 +93,19 @@
 
   </div>
 </section>
+
+<!-- ── DETAIL MODAL ─────────────────────────────── -->
+<div class="modal" data-detail-modal>
+  <div class="modal__panel" data-detail-content></div>
+</div>
+
+<!-- ── ACTION DIALOG ────────────────────────────── -->
+<div class="modal modal--dialog" data-action-dialog>
+  <div class="modal__panel modal__panel--dialog" data-action-dialog-content></div>
+</div>
+
+<!-- ── TOAST ────────────────────────────────────── -->
+<div class="toast-container" data-toast-container></div>
 
 <!-- ── FOOTER ──────────────────────────────────── -->
 <footer class="site-footer">
