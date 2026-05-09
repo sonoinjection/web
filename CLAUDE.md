@@ -6,29 +6,35 @@ Notes for future Claude sessions working on this repo. Read this before making c
 
 ## 1. Hard constraints
 
-- **Static today.** HTML, CSS, vanilla ES modules. No build step, no React, no Node, no server code. The site is hosted on GitHub Pages via the Squarespace-managed `sonoinjection.com` domain.
-- **Vercel migration imminent.** The next phase moves the project to Vercel + Supabase + Resend (see §5). Build new code with that destination in mind: keep API endpoint URLs in named constants, keep mock data in its own file so a real Supabase fetch can drop in, don't introduce build-step dependencies that won't survive the migration.
+- **Hosted on Vercel** at `sonoinjection.com` (DNS apex `A 76.76.21.21`, `www` `CNAME cname.vercel-dns.com`). Static HTML/CSS/JS for the marketing site and registration form; serverless functions under `api/` for the registration endpoint and admin board. Supabase Postgres for data, Resend for transactional email.
+- **No build step.** Vanilla ES modules in the browser, ESM in Node (`"type": "module"` in `package.json`). Keep the no-build constraint unless we explicitly adopt a framework.
 - The `.jsx` files under `design-system/` are **reference material, not production**. Do not import them. Translate their structure to static HTML when implementing.
 
 ## 2. Repo layout
 
 ```
-/                          ← currently-live "coming soon" pages (DO NOT TOUCH until swap)
-  index.html               ← TR coming-soon
-  index-en.html            ← EN coming-soon
-  CNAME                    ← maps repo to sonoinjection.com
+/                          ← Vercel deploys from main; bare `/` 307-redirects to /deneme/
   README.md
   CLAUDE.md                ← this file
   package.json             ← Vercel-installed deps (@supabase/supabase-js, resend)
+  package-lock.json        ← committed for deterministic Vercel installs
+  vercel.json              ← trailingSlash: true; redirect / → /deneme/
   design-system/           ← brand assets + tokens — IMMUTABLE source of truth
   instructor_pictures/     ← original faculty photos (deprecated — see /deneme/assets/faculty/)
-  deneme/                  ← marketing rebuild sandbox (preview at sonoinjection.com/deneme/)
-  deneme-kayit/            ← registration sandbox (preview at sonoinjection.com/deneme-kayit/)
-  api/
-    register.js            ← Vercel serverless function — POST /api/register
+  deneme/                  ← marketing site (TR + EN)
+  deneme-kayit/            ← registration form + admin board
+  api/                     ← Vercel serverless functions
+    register.js            ← POST /api/register
+    _shared.js _emails.js _log.js
+    admin/
+      _transitions.js
+      list-events.js  list-registrations.js  get-registration.js
+      update-status.js  update-registration.js  update-event.js
+      add-log-entry.js
+  scripts/                 ← Node-only diagnostics (test-event-fetch.js, test-register-insert.js, …)
 ```
 
-When the new marketing site is approved, the swap is: move `deneme/*` to repo root and replace the existing root `index.html` / `index-en.html`. Until then, **the root `index.html` and `index-en.html` are the live site — do not modify them without explicit approval.**
+`/deneme/index.html` and `/deneme/index-en.html` are the canonical homepage; the bare root redirects there via `vercel.json`. The legacy GitHub-Pages-era root coming-soon pages and `CNAME` file were removed at production launch (2026-05-09).
 
 ## 3. /deneme/ structure (marketing rebuild)
 
@@ -457,13 +463,21 @@ Each script prints the full Supabase response (`data`, `error` with all enumerab
 
 ## 12. Deployment
 
-GitHub Pages serves the `main` branch from `/`. New commits to `main` deploy automatically.
+Vercel auto-deploys every push to `main` on the `sonoinjection/web` GitHub repo. Production target is `sonoinjection.com`.
+
+DNS (Squarespace, backed by Google Cloud DNS):
+- Apex `A` → `76.76.21.21` (Vercel anycast)
+- `www` `CNAME` → `cname.vercel-dns.com.`
+- Google Workspace `MX` records and Resend's `send.` subdomain TXT/CNAME records are left in place — do not touch them when editing DNS.
+
+GitHub Pages is decommissioned (`Settings → Pages → Source: None`).
 
 Live URLs:
-- `sonoinjection.com` — current coming-soon pages
-- `sonoinjection.com/deneme/` — marketing rebuild preview
-- `sonoinjection.com/deneme-kayit/` — registration sandbox preview
-- `sonoinjection.com/deneme-kayit/admin/` — admin sandbox preview
+- `sonoinjection.com` → 307 redirect to `/deneme/`
+- `sonoinjection.com/deneme/` — marketing site (TR + EN)
+- `sonoinjection.com/deneme-kayit/` — public registration form
+- `sonoinjection.com/deneme-kayit/admin/` — admin board (mock auth until Session 3)
+- `sonoinjection.com/api/*` — serverless functions (`register`, `admin/*`)
 
 ## 13. Voice & copy
 
