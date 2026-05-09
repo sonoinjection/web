@@ -1,5 +1,4 @@
 {
-  "trailingSlash": true,
   "redirects": [
     { "source": "/", "destination": "/deneme/", "permanent": false }
   ]
