@@ -11,9 +11,9 @@ import {
 } from './shared.js';
 
 // ── Wiring ────────────────────────────────────────────────────
-const REGISTER_ENDPOINT = '/api/register';   // becomes a real Vercel route post-migration
-const EVENT_ID = 'TODO_UUID_2026_06_20';     // becomes events.id from Supabase
-const USE_MOCK_RESPONSE = true;              // flip to false when the API is live
+const REGISTER_ENDPOINT = '/api/register';
+const EVENT_ID = 'a0ffd6f9-a96b-4d2f-ba01-e7d0f38b09c4';
+const USE_MOCK_RESPONSE = false;
 const MOCK_LATENCY_MS = 500;
 // ──────────────────────────────────────────────────────────────
 
@@ -80,9 +80,8 @@ async function onSubmit(event) {
 
   try {
     if (USE_MOCK_RESPONSE) {
-      // Simulate the network round-trip so the success state can be
-      // verified end-to-end without a backend.
-      // TODO: flip USE_MOCK_RESPONSE to false once /api/register is live.
+      // Mock-mode fallback: simulates a successful submit without
+      // hitting the API. Useful for local UI work; flip the flag above.
       await new Promise((resolve) => setTimeout(resolve, MOCK_LATENCY_MS));
     } else {
       const payload = {
@@ -102,8 +101,20 @@ async function onSubmit(event) {
         body: JSON.stringify(payload),
       });
       if (!res.ok) {
-        const message = await res.text().catch(() => '');
-        throw new Error(message || `İstek başarısız oldu (${res.status}).`);
+        // The API returns { error, code } as JSON for known failure
+        // modes. Surface the Turkish `error` string to the user; fall
+        // back to a generic message if parsing fails (network blip,
+        // unexpected server response, etc.).
+        let serverMessage = '';
+        try {
+          const errorBody = await res.json();
+          if (errorBody && typeof errorBody.error === 'string') {
+            serverMessage = errorBody.error;
+          }
+        } catch { /* non-JSON response */ }
+        throw new Error(
+          serverMessage || `İstek başarısız oldu (${res.status}). Lütfen daha sonra tekrar deneyin.`,
+        );
       }
     }
 

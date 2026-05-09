@@ -19,10 +19,13 @@ Notes for future Claude sessions working on this repo. Read this before making c
   CNAME                    ← maps repo to sonoinjection.com
   README.md
   CLAUDE.md                ← this file
+  package.json             ← Vercel-installed deps (@supabase/supabase-js, resend)
   design-system/           ← brand assets + tokens — IMMUTABLE source of truth
   instructor_pictures/     ← original faculty photos (deprecated — see /deneme/assets/faculty/)
   deneme/                  ← marketing rebuild sandbox (preview at sonoinjection.com/deneme/)
   deneme-kayit/            ← registration sandbox (preview at sonoinjection.com/deneme-kayit/)
+  api/
+    register.js            ← Vercel serverless function — POST /api/register
 ```
 
 When the new marketing site is approved, the swap is: move `deneme/*` to repo root and replace the existing root `index.html` / `index-en.html`. Until then, **the root `index.html` and `index-en.html` are the live site — do not modify them without explicit approval.**
@@ -101,12 +104,12 @@ deneme-kayit/
 ### Wiring constants live at the top of register.js
 
 ```js
-const REGISTER_ENDPOINT = '/api/register';   // becomes a real Vercel route post-migration
-const EVENT_ID = 'TODO_UUID_2026_06_20';     // becomes the events.id from Supabase
-const USE_MOCK_RESPONSE = true;              // flip to false when the API is live
+const REGISTER_ENDPOINT = '/api/register';
+const EVENT_ID = 'a0ffd6f9-a96b-4d2f-ba01-e7d0f38b09c4';
+const USE_MOCK_RESPONSE = false;
 ```
 
-`USE_MOCK_RESPONSE === true` simulates a 500ms-delayed success without a network call. Flipping to `false` enables the real `fetch(REGISTER_ENDPOINT, …)` path.
+The frontend `POST`s the form payload to `REGISTER_ENDPOINT` and reads the JSON `{ error, code }` body on non-2xx to surface the Turkish error message in the form's error banner. `USE_MOCK_RESPONSE = true` is a local-dev fallback that simulates a 500ms-delayed success without hitting the API.
 
 Admin page is mock-mode only: an amber banner reads *"Mock modu — Google OAuth Vercel geçişinden sonra eklenecek."* The table reads from `scripts/mock-data.js`. Filter and per-row actions mutate the local array and re-render. No persistence.
 
@@ -126,12 +129,20 @@ Target stack:
 
 ### Routes after migration
 
-- `POST /api/register` — receive a registration, insert into `registrations` with `status = 'pending'`. Accepts `first_name` and `last_name` as separate fields; both must be non-empty trimmed strings and are inserted as separate columns. Triggers email #1 (registrant) and email #2 (admins).
-- `POST /api/admin/registrations/:id/confirm` — admin action; flips status to `confirmed`. DB trigger (or this handler) sends email #3 (payment confirmation).
-- `POST /api/admin/registrations/:id/cancel` — admin action; flips status to `cancelled` with reason.
-- A daily cron / scheduled task selects rows where `status = 'confirmed'` AND `event_date - 7 days = today` AND `reminder_sent_at IS NULL`, sends email #4, and stamps `reminder_sent_at`.
+- `POST /api/register` — **implemented** at `api/register.js`. Validates the payload, enforces capacity (`capacity − reserved_for_external`) and duplicate-email checks against the active event, inserts a `pending` row, and dispatches Email 1 (registrant, via Resend) and Email 2 (admin, to `kayit@`). Email failures are logged but do not fail the request — the DB row is the source of truth. Errors return JSON `{ error, code }` with stable `code` values (`VALIDATION_ERROR`, `EVENT_NOT_ACTIVE`, `CAPACITY_FULL`, `DUPLICATE_REGISTRATION`, `INSERT_FAILED`, `CONFIG_ERROR`, …).
+- `POST /api/admin/registrations/:id/confirm` — *not yet implemented.* Admin action; flips status to `confirmed`. DB trigger (or this handler) sends email #3 (payment confirmation).
+- `POST /api/admin/registrations/:id/cancel` — *not yet implemented.* Admin action; flips status to `cancelled` with reason.
+- A daily cron / scheduled task — *not yet implemented.* Selects rows where `status = 'confirmed'` AND `event_date - 7 days = today` AND `reminder_sent_at IS NULL`, sends email #4, and stamps `reminder_sent_at`.
 
 There is **no automatic expiry** of pending registrations. Cancellations are admin-driven only.
+
+### Required environment variables
+
+`api/register.js` reads these from `process.env`. Set them in Vercel project settings (Production + Preview):
+
+- `SUPABASE_URL` — Supabase project URL.
+- `SUPABASE_SERVICE_ROLE_KEY` — service-role key (server-only; never expose to the browser).
+- `RESEND_API_KEY` — Resend API key. The `from` address `kayit@sonoinjection.com` requires the `sonoinjection.com` domain to be verified in Resend.
 
 ### Admin allowlist (current)
 
