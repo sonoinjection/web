@@ -9,7 +9,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const EVENT_ID = 'a0ffd6f9-a96b-4d2f-ba01-e7d0f38b09c4';
+const EVENT_ID = '65675693-d721-47bf-b78d-244db4f3d77e';
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;

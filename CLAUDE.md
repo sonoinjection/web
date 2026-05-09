@@ -105,7 +105,7 @@ deneme-kayit/
 
 ```js
 const REGISTER_ENDPOINT = '/api/register';
-const EVENT_ID = 'a0ffd6f9-a96b-4d2f-ba01-e7d0f38b09c4';
+const EVENT_ID = '65675693-d721-47bf-b78d-244db4f3d77e';
 const USE_MOCK_RESPONSE = false;
 ```
 
