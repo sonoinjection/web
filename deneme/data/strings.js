@@ -13,7 +13,7 @@ export const STRINGS = {
       register: 'Kayıt Ol',
     },
     hero: {
-      tagline: 'Kadavra Tabanlı · MSK Ultrason',
+      tagline: 'Kadavra Üzerinde · MSK Ultrason',
       browseCourses: 'Kursları İncele',
       meetFaculty: 'Eğitmenlerle Tanış',
       facultyLabel: 'Uzman eğitmenler',
