@@ -47,11 +47,14 @@ function getFilters() {
 
 function getVisibleRows() {
   const { status, specialty } = getFilters();
-  return registrations.filter((r) => {
-    if (status !== 'all' && r.status !== status) return false;
-    if (specialty !== 'all' && r.specialty !== specialty) return false;
-    return true;
-  });
+  return registrations
+    .filter((r) => {
+      if (status !== 'all' && r.status !== status) return false;
+      if (specialty !== 'all' && r.specialty !== specialty) return false;
+      return true;
+    })
+    // Default sort: surname-first, ascending (Turkish locale).
+    .sort((a, b) => a.last_name.localeCompare(b.last_name, 'tr'));
 }
 
 function rowActions(r) {
@@ -69,11 +72,15 @@ function rowActions(r) {
   return buttons.join('');
 }
 
+function fullName(r) {
+  return `${r.first_name ?? ''} ${r.last_name ?? ''}`.trim();
+}
+
 function renderRow(r) {
   return `
     <tr data-row="${r.id}">
       <td>
-        <div class="cell-name">${escape(r.full_name)}</div>
+        <div class="cell-name">${escape(fullName(r))}</div>
         <div class="cell-meta">${escape(r.email)}</div>
       </td>
       <td>${escape(r.phone)}</td>
@@ -110,8 +117,10 @@ function onTableClick(event) {
   const row = registrations.find((r) => r.id === id);
   if (!row) return;
 
+  const displayName = fullName(row);
+
   if (action === 'confirm') {
-    if (!confirm(`${row.full_name} adlı katılımcının kaydını onaylamak istediğinizden emin misiniz?`)) return;
+    if (!confirm(`${displayName} adlı katılımcının kaydını onaylamak istediğinizden emin misiniz?`)) return;
     row.status = 'confirmed';
     row.confirmed_at = new Date().toISOString();
     row.confirmed_by = MOCK_ADMIN_EMAIL;
@@ -122,7 +131,7 @@ function onTableClick(event) {
     row.cancelled_at = new Date().toISOString();
     row.cancellation_reason = reason || 'Yönetici tarafından iptal edildi.';
   } else if (action === 'reactivate') {
-    if (!confirm(`${row.full_name} adlı katılımcının süresi dolan kaydını yeniden aktive etmek istediğinizden emin misiniz?`)) return;
+    if (!confirm(`${displayName} adlı katılımcının süresi dolan kaydını yeniden aktive etmek istediğinizden emin misiniz?`)) return;
     row.status = 'pending';
     row.registered_at = new Date().toISOString();
     row.expires_at = calculateDeadline(new Date()).toISOString();

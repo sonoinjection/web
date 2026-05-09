@@ -16,7 +16,8 @@ function iso(offsetMs) {
 export const MOCK_REGISTRATIONS = [
   {
     id: 'mock-001',
-    full_name: 'Dr. Ayşe Yılmaz',
+    first_name: 'Ayşe',
+    last_name: 'Yılmaz',
     email: 'ayse.yilmaz@example.com',
     phone: '+90 532 111 22 33',
     specialty: 'ftr',
@@ -34,7 +35,8 @@ export const MOCK_REGISTRATIONS = [
   },
   {
     id: 'mock-002',
-    full_name: 'Dr. Mehmet Kaya',
+    first_name: 'Mehmet',
+    last_name: 'Kaya',
     email: 'mehmet.kaya@hospital.com.tr',
     phone: '+90 505 444 55 66',
     specialty: 'ortopedi',
@@ -52,7 +54,8 @@ export const MOCK_REGISTRATIONS = [
   },
   {
     id: 'mock-003',
-    full_name: 'Dr. Zeynep Demir',
+    first_name: 'Zeynep',
+    last_name: 'Demir',
     email: 'zeynep.demir@example.org',
     phone: '+90 533 777 88 99',
     specialty: 'spor_hekimligi',
@@ -70,7 +73,8 @@ export const MOCK_REGISTRATIONS = [
   },
   {
     id: 'mock-004',
-    full_name: 'Dr. Can Öztürk',
+    first_name: 'Can',
+    last_name: 'Öztürk',
     email: 'can.ozturk@example.com',
     phone: '+49 175 1234567',
     specialty: 'romatoloji',
@@ -88,7 +92,8 @@ export const MOCK_REGISTRATIONS = [
   },
   {
     id: 'mock-005',
-    full_name: 'Dr. Selin Aksoy',
+    first_name: 'Selin',
+    last_name: 'Aksoy',
     email: 'selin.aksoy@example.com',
     phone: '+90 545 222 33 44',
     specialty: 'algoloji',
@@ -106,7 +111,8 @@ export const MOCK_REGISTRATIONS = [
   },
   {
     id: 'mock-006',
-    full_name: 'Dr. Burak Tekin',
+    first_name: 'Burak',
+    last_name: 'Tekin',
     email: 'burak.tekin@example.com',
     phone: '+90 530 999 00 11',
     specialty: 'ftr',
@@ -124,7 +130,8 @@ export const MOCK_REGISTRATIONS = [
   },
   {
     id: 'mock-007',
-    full_name: 'Dr. Elif Çelik',
+    first_name: 'Elif',
+    last_name: 'Çelik',
     email: 'elif.celik@example.com',
     phone: '+90 542 555 11 22',
     specialty: 'diger',

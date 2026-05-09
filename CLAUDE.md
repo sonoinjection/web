@@ -126,7 +126,7 @@ Target stack:
 
 ### Routes after migration
 
-- `POST /api/register` — receive a registration, insert into `registrations` with `status = 'pending'` and `expires_at` computed via §7. Triggers email #1 (registrant) and email #2 (admins).
+- `POST /api/register` — receive a registration, insert into `registrations` with `status = 'pending'` and `expires_at` computed via §7. Accepts `first_name` and `last_name` as separate fields; both must be non-empty trimmed strings and are inserted as separate columns. Triggers email #1 (registrant) and email #2 (admins).
 - `POST /api/admin/registrations/:id/confirm` — admin action; flips status to `confirmed`. DB trigger (or this handler) sends email #4.
 - `POST /api/admin/registrations/:id/cancel` — admin action; flips status to `cancelled` with reason.
 - `POST /api/admin/registrations/:id/reactivate` — admin action; flips an `expired` row back to `pending` and re-computes `expires_at`.
@@ -174,6 +174,7 @@ Implementation lives in `deneme-kayit/scripts/shared.js::calculateDeadline`, wit
 ## 8. Audience and language policy
 
 - **Physicians-only audience.** Enforced softly by:
+  - Name is collected as two separate fields — *Ad* (`first_name`) and *Soyad* (`last_name`) — both required, both validated as non-empty trimmed strings client-side and server-side.
   - The `Uzmanlık` field is a closed dropdown — *Fiziksel Tıp ve Rehabilitasyon, Ortopedi ve Travmatoloji, Romatoloji, Spor Hekimliği, Algoloji, Diğer*. No free-text profession field.
   - The `Pozisyon` field is a closed dropdown — *Uzman, Asistan*. No "student", "nurse", "marketing rep", etc.
   - All required dropdowns start with `Seçiniz` as the placeholder option.
@@ -208,7 +209,8 @@ create type registration_status_t as enum
 create table registrations (
   id                  uuid primary key default gen_random_uuid(),
   event_id            uuid not null references events(id),
-  full_name           text not null,
+  first_name          text not null,
+  last_name           text not null,
   email               text not null,
   phone               text not null,
   specialty           specialty_t not null,
@@ -227,6 +229,7 @@ create table registrations (
 
 create index on registrations (event_id, status);
 create index on registrations (email);
+create index on registrations (last_name);
 create index on registrations (expires_at) where status = 'pending';
 ```
 

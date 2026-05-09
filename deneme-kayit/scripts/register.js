@@ -29,7 +29,8 @@ const formCard = document.querySelector('[data-form-card]');
 const deadlineSlot = document.querySelector('[data-success-deadline]');
 
 const FIELDS = [
-  { name: 'full_name',   required: true,  validate: isNonEmpty,   error: 'Lütfen adınızı ve soyadınızı girin.' },
+  { name: 'first_name',  required: true,  validate: isNonEmpty,   error: 'Lütfen adınızı girin.' },
+  { name: 'last_name',   required: true,  validate: isNonEmpty,   error: 'Lütfen soyadınızı girin.' },
   { name: 'email',       required: true,  validate: isValidEmail, error: 'Geçerli bir e-posta adresi girin.' },
   { name: 'phone',       required: true,  validate: isValidPhone, error: 'Geçerli bir telefon numarası girin (örn. +90 555 123 45 67).' },
   { name: 'specialty',   required: true,  validate: isNonEmpty,   error: 'Lütfen uzmanlığınızı seçin.' },
@@ -93,7 +94,8 @@ async function onSubmit(event) {
     } else {
       const payload = {
         event_id: EVENT_ID,
-        full_name: data.full_name,
+        first_name: data.first_name,
+        last_name: data.last_name,
         email: data.email,
         phone: data.phone.replace(/[\s\-()]/g, ''),
         specialty: data.specialty,
