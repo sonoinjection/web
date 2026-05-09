@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yönetici Paneli — SonoInjection Kayıt Sandbox</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="../../deneme/assets/favicon.svg" />
+
+  <link rel="stylesheet" href="../styles/tokens.css" />
+  <link rel="stylesheet" href="../styles/base.css" />
+  <link rel="stylesheet" href="../styles/components.css" />
+</head>
+<body>
+
+<!-- ── MOCK BANNER ──────────────────────────────── -->
+<div class="mock-banner" role="status">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg>
+  <span><strong>Mock modu</strong> — Google OAuth Vercel geçişinden sonra eklenecek.</span>
+</div>
+
+<!-- ── HEADER ───────────────────────────────────── -->
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="logo" href="../index.html" aria-label="SonoInjection kayıt sayfası">
+      <span class="logo__bars" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </span>
+      <span class="logo__word">SonoInjection · Yönetici</span>
+    </a>
+    <a class="site-header__back" href="../index.html">← Kayıt sayfasına dön</a>
+  </div>
+</header>
+
+<!-- ── ADMIN BODY ───────────────────────────────── -->
+<section class="section section--tight">
+  <div class="container">
+
+    <div style="margin-bottom: var(--space-8);">
+      <div class="eyebrow">Başvurular</div>
+      <h1 style="font-family: var(--font-display); font-size: var(--text-2xl); font-weight: var(--font-weight-bold); color: var(--navy-900); letter-spacing: var(--tracking-tight); line-height: 1.15; margin-bottom: var(--space-2);">Kayıt Yönetimi</h1>
+      <p class="muted" style="font-size: var(--text-sm); line-height: 1.6; max-width: 680px;">
+        20 Haziran 2026 — Kadavrada Ultrasonografi Eşliğinde Omuz ve Alt Ekstremite Enjeksiyon Kursu.
+        Ödeme dekontu doğrulanan başvuruları onaylayın; süresi dolan kayıtları gerekirse yeniden aktive edin.
+      </p>
+    </div>
+
+    <div class="filter-bar">
+      <div class="filter-bar__field">
+        <label class="filter-bar__label" for="filter-status">Durum</label>
+        <select class="filter-bar__select" id="filter-status" data-filter-status>
+          <option value="all">Tümü</option>
+          <option value="pending">Bekliyor</option>
+          <option value="confirmed">Onaylandı</option>
+          <option value="expired">Süresi Doldu</option>
+          <option value="cancelled">İptal Edildi</option>
+        </select>
+      </div>
+
+      <div class="filter-bar__field">
+        <label class="filter-bar__label" for="filter-specialty">Uzmanlık</label>
+        <select class="filter-bar__select" id="filter-specialty" data-filter-specialty>
+          <option value="all">Tümü</option>
+          <option value="ftr">Fiziksel Tıp ve Rehabilitasyon</option>
+          <option value="ortopedi">Ortopedi ve Travmatoloji</option>
+          <option value="romatoloji">Romatoloji</option>
+          <option value="spor_hekimligi">Spor Hekimliği</option>
+          <option value="algoloji">Algoloji</option>
+          <option value="diger">Diğer</option>
+        </select>
+      </div>
+
+      <div class="filter-bar__count" data-row-count>—</div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Ad / E-posta</th>
+              <th>Telefon</th>
+              <th>Uzmanlık</th>
+              <th>Pozisyon</th>
+              <th>Kurum</th>
+              <th>Durum</th>
+              <th>Kayıt</th>
+              <th>Son Tarih</th>
+              <th style="text-align: right;">İşlem</th>
+            </tr>
+          </thead>
+          <tbody data-table-body>
+            <!-- Rows rendered by admin.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── FOOTER ──────────────────────────────────── -->
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <span>© 2026 SonoInjection — Tüm hakları saklıdır.</span>
+    <a href="https://sonoinjection.com">sonoinjection.com</a>
+  </div>
+</footer>
+
+<script type="module" src="../scripts/admin.js"></script>
+
+</body>
+</html>
