@@ -250,7 +250,7 @@ create table registrations (
   notes               text,
   status              registration_status_t not null default 'pending',
   registered_at       timestamptz not null default now(),
-  expires_at          timestamptz not null,           -- LEGACY: not enforced; kept for backward compatibility
+  expires_at          timestamptz,                    -- LEGACY: nullable; not enforced; kept for backward compatibility
   confirmed_at        timestamptz,
   confirmed_by        text,
   cancelled_at        timestamptz,
@@ -286,6 +286,10 @@ alter table events add column price_net_try   numeric(10,2);
 alter table events add column kdv_rate        numeric(5,2) not null default 20.00;
 alter table events add column price_gross_try numeric(10,2)
   generated always as (round(price_net_try * (1 + kdv_rate / 100), 2)) stored;
+
+-- 2026-05-09 — drop NOT NULL on expires_at so api/register.js can
+-- insert without supplying a value (column is legacy per §6).
+alter table registrations alter column expires_at drop not null;
 ```
 
 ### Seed (the only event for v1)
@@ -346,6 +350,17 @@ Pre-commit checklist for `/deneme-kayit/`:
 - Admin page renders the mock data, filters work, and per-row actions update the row in place
 - Mock-mode banner is visible on `/deneme-kayit/admin/`
 - Console is clean
+
+### Diagnostic scripts (when /api/register misbehaves)
+
+When the production API returns a 500 with no helpful Vercel logs, reproduce the failing call locally against the real Supabase:
+
+1. Pull the production env into a local file: `vercel env pull .env.local` (or paste `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` by hand). The file is gitignored.
+2. Run one of the scripts under `scripts/`:
+   - `node --env-file=.env.local scripts/test-event-fetch.js` — verifies the events row exists and the URL/key are valid.
+   - `node --env-file=.env.local scripts/test-register-insert.js` — runs the same insert payload `api/register.js` writes, with a synthetic email; cleans up on success. Surfaces the raw Postgres error (e.g. constraint violations) that the function masks behind `INSERT_FAILED`.
+
+Each script prints the full Supabase response (`data`, `error` with all enumerable properties, HTTP status). Errors come back with a Postgres `code` like `23502` (not-null violation) or `23503` (foreign-key violation) that points directly at the offending column / table.
 
 ## 11. Deployment
 
