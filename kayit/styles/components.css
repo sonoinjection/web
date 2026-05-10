@@ -197,6 +197,27 @@
   line-height: 1.5;
   max-width: 560px;
 }
+.event-hero__price {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  max-width: 560px;
+}
+.event-hero__price-amount {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--white);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.1;
+  margin-bottom: var(--space-1);
+}
+.event-hero__price-note {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--teal-300);
+  letter-spacing: var(--tracking-wide);
+}
 
 /* ── Form ────────────────────────────────────────── */
 .form {
