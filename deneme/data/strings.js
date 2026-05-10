@@ -13,7 +13,7 @@ export const STRINGS = {
       register: 'Kayıt Ol',
     },
     hero: {
-      tagline: 'Kadavra Üzerinde · MSK Ultrason',
+      tagline: 'Kadavra Üzerinde · MSK Ultrasonografi',
       browseCourses: 'Kursları İncele',
       meetFaculty: 'Eğitmenlerle Tanış',
       facultyLabel: 'Uzman eğitmenler',
@@ -78,7 +78,7 @@ export const STRINGS = {
       ['100%', 'Kadavra üzerinde uygulamalı süre'],
     ],
     footer: {
-      tagline: 'MSK patolojileri için ultrason eşliğinde kadavra enjeksiyon kursları.',
+      tagline: 'Kas-İskelet Sistemi Hastalıkları için ultrason eşliğinde kadavra enjeksiyon kursları.',
       coursesTitle: 'Kurslar',
       coursesLinks: [
         ['Tümünü Gör', 'courses.html'],

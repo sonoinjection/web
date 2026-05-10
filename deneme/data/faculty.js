@@ -1,13 +1,14 @@
 /* ============================================================
    faculty.js — instructor roster
-   Order: by academic rank (Doç. > Dr. Öğr. Üyesi > Uzm. Dr. > Dr.).
-   Director takes the top of their tier. Alphabetical by surname
-   within each tier as a tie-breaker.
-   To add: append an entry. Photo lives in assets/faculty/<id>.jpeg.
+   Order: curated by the course director (Mahir Topaloğlu).
+   This is intentional — not by academic rank or alphabet — and
+   reflects how the team is presented on the homepage hero strip,
+   the faculty teaser grid, and the /faculty page.
+   To add: insert at the desired position. Photo lives in
+   assets/faculty/<id>.jpeg.
    ============================================================ */
 
 export const FACULTY = [
-  // ── Doç. Dr. ────────────────────────────────────────────────
   {
     id: 'mahir-topaloglu',
     photo: 'assets/faculty/mahir-topaloglu.jpeg',
@@ -28,17 +29,17 @@ export const FACULTY = [
     role: 'director',
   },
   {
-    id: 'enes-efe-is',
-    photo: 'assets/faculty/enes-efe-is.jpeg',
-    name: 'Doç. Dr. Enes Efe İş',
-    nameEn: 'Assoc. Prof. Enes Efe İş',
+    id: 'rana-kaynar-terlemez',
+    photo: 'assets/faculty/rana-kaynar-terlemez.jpeg',
+    name: 'Doç. Dr. Rana Kaynar Terlemez',
+    nameEn: 'Assoc. Prof. Rana Kaynar Terlemez',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
       en: 'Physical Medicine & Rehabilitation',
     },
     institution: {
-      tr: 'Şişli Hamidiye Etfal Eğitim ve Araştırma Hastanesi',
-      en: 'Şişli Hamidiye Etfal Training & Research Hospital',
+      tr: 'İstanbul Üniversitesi Cerrahpaşa',
+      en: 'Istanbul University Cerrahpaşa',
     },
     city: {
       tr: 'İstanbul, Türkiye',
@@ -66,17 +67,17 @@ export const FACULTY = [
     role: 'faculty',
   },
   {
-    id: 'rana-kaynar-terlemez',
-    photo: 'assets/faculty/rana-kaynar-terlemez.jpeg',
-    name: 'Doç. Dr. Rana Kaynar Terlemez',
-    nameEn: 'Assoc. Prof. Rana Kaynar Terlemez',
+    id: 'enes-efe-is',
+    photo: 'assets/faculty/enes-efe-is.jpeg',
+    name: 'Doç. Dr. Enes Efe İş',
+    nameEn: 'Assoc. Prof. Enes Efe İş',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
       en: 'Physical Medicine & Rehabilitation',
     },
     institution: {
-      tr: 'İstanbul Üniversitesi Cerrahpaşa',
-      en: 'Istanbul University Cerrahpaşa',
+      tr: 'Şişli Hamidiye Etfal Eğitim ve Araştırma Hastanesi',
+      en: 'Şişli Hamidiye Etfal Training & Research Hospital',
     },
     city: {
       tr: 'İstanbul, Türkiye',
@@ -84,8 +85,22 @@ export const FACULTY = [
     },
     role: 'faculty',
   },
-
-  // ── Dr. Öğr. Üyesi ──────────────────────────────────────────
+  {
+    id: 'omer-batin-gozubuyuk',
+    photo: 'assets/faculty/omer-batin-gozubuyuk.jpeg',
+    name: 'Uzm. Dr. Ömer Batın Gözübüyük',
+    nameEn: 'Dr. Ömer Batın Gözübüyük',
+    title: {
+      tr: 'Spor Hekimliği',
+      en: 'Sports Medicine',
+    },
+    institution: { tr: '', en: '' },
+    city: {
+      tr: 'Melbourne, Avustralya',
+      en: 'Melbourne, Australia',
+    },
+    role: 'faculty',
+  },
   {
     id: 'sergen-devran',
     photo: 'assets/faculty/sergen-devran.jpeg',
@@ -124,8 +139,6 @@ export const FACULTY = [
     },
     role: 'faculty',
   },
-
-  // ── Uzm. Dr. ────────────────────────────────────────────────
   {
     id: 'havvanur-albayrak',
     photo: 'assets/faculty/havvanur-albayrak.jpeg',
@@ -142,22 +155,6 @@ export const FACULTY = [
     city: {
       tr: 'İstanbul, Türkiye',
       en: 'Istanbul, Turkey',
-    },
-    role: 'faculty',
-  },
-  {
-    id: 'omer-batin-gozubuyuk',
-    photo: 'assets/faculty/omer-batin-gozubuyuk.jpeg',
-    name: 'Uzm. Dr. Ömer Batın Gözübüyük',
-    nameEn: 'Dr. Ömer Batın Gözübüyük',
-    title: {
-      tr: 'Spor Hekimliği',
-      en: 'Sports Medicine',
-    },
-    institution: { tr: '', en: '' },
-    city: {
-      tr: 'Melbourne, Avustralya',
-      en: 'Melbourne, Australia',
     },
     role: 'faculty',
   },
@@ -180,8 +177,6 @@ export const FACULTY = [
     },
     role: 'faculty',
   },
-
-  // ── Koordinasyon ────────────────────────────────────────────
   {
     id: 'deniz-sarikaya',
     photo: 'assets/faculty/deniz-sarikaya.jpeg',
