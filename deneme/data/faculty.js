@@ -89,7 +89,7 @@ export const FACULTY = [
   {
     id: 'sergen-devran',
     photo: 'assets/faculty/sergen-devran.jpeg',
-    name: 'Dr. Öğr. Üy. Sergen Devran',
+    name: 'Dr. Öğr. Üyesi Sergen Devran',
     nameEn: 'Dr. Sergen Devran',
     title: {
       tr: 'Spor Hekimliği',

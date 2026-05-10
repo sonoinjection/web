@@ -73,15 +73,15 @@ export const COURSES = [
         { time: '10:00–10:30', type: 'lecture', title: 'Kalça Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Doç. Dr. Enes Efe İş' },
         { time: '10:30–11:00', type: 'admin', title: 'Kahve Arası' },
         { time: '11:00–11:30', type: 'lecture', title: 'Diz Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Dr. Öğr. Üyesi Mert Zure' },
-        { time: '11:30–12:00', type: 'lecture', title: 'Ayak Bileği ve Ayak Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Dr. Havvanur Albayrak' },
+        { time: '11:30–12:00', type: 'lecture', title: 'Ayak Bileği ve Ayak Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Uzm. Dr. Havvanur Albayrak' },
         { time: '12:00–13:00', type: 'admin', title: 'Öğle Arası' },
-        { time: '13:00–16:00', type: 'cadaver', title: 'Kadavra Üzerinde Enjeksiyon Pratikleri', items: [
-          'Glenohumeral eklem', 'Subakromial bursa', 'Biseps tendonu', 'Akromioklavikular eklem', 'Supraskapular blok',
+        { time: '13:00–16:30', type: 'cadaver', title: 'Kadavra Üzerinde Enjeksiyon Pratikleri', items: [
+          'Akromioklavikular eklem', 'Supraskapular blok', 'Subakromial bursa', 'Glenohumeral eklem', 'Biseps tendonu',
           'Kalça eklemi', 'Trokanterik bursa', 'Piriformis kası',
           'Diz eklemi', 'Pes anserin', 'Geniküler sinir', 'Gastrosoleus bursa',
-          'Tibiotalar eklem', '1. MTF Eklem', 'Tarsal tünel', 'Aşil tendonu', 'Plantar fasya',
+          'Tibiotalar eklem', 'Tarsal tünel', 'Aşil tendonu', 'Plantar fasya', '1. MTF Eklem',
         ] },
-        { time: '16:00–17:00', type: 'admin', title: 'Kapanış ve Değerlendirme' },
+        { time: '16:30–17:00', type: 'admin', title: 'Kapanış ve Değerlendirme' },
       ],
       en: [
         { time: '09:00–09:30', type: 'lecture', title: 'Introduction to Musculoskeletal Ultrasound & Core Principles', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
@@ -91,13 +91,13 @@ export const COURSES = [
         { time: '11:00–11:30', type: 'lecture', title: 'Knee Region — Ultrasonography & Injections', speaker: 'Dr. Mert Zure' },
         { time: '11:30–12:00', type: 'lecture', title: 'Foot & Ankle Region — Ultrasonography & Injections', speaker: 'Dr. Havvanur Albayrak' },
         { time: '12:00–13:00', type: 'admin', title: 'Lunch Break' },
-        { time: '13:00–16:00', type: 'cadaver', title: 'Cadaveric Injection Practice', items: [
-          'Glenohumeral joint', 'Subacromial bursa', 'Biceps tendon', 'Acromioclavicular joint', 'Suprascapular block',
+        { time: '13:00–16:30', type: 'cadaver', title: 'Cadaveric Injection Practice', items: [
+          'Acromioclavicular joint', 'Suprascapular block', 'Subacromial bursa', 'Glenohumeral joint', 'Biceps tendon',
           'Hip joint', 'Trochanteric bursa', 'Piriformis muscle',
           'Knee joint', 'Pes anserine', 'Genicular nerve', 'Gastrosoleus bursa',
-          'Tibiotalar joint', '1st MTP joint', 'Tarsal tunnel', 'Achilles tendon', 'Plantar fascia',
+          'Tibiotalar joint', 'Tarsal tunnel', 'Achilles tendon', 'Plantar fascia', '1st MTP joint',
         ] },
-        { time: '16:00–17:00', type: 'admin', title: 'Closing & Evaluation' },
+        { time: '16:30–17:00', type: 'admin', title: 'Closing & Evaluation' },
       ],
     },
     facultyIds: ['mahir-topaloglu', 'mert-zure', 'enes-efe-is', 'havvanur-albayrak'],
