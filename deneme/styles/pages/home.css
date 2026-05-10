@@ -39,43 +39,12 @@
   margin-bottom: var(--space-12);
 }
 
-/* Faculty inline strip in hero */
-.hero__faculty {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-4);
-}
-.hero__faculty-row {
-  display: inline-flex;
-  align-items: center;
-}
-.hero__faculty-row img {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  object-position: center 20%;
-  border: 2px solid var(--navy-900);
-  margin-left: -10px;
-}
-.hero__faculty-row img:first-child { margin-left: 0; }
-.hero__faculty-label {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.55);
-  line-height: 1.4;
-}
-.hero__faculty-label strong {
-  display: block;
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: var(--font-weight-semibold);
-}
-
 /* ── Featured event (homepage hero) ───────────────── */
+/* Single-column copy block on the left; the right side of the hero
+   is occupied by the HeroPhotoStack carousel (see .hps-* below). */
 .featured-event {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: var(--space-12);
-  align-items: end;
+  display: block;
+  max-width: 580px;
 }
 
 .featured-event__copy {
@@ -147,18 +116,121 @@
   gap: var(--space-3);
 }
 
-.featured-event__aside {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-3);
+@media (max-width: 900px) {
+  .featured-event { max-width: none; }
 }
 
+/* ============================================================
+   Hero photo stack (HPS) — crossfading carousel on the right
+   side of the dark hero. 6 photos × 6s = 36s loop. Pure CSS.
+   Original spec: handoff/hero-photo-stack/README.md.
+   ============================================================ */
+
+.hps-root {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 52%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Photo layer — slightly desaturated so it reads as background. */
+.hps-photos {
+  position: absolute;
+  inset: 0;
+  filter: saturate(0.7) contrast(1.02) brightness(0.92);
+}
+
+.hps-photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  animation: hps-rotate 36s infinite;
+  will-change: opacity, transform;
+}
+
+.hps-p1 { animation-delay:  0s; }
+.hps-p2 { animation-delay:  6s; }
+.hps-p3 { animation-delay: 12s; animation-name: hps-rotate-flip; transform: scaleX(-1); }
+.hps-p4 { animation-delay: 18s; }
+.hps-p5 { animation-delay: 24s; }
+.hps-p6 { animation-delay: 30s; }
+
+@keyframes hps-rotate {
+  0%, 13%        { opacity: 1; transform: scale(1.00); }
+  16.66%, 96.66% { opacity: 0; transform: scale(1.04); }
+  100%           { opacity: 1; transform: scale(1.00); }
+}
+
+/* Mirrored variant for photo #3 (preserves scaleX(-1) through keyframes). */
+@keyframes hps-rotate-flip {
+  0%, 13%        { opacity: 1; transform: scaleX(-1) scale(1.00); }
+  16.66%, 96.66% { opacity: 0; transform: scaleX(-1) scale(1.04); }
+  100%           { opacity: 1; transform: scaleX(-1) scale(1.00); }
+}
+
+/* Light navy multiply to keep brand cohesion. */
+.hps-tint {
+  position: absolute;
+  inset: 0;
+  background: var(--navy-900);
+  mix-blend-mode: multiply;
+  opacity: 0.18;
+}
+
+/* Subtle teal duotone in highlights. */
+.hps-duotone {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 173, 168, 0.18),
+    rgba(12, 27, 51, 0) 55%
+  );
+  mix-blend-mode: screen;
+}
+
+/* Left-edge fade so photos blend seamlessly into the navy text side. */
+.hps-fade-x {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--navy-900)           0%,
+    rgba(12, 27, 51, 0.85)   16%,
+    rgba(12, 27, 51, 0.25)   40%,
+    rgba(12, 27, 51, 0)      70%
+  );
+}
+
+/* Top/bottom edge softening to avoid hard seams. */
+.hps-fade-y {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--navy-900)        0%,
+    rgba(12, 27, 51, 0)   14%,
+    rgba(12, 27, 51, 0)   86%,
+    var(--navy-900)      100%
+  );
+}
+
+/* Respect users who don't want motion. */
+@media (prefers-reduced-motion: reduce) {
+  .hps-photo { animation: none; opacity: 0; }
+  .hps-p1    { opacity: 1; }
+}
+
+/* Hide on narrow viewports — the headline column needs the full width
+   and the photos can't carry the layout below ~900px without overlap. */
 @media (max-width: 900px) {
-  .featured-event {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-  }
+  .hps-root { display: none; }
 }
 
 /* Featured CTA band */

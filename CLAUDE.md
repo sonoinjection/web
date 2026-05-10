@@ -64,7 +64,12 @@ deneme/
   assets/
     logo.svg, logo-dark.svg, favicon.svg
     faculty/<id>.jpeg                ← canonical home for portraits
+    hero/hero-{1..6}.jpeg            ← homepage hero photo-stack carousel
 ```
+
+### Homepage hero photo stack
+
+The right side of the dark hero on `/deneme/index.html` and `/deneme/index-en.html` is a CSS-only crossfading carousel — six photos under `deneme/assets/hero/`, ~6 seconds each, 36-second loop. All animation is keyframe-driven (`@keyframes hps-rotate` in `styles/pages/home.css`), no JS. The carousel hides itself below 900px viewport so the headline gets full width on mobile, and falls back to a single static photo for `prefers-reduced-motion`. To swap photos, replace files in place keeping the `hero-1.jpeg` … `hero-6.jpeg` filenames; to change count, update both the `.hps-pN` rules and the keyframe percentages so the timing still divides evenly. Originally adapted from a React/Vite handoff (`HeroPhotoStack.jsx`) — that JSX is not in the repo because the static build is the source of truth.
 
 ### How content is structured
 
