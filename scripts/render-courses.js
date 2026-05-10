@@ -50,7 +50,7 @@ function renderPriceBlock(c) {
 
 function renderCourseCard(c) {
   const detailHref = c.detail[lang];
-  const registerHref = c.registerUrl || '/deneme-kayit/';
+  const registerHref = c.registerUrl || '/kayit/';
   const remaining = c.spots;
   const isFull = remaining === 0;
   const lowSpots = !isFull && remaining <= 4;

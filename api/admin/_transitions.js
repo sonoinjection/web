@@ -1,7 +1,7 @@
 /* ============================================================
    api/admin/_transitions.js — registration status state machine
    Status enum: applied | paid | cancelled | refunded.
-   Mirrored client-side in deneme-kayit/scripts/shared.js
+   Mirrored client-side in kayit/scripts/shared.js
    (STATUS_LABELS_TR) — keep in sync.
    ============================================================ */
 

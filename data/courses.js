@@ -41,7 +41,7 @@ export const COURSES = [
     maxSpots: 40,
     priceNetTry: 29000,
     kdvRate: 20,
-    registerUrl: '/deneme-kayit/',
+    registerUrl: '/kayit/',
     joints: {
       tr: ['Omuz', 'Kalça', 'Diz', 'Ayak Bileği'],
       en: ['Shoulder', 'Hip', 'Knee', 'Ankle'],

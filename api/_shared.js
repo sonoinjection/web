@@ -66,7 +66,7 @@ export function requireFields(body, names) {
   return missing;
 }
 
-// ── Formatters (server-side; mirrors deneme-kayit/scripts/shared.js) ──
+// ── Formatters (server-side; mirrors kayit/scripts/shared.js) ──
 const TR_NUMBER = new Intl.NumberFormat('tr-TR', {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,

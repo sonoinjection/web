@@ -13,16 +13,23 @@ Notes for future Claude sessions working on this repo. Read this before making c
 ## 2. Repo layout
 
 ```
-/                          ← Vercel deploys from main; bare `/` 307-redirects to /deneme/
+/                          ← Vercel deploys from main; marketing site served from /
   README.md
   CLAUDE.md                ← this file
   package.json             ← Vercel-installed deps (@supabase/supabase-js, resend)
   package-lock.json        ← committed for deterministic Vercel installs
-  vercel.json              ← trailingSlash: true; redirect / → /deneme/
+  vercel.json              ← `{}` — no custom routing
   design-system/           ← brand assets + tokens — IMMUTABLE source of truth
-  instructor_pictures/     ← original faculty photos (deprecated — see /deneme/assets/faculty/)
-  deneme/                  ← marketing site (TR + EN)
-  deneme-kayit/            ← registration form + admin board
+  instructor_pictures/     ← legacy faculty photos (deprecated — see /assets/faculty/)
+  index.html, index-en.html, about*.html, courses*.html, faculty*.html
+  courses/                 ← per-course detail pages (TR + EN)
+  styles/  data/  assets/  ← marketing CSS, data, photos. See §3.
+  scripts/                 ← browser render scripts AND Node-only diagnostics. See §3 / §11.
+  kayit/                   ← public registration form (TR) + shared CSS/JS. See §4.
+  deneme-kayit/
+    admin/                 ← admin board (TR, mock auth). URL deliberately kept under
+                             /deneme-kayit/ as soft gating until OAuth ships (Session 3).
+                             Internal CSS/JS load from /kayit/. See §4.
   api/                     ← Vercel serverless functions
     register.js            ← POST /api/register
     _shared.js _emails.js _log.js
@@ -31,45 +38,44 @@ Notes for future Claude sessions working on this repo. Read this before making c
       list-events.js  list-registrations.js  get-registration.js
       update-status.js  update-registration.js  update-event.js
       add-log-entry.js
-  scripts/                 ← Node-only diagnostics (test-event-fetch.js, test-register-insert.js, …)
 ```
 
-`/deneme/index.html` and `/deneme/index-en.html` are the canonical homepage; the bare root redirects there via `vercel.json`. The legacy GitHub-Pages-era root coming-soon pages and `CNAME` file were removed at production launch (2026-05-09).
+`index.html` and `index-en.html` are the canonical homepage, served directly from the apex. Production launched on Vercel at `sonoinjection.com` on 2026-05-09 (legacy GitHub-Pages-era root coming-soon pages and the `CNAME` file removed at the same time); the `/deneme/` sandbox prefix was retired and its content promoted to root, and `/deneme-kayit/` was renamed to `/kayit/`, on 2026-05-10. `/deneme-kayit/admin/` was deliberately left in place as URL gating for the admin board until Google OAuth ships (Session 3).
 
-## 3. /deneme/ structure (marketing rebuild)
+## 3. Marketing site structure
 
 ```
-deneme/
-  index.html, index-en.html          ← homepage (TR / EN)
-  courses.html, courses-en.html      ← course listing
-  faculty.html, faculty-en.html      ← faculty roster
-  about.html, about-en.html          ← about page
-  courses/
-    <slug>.html, <slug>.en.html      ← one detail page per course
-  styles/
-    tokens.css                       ← thin re-export of design-system/colors_and_type.css
-    base.css                         ← reset + element defaults
-    components.css                   ← .btn, .badge, .nav, .card, .footer, etc.
-    pages/
-      home.css                       ← homepage-only sections
-      course-detail.css              ← course detail / inner page hero / prose layout
-  scripts/
-    render-courses.js                ← reads data/courses.js → injects into [data-course-grid]
-    render-faculty.js                ← reads data/faculty.js → injects into [data-faculty-grid]
-    nav.js                           ← mobile menu toggle
-  data/
-    courses.js                       ← course catalogue (multilingual fields)
-    faculty.js                       ← faculty roster (multilingual fields)
-    strings.js                       ← UI strings used by render scripts
-  assets/
-    logo.svg, logo-dark.svg, favicon.svg
-    faculty/<id>.jpeg                ← canonical home for portraits
-    hero/hero-{1..6}.jpeg            ← homepage hero photo-stack carousel
+index.html, index-en.html            ← homepage (TR / EN)
+courses.html, courses-en.html        ← course listing
+faculty.html, faculty-en.html        ← faculty roster
+about.html, about-en.html            ← about page
+courses/
+  <slug>.html, <slug>.en.html        ← one detail page per course
+styles/
+  tokens.css                         ← thin re-export of design-system/colors_and_type.css
+  base.css                           ← reset + element defaults
+  components.css                     ← .btn, .badge, .nav, .card, .footer, etc.
+  pages/
+    home.css                         ← homepage-only sections
+    course-detail.css                ← course detail / inner page hero / prose layout
+scripts/
+  render-courses.js                  ← reads data/courses.js → injects into [data-course-grid]
+  render-faculty.js                  ← reads data/faculty.js → injects into [data-faculty-grid]
+  nav.js                             ← mobile menu toggle
+  event-availability.js              ← live "X kontenjan kaldı" badge on course detail pages
+data/
+  courses.js                         ← course catalogue (multilingual fields)
+  faculty.js                         ← faculty roster (multilingual fields)
+  strings.js                         ← UI strings used by render scripts
+assets/
+  logo.svg, logo-dark.svg, favicon.svg
+  faculty/<id>.jpeg                  ← canonical home for portraits
+  hero/hero-{1..6}.jpeg              ← homepage hero photo-stack carousel
 ```
 
 ### Homepage hero photo stack
 
-The right side of the dark hero on `/deneme/index.html` and `/deneme/index-en.html` is a CSS-only crossfading carousel — six photos under `deneme/assets/hero/`, ~6 seconds each, 36-second loop. All animation is keyframe-driven (`@keyframes hps-rotate` in `styles/pages/home.css`), no JS. The carousel hides itself below 900px viewport so the headline gets full width on mobile, and falls back to a single static photo for `prefers-reduced-motion`. To swap photos, replace files in place keeping the `hero-1.jpeg` … `hero-6.jpeg` filenames; to change count, update both the `.hps-pN` rules and the keyframe percentages so the timing still divides evenly. Originally adapted from a React/Vite handoff (`HeroPhotoStack.jsx`) — that JSX is not in the repo because the static build is the source of truth.
+The right side of the dark hero on `index.html` and `index-en.html` is a CSS-only crossfading carousel — six photos under `assets/hero/`, ~6 seconds each, 36-second loop. All animation is keyframe-driven (`@keyframes hps-rotate` in `styles/pages/home.css`), no JS. The carousel hides itself below 900px viewport so the headline gets full width on mobile, and falls back to a single static photo for `prefers-reduced-motion`. To swap photos, replace files in place keeping the `hero-1.jpeg` … `hero-6.jpeg` filenames; to change count, update both the `.hps-pN` rules and the keyframe percentages so the timing still divides evenly. Originally adapted from a React/Vite handoff (`HeroPhotoStack.jsx`) — that JSX is not in the repo because the static build is the source of truth.
 
 ### How content is structured
 
@@ -84,23 +90,21 @@ Render scripts find target containers by attribute:
 - `<div data-faculty-grid></div>` — renders all faculty
 - `<div data-faculty-grid data-ids="mahir-topaloglu,mert-zure"></div>` — renders specific faculty in order
 
-### Adding things to /deneme/
+### Adding things to the marketing site
 
-**A course.** Add an entry to `deneme/data/courses.js` (see existing entries for the field shape: `id`, `slug`, `detail.{tr,en}`, `thumbLabel.{tr,en}`, `title.{tr,en}`, `level.{tr,en}`, `venue`, `city`, `date.{tr,en}`, `iso`, `spots`, `maxSpots`, `price` or `null`, `joints.{tr,en}`, `description.{tr,en}` (array of HTML strings), `signature.{tr,en}`, `signatureBy.{tr,en}`, `schedule.{tr,en}`, `facultyIds`). Create `deneme/courses/<slug>.html` and `<slug>.en.html` from the existing detail-page template.
+**A course.** Add an entry to `data/courses.js` (see existing entries for the field shape: `id`, `slug`, `detail.{tr,en}`, `thumbLabel.{tr,en}`, `title.{tr,en}`, `level.{tr,en}`, `venue`, `city`, `date.{tr,en}`, `iso`, `spots`, `maxSpots`, `price` or `null`, `joints.{tr,en}`, `description.{tr,en}` (array of HTML strings), `signature.{tr,en}`, `signatureBy.{tr,en}`, `schedule.{tr,en}`, `facultyIds`). Create `courses/<slug>.html` and `<slug>.en.html` from the existing detail-page template.
 
-**A faculty member.** Drop a square JPEG into `deneme/assets/faculty/<id>.jpeg` (lowercase, hyphenated, ASCII: ş→s, ı→i, etc.). Add an entry to `deneme/data/faculty.js` with `id`, `photo`, `name` (TR display), `nameEn`, `title.{tr,en}`, `institution.{tr,en}`, `city.{tr,en}`, `role` (`director` | `faculty` | `coordination`). Reference by ID in a course's `facultyIds` if appropriate.
+**A faculty member.** Drop a square JPEG into `assets/faculty/<id>.jpeg` (lowercase, hyphenated, ASCII: ş→s, ı→i, etc.). Add an entry to `data/faculty.js` with `id`, `photo`, `name` (TR display), `nameEn`, `title.{tr,en}`, `institution.{tr,en}`, `city.{tr,en}`, `role` (`director` | `faculty` | `coordination`). Reference by ID in a course's `facultyIds` if appropriate.
 
 **A language (e.g. German).** Add a `de` key to every multilingual field in `data/*.js`. Create the German page variants (`index-de.html`, `courses-de.html`, etc.). Update the `nav__lang` switcher on every page.
 
-## 4. /deneme-kayit/ structure (registration sandbox)
+## 4. /kayit/ structure (registration form) and /deneme-kayit/admin/ (admin board)
 
-Two-page Turkish-only sandbox for the registration flow. Built static today; the form `POST` and admin auth get wired after the Vercel migration.
+Public registration page is served from `/kayit/`; the admin board stays at `/deneme-kayit/admin/` as soft URL gating until OAuth ships (Session 3). Both pages share the same CSS and the same `scripts/` directory under `/kayit/` — the admin HTML at `/deneme-kayit/admin/index.html` loads its stylesheets and `admin.js` via absolute paths under `/kayit/`.
 
 ```
-deneme-kayit/
+kayit/
   index.html                         ← public registration page (TR)
-  admin/
-    index.html                       ← admin protected page (TR, mock auth)
   styles/
     tokens.css                       ← thin re-export of design-system/colors_and_type.css
     base.css                         ← reset + element defaults
@@ -110,6 +114,11 @@ deneme-kayit/
     register.js                      ← public form handler; constants on top
     admin.js                         ← admin board: state, render, dialogs, optimistic updates
     admin-api.js                     ← thin fetch() wrappers for the 7 admin routes
+
+deneme-kayit/
+  admin/
+    index.html                       ← admin protected page (TR, mock auth);
+                                       loads CSS and admin.js from /kayit/.
 ```
 
 ### Wiring constants live at the top of register.js
@@ -122,11 +131,11 @@ const USE_MOCK_RESPONSE = false;
 
 The frontend `POST`s the form payload to `REGISTER_ENDPOINT` and reads the JSON `{ error, code }` body on non-2xx to surface the Turkish error message in the form's error banner. `USE_MOCK_RESPONSE = true` is a local-dev fallback that simulates a 500ms-delayed success without hitting the API.
 
-Admin page is mock-mode only: an amber banner reads *"Mock modu — Google OAuth Vercel geçişinden sonra eklenecek."* The table reads from `scripts/mock-data.js`. Filter and per-row actions mutate the local array and re-render. No persistence.
+Admin page is mock-mode only: an amber banner reads *"Mock modu — Google OAuth Vercel geçişinden sonra eklenecek."* All admin mutations go through `api/admin/*` (real Supabase reads/writes — no client-side mock data); every log entry written by these routes is stamped `created_by: 'mock-admin'` until OAuth replaces it (Session 3). The admin URL is intentionally not advertised in the marketing site nav.
 
-### Adding things to /deneme-kayit/
+### Adding things to /kayit/
 
-**A new event.** Append a row to the Supabase `events` table (post-migration) with `is_active = true`. Set `EVENT_ID` in `register.js` to its `id`, or — once we support multiple active events — extend the public page to a small picker.
+**A new event.** Append a row to the Supabase `events` table with `is_active = true`. Set `EVENT_ID` in `kayit/scripts/register.js` to its `id`, or — once we support multiple active events — extend the public page to a small picker.
 
 **A new admin email.** Append it to the allowlist in §5.
 
@@ -134,7 +143,7 @@ Admin page is mock-mode only: an amber banner reads *"Mock modu — Google OAuth
 
 Target stack:
 
-- **Vercel** for hosting + serverless API routes. The two HTML sandboxes become static-rendered pages of a Next.js (or similar) app.
+- **Vercel** for hosting + serverless API routes. Static HTML at the apex and under `/kayit/` is served directly; routes under `api/` are auto-detected as serverless functions.
 - **Supabase** for Postgres + Auth (Google OAuth). Schema in §8. Row-level security policies will gate the admin views; for now the allowlist is enforced at the application layer.
 - **Resend** for transactional email. Four email types, see §6.
 
@@ -400,7 +409,7 @@ insert into events (
 
 ## 9. Admin actions and status transitions
 
-The `registrations.status` enum has four values: `applied`, `paid`, `cancelled`, `refunded`. The state machine is enforced server-side in `api/admin/_transitions.js` and mirrored client-side in `deneme-kayit/scripts/shared.js` for UI affordances.
+The `registrations.status` enum has four values: `applied`, `paid`, `cancelled`, `refunded`. The state machine is enforced server-side in `api/admin/_transitions.js` and mirrored client-side in `kayit/scripts/shared.js` for UI affordances.
 
 | From → To | Action label (TR) | Email triggered | Gating in dialog | Log entries written |
 |---|---|---|---|---|
@@ -437,21 +446,21 @@ When an admin action both changes status and dispatches an email (Email 3/5/6), 
 ```sh
 cd /Users/denizsarikaya/SonoInjection/web
 python3 -m http.server 8000
-# open http://localhost:8000/deneme/  or  http://localhost:8000/deneme-kayit/
+# open http://localhost:8000/  or  http://localhost:8000/kayit/  or  http://localhost:8000/deneme-kayit/admin/
 ```
 
 ES module imports require a server (won't work via `file://`).
 
-Pre-commit checklist for `/deneme/`:
+Pre-commit checklist for the marketing site:
 - TR↔EN switcher round-trips on every page
 - The course detail language switcher points to the sister detail page (not the homepage)
 - Faculty photos load on homepage, faculty page, and course detail
 - DevTools console is clean
 
-Pre-commit checklist for `/deneme-kayit/`:
-- Public form submits in mock mode and shows the success state
+Pre-commit checklist for `/kayit/` and `/deneme-kayit/admin/`:
+- Public form submits and shows the success state (against the real API or with `USE_MOCK_RESPONSE = true`)
 - All required fields enforce validation; `Seçiniz` placeholders cannot be left selected
-- Admin page renders the mock data, filters work, and per-row actions update the row in place
+- Admin page renders Supabase data, filters work, and per-row actions update the row in place
 - Mock-mode banner is visible on `/deneme-kayit/admin/`
 - Console is clean
 
@@ -478,10 +487,9 @@ DNS (Squarespace, backed by Google Cloud DNS):
 GitHub Pages is decommissioned (`Settings → Pages → Source: None`).
 
 Live URLs:
-- `sonoinjection.com` → 307 redirect to `/deneme/`
-- `sonoinjection.com/deneme/` — marketing site (TR + EN)
-- `sonoinjection.com/deneme-kayit/` — public registration form
-- `sonoinjection.com/deneme-kayit/admin/` — admin board (mock auth until Session 3)
+- `sonoinjection.com` — marketing site (TR + EN), served directly from `/`
+- `sonoinjection.com/kayit/` — public registration form
+- `sonoinjection.com/deneme-kayit/admin/` — admin board (mock auth until Session 3; URL deliberately kept off `/kayit/` as soft gating)
 - `sonoinjection.com/api/*` — serverless functions (`register`, `admin/*`)
 
 ## 13. Voice & copy
