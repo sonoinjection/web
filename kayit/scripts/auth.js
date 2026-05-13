@@ -51,7 +51,11 @@ export async function signInWithEmail(email, redirectTo) {
     email,
     options: {
       emailRedirectTo: redirectTo,
-      shouldCreateUser: true,
+      // Project signups are off — admin auth.users rows are
+      // pre-created in Supabase. Unknown emails get a Supabase
+      // error (or a silent no-email-sent response, depending on
+      // version) instead of opening a self-serve account.
+      shouldCreateUser: false,
     },
   });
 }

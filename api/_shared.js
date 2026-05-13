@@ -145,11 +145,16 @@ export const ADMIN_FROM_EMAIL = 'SonoInjection <kayit@sonoinjection.com>';
 export const ADMIN_REPLY_TO = 'kayit@sonoinjection.com';
 
 // Admin allowlist: only these emails may sign in to /deneme-kayit/admin/.
-// Append entries (any email — Workspace, personal Gmail, etc.) to grant
-// access; remove + redeploy to revoke. Matches lowercase.
+// To grant access: add the email both here AND in Supabase
+// (Authentication → Users → Add user), since signups are disabled at
+// the project level. Remove + redeploy to revoke (also delete from
+// Supabase Users if you want to invalidate the auth record). Matches
+// lowercase.
 export const ADMIN_ALLOWLIST = new Set([
   'info@sonoinjection.com',
   'kayit@sonoinjection.com',
+  'sarikayad3@gmail.com',
+  'mahirtopaloglu87@gmail.com',
 ]);
 
 export const ADMIN_PANEL_URL = 'https://sonoinjection.com/deneme-kayit/admin/';
