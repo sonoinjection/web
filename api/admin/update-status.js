@@ -15,10 +15,10 @@ import {
   jsonError,
   parseBody,
   requireMethod,
+  requireAdmin,
   logServerError,
   logEvent,
   ADMIN_REPLY_TO,
-  MOCK_ADMIN_EMAIL,
   ConfigError,
 } from '../_shared.js';
 import {
@@ -37,12 +37,10 @@ import {
   writeEmailSentLog,
 } from '../_log.js';
 
-// TODO Session 3: derive the admin email from Google OAuth, gate
-// by ADMIN_ALLOWLIST, and pass it into writeStatusChangeLog as
-// `created_by` instead of MOCK_ADMIN_EMAIL.
-
 export default async function handler(req, res) {
   if (!requireMethod(req, res, 'POST')) return;
+  const adminEmail = await requireAdmin(req, res);
+  if (!adminEmail) return;
 
   const body = parseBody(req);
   if (!body) {
@@ -109,7 +107,7 @@ export default async function handler(req, res) {
 
   if (registration.status === 'applied' && new_status === 'paid') {
     update.confirmed_at = now;
-    update.confirmed_by = MOCK_ADMIN_EMAIL;
+    update.confirmed_by = adminEmail;
     if (payment_reference) update.payment_reference = payment_reference;
   } else if (new_status === 'cancelled') {
     update.cancelled_at = now;
@@ -125,7 +123,7 @@ export default async function handler(req, res) {
   } else if (registration.status === 'refunded' && new_status === 'paid') {
     // Restoring to paid: re-stamp confirmation.
     update.confirmed_at = now;
-    update.confirmed_by = MOCK_ADMIN_EMAIL;
+    update.confirmed_by = adminEmail;
   }
 
   const { data: updated, error: updateErr } = await supabase
@@ -209,7 +207,7 @@ export default async function handler(req, res) {
       ? refund_completed_confirmed
       : null,
     sent_email: emailDispatch.sent,
-    created_by: MOCK_ADMIN_EMAIL,
+    created_by: adminEmail,
   });
 
   // Write email_sent log entry if applicable.

@@ -1,6 +1,6 @@
 /* ============================================================
    components.css — registration sandbox building blocks
-   Form, button, table, status pills, mock-mode banner, header.
+   Form, button, table, status pills, auth overlay, header.
    ============================================================ */
 
 /* ── Wave / glow (decorative for dark hero) ─────── */
@@ -417,21 +417,111 @@
 .status-pill--expired   { background: var(--slate-100); color: var(--slate-600); border: 1px solid var(--slate-200); }
 .status-pill--cancelled { background: #fee2e2;        color: #b91c1c;          border: 1px solid #fecaca; }
 
-/* ── Mock-mode banner (admin) ────────────────────── */
-.mock-banner {
-  background: var(--amber-50);
-  border-bottom: 1px solid var(--amber-100);
-  padding: var(--space-3) var(--space-12);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  color: var(--amber-800);
+/* ── Site header actions (user badge + signout) ──── */
+.site-header__actions {
   display: flex;
   align-items: center;
   gap: var(--space-3);
 }
-.mock-banner svg { width: 18px; height: 18px; flex-shrink: 0; }
+.user-badge__email {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--slate-700);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 @media (max-width: 600px) {
-  .mock-banner { padding: var(--space-3) var(--space-6); }
+  .user-badge__email { display: none; }
+}
+
+/* ── Auth overlay (admin login / denied) ─────────── */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  z-index: 200;
+}
+.auth-overlay[hidden] { display: none; }
+
+.auth-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+  padding: var(--space-12);
+  max-width: 460px;
+  width: 100%;
+}
+.auth-card__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+}
+.auth-card__panel[hidden] { display: none; }
+
+.auth-card__title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--navy-900);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1.2;
+  margin: 0;
+}
+.auth-card__lead {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--slate-700);
+  line-height: 1.5;
+  margin: 0;
+}
+.auth-card__hint {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--slate-500);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.auth-card__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--teal-50);
+  color: var(--teal-700);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.auth-card__icon svg { width: 24px; height: 24px; }
+.auth-card__icon--warn { background: var(--amber-50); color: var(--amber-700); }
+
+.auth-card__spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--slate-200);
+  border-top-color: var(--teal-500);
+  border-radius: 50%;
+  animation: auth-spin 0.8s linear infinite;
+}
+@keyframes auth-spin { to { transform: rotate(360deg); } }
+
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  text-align: left;
 }
 
 /* ── Filter bar (admin) ──────────────────────────── */

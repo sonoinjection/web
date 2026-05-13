@@ -11,15 +11,13 @@ import {
   jsonError,
   parseBody,
   requireMethod,
+  requireAdmin,
   trimmedString,
   logServerError,
   logEvent,
-  MOCK_ADMIN_EMAIL,
   ConfigError,
 } from '../_shared.js';
 import { writeFieldChangeLog } from '../_log.js';
-
-// TODO Session 3: gate by Google OAuth + ADMIN_ALLOWLIST.
 
 const ALLOWED_FIELDS = [
   'first_name', 'last_name', 'email', 'phone',
@@ -35,6 +33,8 @@ const NOTES_MAX = 1000;
 
 export default async function handler(req, res) {
   if (!requireMethod(req, res, 'POST')) return;
+  const adminEmail = await requireAdmin(req, res);
+  if (!adminEmail) return;
 
   const body = parseBody(req);
   if (!body) return jsonError(res, 400, 'INVALID_BODY', 'Geçersiz istek gövdesi.');
@@ -155,7 +155,7 @@ export default async function handler(req, res) {
       field,
       old_value: current[field] ?? null,
       new_value: newValue ?? null,
-      created_by: MOCK_ADMIN_EMAIL,
+      created_by: adminEmail,
     });
     if (entry) logEntries.unshift(entry); // newest first
   }

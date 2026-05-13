@@ -13,13 +13,12 @@ import {
   jsonError,
   parseBody,
   requireMethod,
+  requireAdmin,
   trimmedString,
   logServerError,
   logEvent,
   ConfigError,
 } from '../_shared.js';
-
-// TODO Session 3: gate by Google OAuth + ADMIN_ALLOWLIST.
 
 const ALLOWED_FIELDS = [
   'title_tr',
@@ -47,6 +46,8 @@ const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 export default async function handler(req, res) {
   if (!requireMethod(req, res, 'POST')) return;
+  const adminEmail = await requireAdmin(req, res);
+  if (!adminEmail) return;
 
   const body = parseBody(req);
   if (!body) return jsonError(res, 400, 'INVALID_BODY', 'Geçersiz istek gövdesi.');

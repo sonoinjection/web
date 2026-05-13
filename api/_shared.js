@@ -143,12 +143,62 @@ export function requireMethod(req, res, method) {
 // ── Constants ─────────────────────────────────────────────────
 export const ADMIN_FROM_EMAIL = 'SonoInjection <kayit@sonoinjection.com>';
 export const ADMIN_REPLY_TO = 'kayit@sonoinjection.com';
-export const ADMIN_ALLOWLIST = [
+
+// Admin allowlist: only these emails may sign in to /deneme-kayit/admin/.
+// Append entries (any email — Workspace, personal Gmail, etc.) to grant
+// access; remove + redeploy to revoke. Matches lowercase.
+export const ADMIN_ALLOWLIST = new Set([
   'info@sonoinjection.com',
   'kayit@sonoinjection.com',
-];
-// TODO Session 3: replace 'mock-admin' with the authenticated admin's
-// email (Google OAuth via Supabase Auth, gated by ADMIN_ALLOWLIST).
-export const MOCK_ADMIN_EMAIL = 'mock-admin';
+]);
 
 export const ADMIN_PANEL_URL = 'https://sonoinjection.com/deneme-kayit/admin/';
+
+// ── Admin auth gate ───────────────────────────────────────────
+// Validates the Bearer JWT on the request, then checks the user's
+// email against ADMIN_ALLOWLIST. On any failure it writes the
+// JSON error response and returns null — callers should bail out:
+//
+//   const adminEmail = await requireAdmin(req, res);
+//   if (!adminEmail) return;
+//
+// On success returns the authenticated lowercase email string,
+// which is the value to use as `created_by` on log writes and
+// `confirmed_by` on status changes.
+export async function requireAdmin(req, res) {
+  const header = req.headers?.authorization || req.headers?.Authorization || '';
+  const match = /^Bearer\s+(.+)$/i.exec(String(header).trim());
+  if (!match) {
+    jsonError(res, 401, 'AUTH_REQUIRED', 'Oturum bulunamadı. Lütfen tekrar giriş yapın.');
+    return null;
+  }
+  const token = match[1];
+
+  let supabase;
+  try {
+    supabase = getSupabase();
+  } catch (err) {
+    if (err instanceof ConfigError) {
+      logServerError('config', err);
+      jsonError(res, 500, 'CONFIG_ERROR', 'Sunucu yapılandırma hatası.');
+      return null;
+    }
+    throw err;
+  }
+
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data?.user?.email) {
+    logEvent('info', 'admin.auth_invalid_token', { reason: error?.message || 'no_user' });
+    jsonError(res, 401, 'AUTH_INVALID', 'Oturum geçersiz veya süresi dolmuş. Lütfen tekrar giriş yapın.');
+    return null;
+  }
+
+  const email = String(data.user.email).toLowerCase();
+  if (!ADMIN_ALLOWLIST.has(email)) {
+    logEvent('warn', 'admin.auth_forbidden', { email });
+    jsonError(res, 403, 'AUTH_FORBIDDEN', 'Bu e-posta yönetici listesinde yok.');
+    return null;
+  }
+
+  return email;
+}

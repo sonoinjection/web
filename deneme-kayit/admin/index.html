@@ -13,12 +13,6 @@
 </head>
 <body>
 
-<!-- ── MOCK BANNER ──────────────────────────────── -->
-<div class="mock-banner" role="status">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg>
-  <span><strong>Mock modu</strong> — Google OAuth Vercel geçişinden sonra eklenecek.</span>
-</div>
-
 <!-- ── HEADER ───────────────────────────────────── -->
 <header class="site-header">
   <div class="site-header__inner">
@@ -28,12 +22,15 @@
       </span>
       <span class="logo__word">SonoInjection · Yönetici</span>
     </a>
-    <a class="site-header__back" href="/kayit/">← Kayıt sayfasına dön</a>
+    <div class="site-header__actions" data-user-badge hidden>
+      <span class="user-badge__email" data-user-email>—</span>
+      <button class="btn btn--ghost btn--sm" type="button" data-signout-button>Çıkış yap</button>
+    </div>
   </div>
 </header>
 
 <!-- ── ADMIN BODY ───────────────────────────────── -->
-<section class="section section--tight">
+<section class="section section--tight" data-admin-body hidden>
   <div class="container">
 
     <div class="admin-head">
@@ -89,6 +86,62 @@
           </tbody>
         </table>
       </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── AUTH OVERLAY (login / denied) ────────────── -->
+<section class="auth-overlay" data-auth-overlay>
+  <div class="auth-card" data-auth-state="loading">
+
+    <!-- Loading state (default while we check the session) -->
+    <div class="auth-card__panel" data-auth-panel="loading">
+      <div class="auth-card__spinner" aria-hidden="true"></div>
+      <p class="auth-card__lead">Oturum kontrol ediliyor…</p>
+    </div>
+
+    <!-- Sign-in form -->
+    <div class="auth-card__panel" data-auth-panel="signin" hidden>
+      <div class="eyebrow">Yönetici Girişi</div>
+      <h1 class="auth-card__title">Giriş yapın</h1>
+      <p class="auth-card__lead">E-posta adresinizi girin; tek tıklamalık bir bağlantı gönderelim.</p>
+      <form class="auth-form" data-signin-form novalidate>
+        <div class="form-field" data-field="auth_email">
+          <label class="form-label" for="auth_email">E-posta</label>
+          <input class="form-input" id="auth_email" name="email" type="email" autocomplete="email" inputmode="email" required />
+          <div class="form-error">Geçerli bir e-posta adresi girin.</div>
+        </div>
+        <div class="form-status-banner form-status-banner--error" data-signin-error role="alert"></div>
+        <div class="form-actions">
+          <button class="btn btn--primary btn--lg btn--block" type="submit" data-signin-submit>
+            <span class="btn__spinner" data-signin-spinner style="display:none;"></span>
+            <span data-signin-label>Giriş bağlantısı gönder</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Magic-link sent confirmation -->
+    <div class="auth-card__panel" data-auth-panel="sent" hidden>
+      <div class="auth-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      </div>
+      <h1 class="auth-card__title">Bağlantı gönderildi</h1>
+      <p class="auth-card__lead"><strong data-sent-email>—</strong> adresinize bir giriş bağlantısı gönderdik. E-postanızdaki bağlantıya tıklayın.</p>
+      <p class="auth-card__hint">Bağlantı bu sekmede açılır; bağlantıyı bu cihazda açın.</p>
+      <button class="btn btn--ghost btn--sm" type="button" data-signin-retry>Farklı bir e-posta dene</button>
+    </div>
+
+    <!-- Forbidden (signed in but not allowlisted) -->
+    <div class="auth-card__panel" data-auth-panel="denied" hidden>
+      <div class="auth-card__icon auth-card__icon--warn" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      </div>
+      <h1 class="auth-card__title">Yetkisiz erişim</h1>
+      <p class="auth-card__lead"><strong data-denied-email>—</strong> bu panelde tanımlı bir yönetici hesabı değil.</p>
+      <p class="auth-card__hint">Erişim için yöneticinizle iletişime geçin.</p>
+      <button class="btn btn--ghost btn--sm" type="button" data-denied-signout>Farklı bir hesapla dene</button>
     </div>
 
   </div>

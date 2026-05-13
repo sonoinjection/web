@@ -27,9 +27,9 @@ Notes for future Claude sessions working on this repo. Read this before making c
   scripts/                 ← browser render scripts AND Node-only diagnostics. See §3 / §11.
   kayit/                   ← public registration form (TR) + shared CSS/JS. See §4.
   deneme-kayit/
-    admin/                 ← admin board (TR, mock auth). URL deliberately kept under
-                             /deneme-kayit/ as soft gating until OAuth ships (Session 3).
-                             Internal CSS/JS load from /kayit/. See §4.
+    admin/                 ← admin board (TR, magic-link auth). URL deliberately kept
+                             off /kayit/ as soft gating. Internal CSS/JS load from
+                             /kayit/. See §4.
   api/                     ← Vercel serverless functions
     register.js            ← POST /api/register
     _shared.js _emails.js _log.js
@@ -40,7 +40,7 @@ Notes for future Claude sessions working on this repo. Read this before making c
       add-log-entry.js
 ```
 
-`index.html` and `index-en.html` are the canonical homepage, served directly from the apex. Production launched on Vercel at `sonoinjection.com` on 2026-05-09 (legacy GitHub-Pages-era root coming-soon pages and the `CNAME` file removed at the same time); the `/deneme/` sandbox prefix was retired and its content promoted to root, and `/deneme-kayit/` was renamed to `/kayit/`, on 2026-05-10. `/deneme-kayit/admin/` was deliberately left in place as URL gating for the admin board until Google OAuth ships (Session 3).
+`index.html` and `index-en.html` are the canonical homepage, served directly from the apex. Production launched on Vercel at `sonoinjection.com` on 2026-05-09 (legacy GitHub-Pages-era root coming-soon pages and the `CNAME` file removed at the same time); the `/deneme/` sandbox prefix was retired and its content promoted to root, and `/deneme-kayit/` was renamed to `/kayit/`, on 2026-05-10. `/deneme-kayit/admin/` was deliberately left in place as URL gating for the admin board (alongside the magic-link auth — see §4/§5).
 
 ## 3. Marketing site structure
 
@@ -100,7 +100,7 @@ Render scripts find target containers by attribute:
 
 ## 4. /kayit/ structure (registration form) and /deneme-kayit/admin/ (admin board)
 
-Public registration page is served from `/kayit/`; the admin board stays at `/deneme-kayit/admin/` as soft URL gating until OAuth ships (Session 3). Both pages share the same CSS and the same `scripts/` directory under `/kayit/` — the admin HTML at `/deneme-kayit/admin/index.html` loads its stylesheets and `admin.js` via absolute paths under `/kayit/`.
+Public registration page is served from `/kayit/`; the admin board stays at `/deneme-kayit/admin/` as soft URL gating, layered with magic-link auth (see below). Both pages share the same CSS and the same `scripts/` directory under `/kayit/` — the admin HTML at `/deneme-kayit/admin/index.html` loads its stylesheets and `admin.js` via absolute paths under `/kayit/`.
 
 ```
 kayit/
@@ -108,16 +108,17 @@ kayit/
   styles/
     tokens.css                       ← thin re-export of design-system/colors_and_type.css
     base.css                         ← reset + element defaults
-    components.css                   ← form, button, table, status pills, mock-mode banner
+    components.css                   ← form, button, table, status pills, auth overlay
   scripts/
     shared.js                        ← validators, label dictionaries (incl. STATUS_LABELS_TR), formatters
     register.js                      ← public form handler; constants on top
-    admin.js                         ← admin board: state, render, dialogs, optimistic updates
-    admin-api.js                     ← thin fetch() wrappers for the 7 admin routes
+    auth.js                          ← Supabase Auth browser wrapper (magic link)
+    admin.js                         ← admin board: state, render, dialogs, optimistic updates, auth gate
+    admin-api.js                     ← thin fetch() wrappers for the 7 admin routes; attaches Bearer token
 
 deneme-kayit/
   admin/
-    index.html                       ← admin protected page (TR, mock auth);
+    index.html                       ← admin protected page (TR, magic-link auth);
                                        loads CSS and admin.js from /kayit/.
 ```
 
@@ -131,20 +132,26 @@ const USE_MOCK_RESPONSE = false;
 
 The frontend `POST`s the form payload to `REGISTER_ENDPOINT` and reads the JSON `{ error, code }` body on non-2xx to surface the Turkish error message in the form's error banner. `USE_MOCK_RESPONSE = true` is a local-dev fallback that simulates a 500ms-delayed success without hitting the API.
 
-Admin page is mock-mode only: an amber banner reads *"Mock modu — Google OAuth Vercel geçişinden sonra eklenecek."* All admin mutations go through `api/admin/*` (real Supabase reads/writes — no client-side mock data); every log entry written by these routes is stamped `created_by: 'mock-admin'` until OAuth replaces it (Session 3). The admin URL is intentionally not advertised in the marketing site nav.
+### Admin authentication (magic link)
+
+Admins sign in by entering their email on the admin overlay; Supabase emails a one-click sign-in link. After clicking, the browser receives a JWT (session persisted via Supabase JS), and every request to `/api/admin/*` carries `Authorization: Bearer <token>`. Server-side, `requireAdmin()` in `api/_shared.js` validates the token via `supabase.auth.getUser(token)` and rejects any email not in `ADMIN_ALLOWLIST`. The authenticated email becomes `created_by` on every `registration_log` row (and `confirmed_by` on status changes).
+
+Browser-side Supabase config (URL + anon publishable key) is served by `/api/auth-config`, which reads `SUPABASE_URL` and `SUPABASE_ANON_KEY` from env. The anon key is public-by-design — access control lives in `requireAdmin()`.
+
+Adding an admin = append the email to `ADMIN_ALLOWLIST` in `api/_shared.js` and redeploy. The list is case-insensitive (the gate lowercases before comparing).
 
 ### Adding things to /kayit/
 
 **A new event.** Append a row to the Supabase `events` table with `is_active = true`. Set `EVENT_ID` in `kayit/scripts/register.js` to its `id`, or — once we support multiple active events — extend the public page to a small picker.
 
-**A new admin email.** Append it to the allowlist in §5.
+**A new admin email.** Append it to `ADMIN_ALLOWLIST` in `api/_shared.js` (also documented in §5). Any email type works — Workspace, personal Gmail, anything — since magic links go via Supabase Auth's SMTP, not Google OAuth.
 
-## 5. Vercel migration plan
+## 5. Vercel runtime (API routes, env, allowlist)
 
-Target stack:
+Stack:
 
 - **Vercel** for hosting + serverless API routes. Static HTML at the apex and under `/kayit/` is served directly; routes under `api/` are auto-detected as serverless functions.
-- **Supabase** for Postgres + Auth (Google OAuth). Schema in §8. Row-level security policies will gate the admin views; for now the allowlist is enforced at the application layer.
+- **Supabase** for Postgres + Auth (magic-link email). Schema in §8. Access control is enforced at the application layer by `requireAdmin()` checking `ADMIN_ALLOWLIST` (see §4). RLS stays disabled — adding it is a future hardening step but not required for two-admin scale.
 - **Resend** for transactional email. Four email types, see §6.
 
 ### Vercel API routes
@@ -154,7 +161,7 @@ All routes live under `api/` (Vercel auto-detects). Files prefixed with `_` are 
 **Public**
 - `POST /api/register` — receives the public form payload. Validates, enforces capacity (`capacity − reserved_for_external`) and duplicate-email checks, inserts a `registrations` row with `status = 'applied'`, dispatches Email 1 (registrant) + Email 2 (admin), and writes the corresponding `email_sent` log entries. Email failures don't fail the request. Stable error codes: `VALIDATION_ERROR`, `EVENT_NOT_ACTIVE`, `CAPACITY_FULL`, `DUPLICATE_REGISTRATION`, `INSERT_FAILED`, `CONFIG_ERROR`, `INVALID_BODY`, `METHOD_NOT_ALLOWED`.
 
-**Admin** — implemented in Session 1; mock auth (no OAuth gate yet — Session 3). Every log entry these routes write is stamped `created_by: 'mock-admin'`.
+**Admin** — every route runs `requireAdmin(req, res)` first (validates the Bearer JWT, rejects emails not in `ADMIN_ALLOWLIST`). The returned email is stamped as `created_by` on every log write and `confirmed_by` on status changes.
 - `GET  /api/admin/list-events` — events sorted by `event_date desc`, each augmented with `counts` (`applied`, `paid`, `cancelled`, `refunded`, `active_count`, `total_count`).
 - `GET  /api/admin/list-registrations?event_id=…` — registrations for an event + each row's most recent `registration_log` entry.
 - `GET  /api/admin/get-registration?id=…` — one registration + full log timeline (desc).
@@ -162,6 +169,9 @@ All routes live under `api/` (Vercel auto-detects). Files prefixed with `_` are 
 - `POST /api/admin/update-registration` — diff-based field updates (whitelisted fields only). One `admin_note` log entry per changed field.
 - `POST /api/admin/update-event` — admin-edited event metadata. Whitelisted fields only; `price_gross_try` is generated by Postgres and never accepted as input.
 - `POST /api/admin/add-log-entry` — manual `admin_note` and `contact` entries from the detail-modal Geçmiş timeline.
+
+**Auth bootstrap**
+- `GET /api/auth-config` — returns `{ supabaseUrl, supabaseAnonKey }` from env so the admin browser can construct a Supabase Auth client without hardcoding values. Anon key is public-by-design.
 
 Cron / scheduled tasks are not yet implemented. Email 4 (pre-course reminder) is the only outstanding one — it'll select rows where `status = 'confirmed'` AND `event_date - 7 days = today` AND `reminder_sent_at IS NULL`, send the email, and stamp `reminder_sent_at`.
 
@@ -172,7 +182,8 @@ There is **no automatic expiry** of `applied` registrations. Cancellations are a
 ```
 api/
   register.js                 ← public form handler
-  _shared.js                  ← Supabase + Resend client init, jsonError, parseBody, formatters
+  auth-config.js              ← public GET → {supabaseUrl, supabaseAnonKey} for the admin browser
+  _shared.js                  ← Supabase + Resend client init, requireAdmin(), formatters, ADMIN_ALLOWLIST
   _emails.js                  ← email templates (1, 2, 3, 5, 6) + sendEmail()
   _log.js                     ← registration_log writers
   admin/
@@ -188,20 +199,21 @@ api/
 
 ### Required environment variables
 
-`api/register.js` reads these from `process.env`. Set them in Vercel project settings (Production + Preview):
+Set these in Vercel project settings (Production + Preview). Mirror them in a local `.env.local` (gitignored) for the diagnostic scripts in §11.
 
 - `SUPABASE_URL` — Supabase project URL.
-- `SUPABASE_SERVICE_ROLE_KEY` — service-role key (server-only; never expose to the browser).
+- `SUPABASE_SERVICE_ROLE_KEY` — service-role key (server-only; used by every server function via `getSupabase()`).
+- `SUPABASE_ANON_KEY` — Supabase anon/publishable key. Public-by-design; served to the admin browser via `/api/auth-config` so it can construct a Supabase Auth client.
 - `RESEND_API_KEY` — Resend API key. The `from` address `kayit@sonoinjection.com` requires the `sonoinjection.com` domain to be verified in Resend.
 
 ### Admin allowlist (current)
 
-Only the following emails are permitted to sign in to the admin UI. The admin page checks the authenticated email against this set on every request.
+Only the following emails are permitted to sign in to the admin UI. `requireAdmin()` in `api/_shared.js` checks the authenticated email (case-insensitive) against this set on every admin request.
 
 - `info@sonoinjection.com`
 - `kayit@sonoinjection.com`
 
-To add an admin: append the email to this list (and to the equivalent allowlist constant in the deployed app code). Removal is the same operation in reverse.
+To add an admin: append the email to `ADMIN_ALLOWLIST` in `api/_shared.js` and redeploy. Any email host works — Workspace, personal Gmail, etc. — since auth is magic-link, not Google OAuth. Removal is the same operation in reverse.
 
 ## 6. Email pipeline
 
@@ -330,7 +342,7 @@ create table registration_log (
   entry_type      registration_log_entry_type_t not null,
   message         text,
   metadata        jsonb,
-  created_by      text not null,           -- admin email (or 'mock-admin' until OAuth) or 'system'
+  created_by      text not null,           -- authenticated admin email (set by requireAdmin) or 'system'
   created_at      timestamptz not null default now()
 );
 
@@ -341,9 +353,9 @@ create index on registration_log (registration_id, created_at desc);
 
 ### Admin actions write to registration_log via the Vercel API only
 
-Admin pages do **not** write directly to Supabase from the browser. All mutations go through the routes under `api/admin/` (see §5). This keeps the validation and audit-log writes centralized server-side. RLS is currently disabled on every table — Session 3 will turn it on alongside Google OAuth.
+Admin pages do **not** write directly to Supabase from the browser. All mutations go through the routes under `api/admin/` (see §5). This keeps validation and audit-log writes centralized server-side. RLS stays disabled — auth is enforced at the application layer by `requireAdmin()` in `api/_shared.js`, which validates the Bearer JWT and gates on `ADMIN_ALLOWLIST`.
 
-The `created_by` column on every log entry is currently hardcoded to the literal string `'mock-admin'` for human-driven actions and `'system'` for automated events (email dispatches, cron jobs once they ship). Each admin route has a `// TODO Session 3` comment marking the swap point where this becomes the authenticated admin's email — gated by `ADMIN_ALLOWLIST` in `api/_shared.js`.
+`created_by` on every log entry is the authenticated admin's email returned by `requireAdmin()`. `'system'` is reserved for automated events (email dispatches by `api/register.js`, cron jobs once they ship).
 
 ### Applied migrations
 
@@ -489,7 +501,7 @@ GitHub Pages is decommissioned (`Settings → Pages → Source: None`).
 Live URLs:
 - `sonoinjection.com` — marketing site (TR + EN), served directly from `/`
 - `sonoinjection.com/kayit/` — public registration form
-- `sonoinjection.com/deneme-kayit/admin/` — admin board (mock auth until Session 3; URL deliberately kept off `/kayit/` as soft gating)
+- `sonoinjection.com/deneme-kayit/admin/` — admin board (magic-link auth via Supabase + `ADMIN_ALLOWLIST`; URL deliberately kept off `/kayit/` as soft gating)
 - `sonoinjection.com/api/*` — serverless functions (`register`, `admin/*`)
 
 ## 13. Voice & copy

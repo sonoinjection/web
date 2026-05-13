@@ -4,7 +4,8 @@
    detail modal, six action dialogs (status + log entry).
    ============================================================ */
 
-import { adminApi } from './admin-api.js';
+import { adminApi, setUnauthorizedHandler } from './admin-api.js';
+import { getSession, signInWithEmail, signOut } from './auth.js';
 import {
   STATUS_LABELS_TR,
   ENTRY_TYPE_LABELS_TR,
@@ -34,6 +35,21 @@ const els = {
   actionDialog:          document.querySelector('[data-action-dialog]'),
   actionDialogContent:   document.querySelector('[data-action-dialog-content]'),
   toastContainer:        document.querySelector('[data-toast-container]'),
+  // Auth
+  adminBody:             document.querySelector('[data-admin-body]'),
+  authOverlay:           document.querySelector('[data-auth-overlay]'),
+  userBadge:             document.querySelector('[data-user-badge]'),
+  userEmail:             document.querySelector('[data-user-email]'),
+  signinForm:            document.querySelector('[data-signin-form]'),
+  signinError:           document.querySelector('[data-signin-error]'),
+  signinSubmit:          document.querySelector('[data-signin-submit]'),
+  signinSpinner:         document.querySelector('[data-signin-spinner]'),
+  signinLabel:           document.querySelector('[data-signin-label]'),
+  signinRetry:           document.querySelector('[data-signin-retry]'),
+  signoutButton:         document.querySelector('[data-signout-button]'),
+  deniedSignout:         document.querySelector('[data-denied-signout]'),
+  sentEmail:             document.querySelector('[data-sent-email]'),
+  deniedEmail:           document.querySelector('[data-denied-email]'),
 };
 
 // ── State ─────────────────────────────────────────────────────
@@ -50,12 +66,19 @@ const state = {
   detail: { open: false, registration: null, log: [] },
   pendingDialog: null,            // 'paid' | 'cancelled' | 'refunded' | 'reactivate' | 'note' | 'contact'
   pendingDialogTransition: null,  // for reactivate, the inferred new status
+  adminEmail: null,               // authenticated email after requireAdmin passes
 };
 
 // ── Boot ──────────────────────────────────────────────────────
 boot();
 
 async function boot() {
+  bindAuthControls();
+  setUnauthorizedHandler(handleUnauthorized);
+
+  const authorized = await runAuthFlow();
+  if (!authorized) return;
+
   // Event-select listener.
   els.eventSelect.addEventListener('change', () => {
     selectEvent(els.eventSelect.value);
@@ -83,6 +106,125 @@ async function boot() {
   });
 
   await loadEvents();
+}
+
+// ── Auth flow ─────────────────────────────────────────────────
+async function runAuthFlow() {
+  setAuthPanel('loading');
+  const session = await getSession().catch(() => null);
+  if (session?.user?.email) {
+    return tryEnterAdmin(session.user.email);
+  }
+  setAuthPanel('signin');
+  return false;
+}
+
+async function tryEnterAdmin(email) {
+  setAuthPanel('loading');
+  try {
+    await adminApi.listEvents();
+    state.adminEmail = email;
+    if (els.userEmail) els.userEmail.textContent = email;
+    if (els.userBadge) els.userBadge.hidden = false;
+    hideAuthOverlay();
+    return true;
+  } catch (err) {
+    if (err?.status === 403) {
+      setAuthPanel('denied', { email });
+    } else if (err?.status === 401) {
+      setAuthPanel('signin');
+    } else {
+      setAuthPanel('signin');
+      showSigninError(err?.message || 'Giriş başarısız oldu.');
+    }
+    return false;
+  }
+}
+
+function bindAuthControls() {
+  els.signinForm?.addEventListener('submit', onSigninSubmit);
+  els.signinRetry?.addEventListener('click', () => {
+    clearSigninError();
+    setAuthPanel('signin');
+  });
+  els.signoutButton?.addEventListener('click', async () => {
+    await signOut();
+    window.location.reload();
+  });
+  els.deniedSignout?.addEventListener('click', async () => {
+    await signOut();
+    clearSigninError();
+    setAuthPanel('signin');
+  });
+}
+
+async function onSigninSubmit(event) {
+  event.preventDefault();
+  clearSigninError();
+  const input = els.signinForm.querySelector('#auth_email');
+  const email = (input?.value || '').trim().toLowerCase();
+  const emailField = els.signinForm.querySelector('[data-field="auth_email"]');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    emailField?.classList.add('form-field--invalid');
+    return;
+  }
+  emailField?.classList.remove('form-field--invalid');
+
+  setSigninLoading(true);
+  try {
+    const redirectTo = window.location.origin + window.location.pathname;
+    const { error } = await signInWithEmail(email, redirectTo);
+    if (error) throw new Error(error.message || 'Giriş bağlantısı gönderilemedi.');
+    if (els.sentEmail) els.sentEmail.textContent = email;
+    setAuthPanel('sent');
+  } catch (err) {
+    showSigninError(err.message || 'Giriş bağlantısı gönderilemedi.');
+  } finally {
+    setSigninLoading(false);
+  }
+}
+
+function setAuthPanel(name, opts = {}) {
+  if (!els.authOverlay) return;
+  els.authOverlay.hidden = false;
+  if (els.adminBody) els.adminBody.hidden = true;
+  if (els.userBadge) els.userBadge.hidden = true;
+  document.querySelectorAll('.auth-card__panel').forEach((p) => {
+    p.hidden = p.dataset.authPanel !== name;
+  });
+  if (name === 'denied' && els.deniedEmail && opts.email) {
+    els.deniedEmail.textContent = opts.email;
+  }
+}
+
+function hideAuthOverlay() {
+  if (els.authOverlay) els.authOverlay.hidden = true;
+  if (els.adminBody) els.adminBody.hidden = false;
+}
+
+function setSigninLoading(loading) {
+  if (els.signinSubmit) els.signinSubmit.disabled = loading;
+  if (els.signinSpinner) els.signinSpinner.style.display = loading ? '' : 'none';
+  if (els.signinLabel) els.signinLabel.textContent = loading ? 'Gönderiliyor…' : 'Giriş bağlantısı gönder';
+}
+
+function showSigninError(message) {
+  if (!els.signinError) return;
+  els.signinError.textContent = message;
+  els.signinError.classList.add('is-active');
+}
+
+function clearSigninError() {
+  if (!els.signinError) return;
+  els.signinError.textContent = '';
+  els.signinError.classList.remove('is-active');
+}
+
+async function handleUnauthorized() {
+  await signOut().catch(() => {});
+  state.adminEmail = null;
+  if (els.userBadge) els.userBadge.hidden = true;
+  setAuthPanel('signin');
 }
 
 // ── Loaders ───────────────────────────────────────────────────

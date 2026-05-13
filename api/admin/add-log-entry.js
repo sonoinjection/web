@@ -10,14 +10,12 @@ import {
   jsonError,
   parseBody,
   requireMethod,
+  requireAdmin,
   trimmedString,
   logServerError,
-  MOCK_ADMIN_EMAIL,
   ConfigError,
 } from '../_shared.js';
 import { writeAdminNoteLog, writeContactLog } from '../_log.js';
-
-// TODO Session 3: gate by Google OAuth + ADMIN_ALLOWLIST.
 
 const ALLOWED_ENTRY_TYPES = new Set(['admin_note', 'contact']);
 const ALLOWED_CONTACT_METHODS = new Set(['phone', 'email', 'in_person']);
@@ -25,6 +23,8 @@ const MESSAGE_MAX = 4000;
 
 export default async function handler(req, res) {
   if (!requireMethod(req, res, 'POST')) return;
+  const adminEmail = await requireAdmin(req, res);
+  if (!adminEmail) return;
 
   const body = parseBody(req);
   if (!body) return jsonError(res, 400, 'INVALID_BODY', 'Geçersiz istek gövdesi.');
@@ -96,14 +96,14 @@ export default async function handler(req, res) {
     result = await writeAdminNoteLog(supabase, {
       registration_id,
       message,
-      created_by: MOCK_ADMIN_EMAIL,
+      created_by: adminEmail,
     });
   } else {
     result = await writeContactLog(supabase, {
       registration_id,
       contact_method,
       message,
-      created_by: MOCK_ADMIN_EMAIL,
+      created_by: adminEmail,
     });
   }
 

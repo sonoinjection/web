@@ -8,15 +8,16 @@ import {
   getSupabase,
   jsonError,
   requireMethod,
+  requireAdmin,
   trimmedString,
   logServerError,
   ConfigError,
 } from '../_shared.js';
 
-// TODO Session 3: gate by Google OAuth + ADMIN_ALLOWLIST.
-
 export default async function handler(req, res) {
   if (!requireMethod(req, res, 'GET')) return;
+  const adminEmail = await requireAdmin(req, res);
+  if (!adminEmail) return;
 
   const event_id = trimmedString(req.query?.event_id);
   if (!event_id) {

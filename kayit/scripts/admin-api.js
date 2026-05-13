@@ -1,11 +1,25 @@
 /* ============================================================
    admin-api.js — thin fetch() wrappers around the 7 admin routes
    Centralizes URL strings and error parsing so admin.js stays
-   focused on state + render logic.
+   focused on state + render logic. Attaches the Supabase JWT as
+   `Authorization: Bearer …` on every request; admin.js wires an
+   onUnauthorized handler that re-shows the login screen on 401/403.
    ============================================================ */
+
+import { getAccessToken } from './auth.js';
+
+let _onUnauthorized = null;
+
+export function setUnauthorizedHandler(fn) {
+  _onUnauthorized = typeof fn === 'function' ? fn : null;
+}
 
 async function request(url, { method = 'GET', body = null } = {}) {
   const init = { method, headers: { Accept: 'application/json' } };
+
+  const token = await getAccessToken();
+  if (token) init.headers.Authorization = `Bearer ${token}`;
+
   if (body !== null && body !== undefined) {
     init.headers['Content-Type'] = 'application/json';
     init.body = JSON.stringify(body);
@@ -27,6 +41,11 @@ async function request(url, { method = 'GET', body = null } = {}) {
     error.code = payload?.code || `HTTP_${res.status}`;
     error.status = res.status;
     error.details = payload?.details;
+
+    if ((res.status === 401 || res.status === 403) && _onUnauthorized) {
+      _onUnauthorized(error);
+    }
+
     throw error;
   }
 
