@@ -46,12 +46,8 @@ export const STRINGS = {
     courseCard: {
       enroll: 'Kayıt Ol',
       register: 'Kayıt',
-      waitlist: 'Bekleme Listesi',
       details: 'Detaylar →',
       comingSoon: 'Yakında',
-      vatIncluded: 'kişi başı · KDV dahil',
-      spotsLeft: (n) => `${n} kontenjan kaldı`,
-      full: 'Dolu',
       back: '← Tüm Kurslar',
     },
     courseDetail: {
@@ -144,12 +140,8 @@ export const STRINGS = {
     courseCard: {
       enroll: 'Enroll',
       register: 'Register',
-      waitlist: 'Join Waitlist',
       details: 'Details →',
       comingSoon: 'Coming Soon',
-      vatIncluded: 'per participant · VAT included',
-      spotsLeft: (n) => `${n} spots left`,
-      full: 'Full',
       back: '← All Courses',
     },
     courseDetail: {

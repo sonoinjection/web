@@ -62,7 +62,6 @@ scripts/
   render-courses.js                  ← reads data/courses.js → injects into [data-course-grid]
   render-faculty.js                  ← reads data/faculty.js → injects into [data-faculty-grid]
   nav.js                             ← mobile menu toggle
-  event-availability.js              ← live "X kontenjan kaldı" badge on course detail pages
 data/
   courses.js                         ← course catalogue (multilingual fields)
   faculty.js                         ← faculty roster (multilingual fields)

@@ -28,16 +28,7 @@ function calIcon() {
 function renderCourseCard(c) {
   const detailHref = c.detail[lang];
   const registerHref = c.registerUrl || '/kayit/';
-  const remaining = c.spots;
-  const isFull = remaining === 0;
-  const lowSpots = !isFull && remaining <= 4;
-
-  const tags = [];
-  tags.push(`<span class="badge badge--teal">${escape(c.level[lang])}</span>`);
-  if (isFull) tags.push(`<span class="badge badge--danger">${escape(t.courseCard.full)}</span>`);
-  else if (lowSpots) tags.push(`<span class="badge badge--amber">${escape(t.courseCard.spotsLeft(remaining))}</span>`);
-
-  const ctaLabel = isFull ? t.courseCard.waitlist : t.courseCard.register;
+  const ctaLabel = t.courseCard.register;
 
   return `
     <article class="course-card">
@@ -47,7 +38,9 @@ function renderCourseCard(c) {
           <span class="course-card__thumb-label">${escape(c.thumbLabel[lang])}</span>
         </div>
         <div class="course-card__body">
-          <div class="course-card__tags">${tags.join('')}</div>
+          <div class="course-card__tags">
+            <span class="badge badge--teal">${escape(c.level[lang])}</span>
+          </div>
           <div class="course-card__title">${escape(c.title[lang])}</div>
           <div class="course-card__meta">
             <span class="course-card__meta-row">${pinIcon()}${escape(c.venue)} · ${escape(c.city)}</span>
@@ -56,7 +49,7 @@ function renderCourseCard(c) {
         </div>
       </a>
       <div class="course-card__footer course-card__footer--cta-only">
-        <a class="btn btn--primary btn--sm" href="${escape(isFull ? detailHref : registerHref)}">${escape(ctaLabel)}</a>
+        <a class="btn btn--primary btn--sm" href="${escape(registerHref)}">${escape(ctaLabel)}</a>
       </div>
     </article>
   `;
