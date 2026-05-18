@@ -38,10 +38,6 @@
     <h1 class="event-hero__title">Kadavrada Ultrasonografi Eşliğinde Omuz ve Alt Ekstremite Enjeksiyon Kursu</h1>
     <div class="event-hero__venue">RMK AIMES, İstanbul</div>
     <div class="event-hero__address">Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010</div>
-    <div class="event-hero__price">
-      <div class="event-hero__price-amount">29.000,00 TL</div>
-      <div class="event-hero__price-note">+ KDV · Toplam: 34.800,00 TL</div>
-    </div>
   </div>
 </section>
 
@@ -93,16 +89,8 @@
         <div class="form-row">
           <div class="form-field" data-field="specialty">
             <label class="form-label" for="specialty">Uzmanlık</label>
-            <select class="form-select" id="specialty" name="specialty" required>
-              <option value="" disabled selected>Seçiniz</option>
-              <option value="ftr">Fiziksel Tıp ve Rehabilitasyon</option>
-              <option value="ortopedi">Ortopedi ve Travmatoloji</option>
-              <option value="romatoloji">Romatoloji</option>
-              <option value="spor_hekimligi">Spor Hekimliği</option>
-              <option value="algoloji">Algoloji</option>
-              <option value="diger">Diğer</option>
-            </select>
-            <div class="form-error">Lütfen uzmanlığınızı seçin.</div>
+            <input class="form-input" id="specialty" name="specialty" type="text" autocomplete="off" required />
+            <div class="form-error">Lütfen uzmanlığınızı girin.</div>
           </div>
 
           <div class="form-field" data-field="position">

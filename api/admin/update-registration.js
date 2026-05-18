@@ -24,12 +24,10 @@ const ALLOWED_FIELDS = [
   'specialty', 'position', 'institution', 'notes',
 ];
 
-const SPECIALTY_VALUES = [
-  'ftr', 'ortopedi', 'romatoloji', 'spor_hekimligi', 'algoloji', 'diger',
-];
 const POSITION_VALUES = ['uzman', 'asistan'];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NOTES_MAX = 1000;
+const SPECIALTY_MAX = 120;
 
 export default async function handler(req, res) {
   if (!requireMethod(req, res, 'POST')) return;
@@ -76,7 +74,7 @@ export default async function handler(req, res) {
       if (!EMAIL_RE.test(v)) errors.push('Geçerli bir e-posta adresi girin');
       else proposed.email = v.toLowerCase();
     } else if (key === 'specialty') {
-      if (!SPECIALTY_VALUES.includes(v)) errors.push('Geçerli bir uzmanlık değeri girin');
+      if (v.length > SPECIALTY_MAX) errors.push(`Uzmanlık en fazla ${SPECIALTY_MAX} karakter olabilir`);
       else proposed.specialty = v;
     } else if (key === 'position') {
       if (!POSITION_VALUES.includes(v)) errors.push('Geçerli bir pozisyon değeri girin');

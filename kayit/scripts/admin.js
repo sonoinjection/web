@@ -632,7 +632,7 @@ function renderDetailModal() {
         </div>
         <div class="form-row">
           <div class="form-field"><label class="form-label">Uzmanlık</label>
-            <select class="form-select" name="specialty">${specialtyOptions(r.specialty)}</select></div>
+            <input class="form-input" name="specialty" type="text" value="${escapeHtml(r.specialty || '')}" required /></div>
           <div class="form-field"><label class="form-label">Pozisyon</label>
             <select class="form-select" name="position">${positionOptions(r.position)}</select></div>
         </div>
@@ -696,18 +696,13 @@ function collectRegForm(form) {
     last_name:  f.last_name.value.trim(),
     email:      f.email.value.trim().toLowerCase(),
     phone:      f.phone.value.trim(),
-    specialty:  f.specialty.value,
+    specialty:  f.specialty.value.trim(),
     position:   f.position.value,
     institution: f.institution.value.trim(),
     notes:      f.notes.value.trim(),
   };
 }
 
-function specialtyOptions(current) {
-  return Object.entries(SPECIALTY_LABELS_TR).map(([v, l]) =>
-    `<option value="${v}"${v === current ? ' selected' : ''}>${escapeHtml(l)}</option>`,
-  ).join('');
-}
 function positionOptions(current) {
   return Object.entries(POSITION_LABELS_TR).map(([v, l]) =>
     `<option value="${v}"${v === current ? ' selected' : ''}>${escapeHtml(l)}</option>`,

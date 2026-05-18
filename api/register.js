@@ -24,13 +24,11 @@ import {
 } from './_emails.js';
 import { writeEmailSentLog } from './_log.js';
 
-const SPECIALTY_VALUES = [
-  'ftr', 'ortopedi', 'romatoloji', 'spor_hekimligi', 'algoloji', 'diger',
-];
 const POSITION_VALUES = ['uzman', 'asistan'];
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const NOTES_MAX = 1000;
+const SPECIALTY_MAX = 120;
 
 // ── Validation ────────────────────────────────────────────────
 function validatePayload(body) {
@@ -54,8 +52,10 @@ function validatePayload(body) {
   if (email && !EMAIL_RE.test(email)) {
     errors.push('Geçerli bir e-posta adresi girin');
   }
-  if (!specialty || !SPECIALTY_VALUES.includes(specialty)) {
-    errors.push('Geçerli bir uzmanlık değeri girin');
+  if (!specialty) {
+    errors.push('Uzmanlık alanı zorunludur');
+  } else if (specialty.length > SPECIALTY_MAX) {
+    errors.push(`Uzmanlık en fazla ${SPECIALTY_MAX} karakter olabilir`);
   }
   if (!position || !POSITION_VALUES.includes(position)) {
     errors.push('Geçerli bir pozisyon değeri girin');

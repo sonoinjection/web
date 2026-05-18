@@ -172,20 +172,6 @@
   padding: var(--space-8);
   box-shadow: var(--shadow-3);
 }
-.enrol-card__price {
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--navy-900);
-  line-height: 1;
-}
-.enrol-card__price-note {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  color: var(--color-fg-secondary);
-  margin-top: var(--space-1);
-  margin-bottom: var(--space-8);
-}
 .enrol-card__facts { display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-8); }
 .enrol-card__fact { display: flex; gap: var(--space-3); align-items: center; font-family: var(--font-body); font-size: var(--text-base); color: var(--color-fg-secondary); }
 .enrol-card__fact svg { width: 18px; height: 18px; color: var(--color-fg-accent); flex-shrink: 0; }

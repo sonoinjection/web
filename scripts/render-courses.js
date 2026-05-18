@@ -12,17 +12,6 @@ import { STRINGS } from '../data/strings.js';
 const lang = document.documentElement.dataset.lang || 'en';
 const t = STRINGS[lang];
 
-// Per CLAUDE.md §7: tr-TR formatting, two fraction digits, suffix " TL".
-const TR_NUMBER = new Intl.NumberFormat('tr-TR', {
-  minimumFractionDigits: 2,
-  maximumFractionDigits: 2,
-});
-function formatTRY(value) {
-  return `${TR_NUMBER.format(Number(value))} TL`;
-}
-
-const VAT_LABEL = { tr: 'KDV', en: 'VAT' };
-
 function escape(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
@@ -34,18 +23,6 @@ function pinIcon() {
 }
 function calIcon() {
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
-}
-
-function renderPriceBlock(c) {
-  if (c.priceNetTry !== null && c.priceNetTry !== undefined) {
-    return `
-      <span class="course-card__price">
-        ${escape(formatTRY(c.priceNetTry))}
-        <small class="course-card__price-vat">+ ${VAT_LABEL[lang] || 'KDV'}</small>
-      </span>
-    `;
-  }
-  return `<span class="course-card__price--tba">${escape(t.courseCard.comingSoon)}</span>`;
 }
 
 function renderCourseCard(c) {
@@ -78,8 +55,7 @@ function renderCourseCard(c) {
           </div>
         </div>
       </a>
-      <div class="course-card__footer">
-        ${renderPriceBlock(c)}
+      <div class="course-card__footer course-card__footer--cta-only">
         <a class="btn btn--primary btn--sm" href="${escape(isFull ? detailHref : registerHref)}">${escape(ctaLabel)}</a>
       </div>
     </article>

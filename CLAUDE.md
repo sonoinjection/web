@@ -248,9 +248,9 @@ All emails sent via Resend. Each event row has its own `bank_details_tr` so per-
 
 - **Physicians-only audience.** Enforced softly by:
   - Name is collected as two separate fields — *Ad* (`first_name`) and *Soyad* (`last_name`) — both required, both validated as non-empty trimmed strings client-side and server-side.
-  - The `Uzmanlık` field is a closed dropdown — *Fiziksel Tıp ve Rehabilitasyon, Ortopedi ve Travmatoloji, Romatoloji, Spor Hekimliği, Algoloji, Diğer*. No free-text profession field.
+  - The `Uzmanlık` field is an open-ended text input (max 120 chars). Server validation accepts any non-empty trimmed string; the admin board renders whatever was typed verbatim.
   - The `Pozisyon` field is a closed dropdown — *Uzman, Asistan*. No "student", "nurse", "marketing rep", etc.
-  - All required dropdowns start with `Seçiniz` as the placeholder option.
+  - The position dropdown starts with `Seçiniz` as the placeholder option.
 - **Turkish only for v1.** All form copy, validation messages, success/error states, admin UI labels are Turkish. The schema's `*_tr` columns are intentionally suffixed so we can add `*_en` (and `*_de`) columns later without renaming.
 - **No emoji in form copy.** Lucide line icons via CDN where icons are needed.
 
@@ -298,8 +298,7 @@ create table events (
   created_at             timestamptz not null default now()
 );
 
-create type specialty_t as enum
-  ('ftr','ortopedi','romatoloji','spor_hekimligi','algoloji','diger');
+-- specialty is plain text since 2026-05-18 (was an enum specialty_t).
 create type position_t as enum ('uzman','asistan');
 create type registration_status_t as enum
   ('applied','paid','cancelled','refunded');
@@ -313,7 +312,7 @@ create table registrations (
   last_name           text not null,
   email               text not null,
   phone               text not null,
-  specialty           specialty_t not null,
+  specialty           text not null,
   position            position_t not null,
   institution         text not null,
   notes               text,
@@ -381,6 +380,10 @@ alter table events add column price_gross_try numeric(10,2)
 -- 2026-05-09 — drop NOT NULL on expires_at so api/register.js can
 -- insert without supplying a value (column is legacy per §6).
 alter table registrations alter column expires_at drop not null;
+
+-- 2026-05-18 — specialty: closed enum → open free-text field
+alter table registrations alter column specialty type text using specialty::text;
+drop type if exists specialty_t;
 
 -- 2026-05-09 — schema rebuild for Session 1 admin board
 -- registration_status_t enum: pending|confirmed|expired|cancelled  →  applied|paid|cancelled|refunded
