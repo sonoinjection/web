@@ -29,25 +29,6 @@ export const FACULTY = [
     role: 'director',
   },
   {
-    id: 'rana-kaynar-terlemez',
-    photo: 'assets/faculty/rana-kaynar-terlemez.jpeg',
-    name: 'Doç. Dr. Rana Kaynar Terlemez',
-    nameEn: 'Assoc. Prof. Rana Kaynar Terlemez',
-    title: {
-      tr: 'Fiziksel Tıp ve Rehabilitasyon',
-      en: 'Physical Medicine & Rehabilitation',
-    },
-    institution: {
-      tr: 'İstanbul Üniversitesi Cerrahpaşa',
-      en: 'Istanbul University Cerrahpaşa',
-    },
-    city: {
-      tr: 'İstanbul, Türkiye',
-      en: 'Istanbul, Turkey',
-    },
-    role: 'faculty',
-  },
-  {
     id: 'ergun-mendes',
     photo: 'assets/faculty/ergun-mendes.jpeg',
     name: 'Doç. Dr. Ergün Mendeş',
@@ -176,25 +157,6 @@ export const FACULTY = [
       en: 'Istanbul, Turkey',
     },
     role: 'faculty',
-  },
-  {
-    id: 'deniz-sarikaya',
-    photo: 'assets/faculty/deniz-sarikaya.jpeg',
-    name: 'Dr. Deniz Sarıkaya',
-    nameEn: 'Dr. Deniz Sarıkaya',
-    title: {
-      tr: 'Araştırma ve Koordinasyon',
-      en: 'Research and Coordination',
-    },
-    institution: {
-      tr: 'Erlangen Üniversitesi Hastanesi',
-      en: 'Erlangen University Hospital',
-    },
-    city: {
-      tr: 'Erlangen, Almanya',
-      en: 'Erlangen, Germany',
-    },
-    role: 'coordination',
   },
 ];
 
