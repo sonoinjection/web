@@ -1,0 +1,11 @@
+# robots.txt — sonoinjection.com
+User-agent: *
+Allow: /
+Disallow: /design-system/
+Disallow: /deneme-kayit/
+Disallow: /api/
+
+# /kayit/ is left crawlable but carries a <meta name="robots" content="noindex,follow">
+# so the registration form stays out of the index while its links are still followed.
+
+Sitemap: https://sonoinjection.com/sitemap.xml

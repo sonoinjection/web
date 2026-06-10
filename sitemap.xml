@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Home -->
+  <url>
+    <loc>https://sonoinjection.com/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/index-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/"/>
+  </url>
+  <url>
+    <loc>https://sonoinjection.com/index-en.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/index-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/"/>
+  </url>
+
+  <!-- Courses (listing) -->
+  <url>
+    <loc>https://sonoinjection.com/courses.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/courses.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/courses-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/courses.html"/>
+  </url>
+  <url>
+    <loc>https://sonoinjection.com/courses-en.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/courses.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/courses-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/courses.html"/>
+  </url>
+
+  <!-- Faculty -->
+  <url>
+    <loc>https://sonoinjection.com/faculty.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/faculty.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/faculty-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/faculty.html"/>
+  </url>
+  <url>
+    <loc>https://sonoinjection.com/faculty-en.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/faculty.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/faculty-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/faculty.html"/>
+  </url>
+
+  <!-- About -->
+  <url>
+    <loc>https://sonoinjection.com/about.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/about-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/about.html"/>
+  </url>
+  <url>
+    <loc>https://sonoinjection.com/about-en.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/about.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/about-en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/about.html"/>
+  </url>
+
+  <!-- Course detail: 2026-06 RMK AIMES -->
+  <url>
+    <loc>https://sonoinjection.com/courses/2026-06-rmk-aimes.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/courses/2026-06-rmk-aimes.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/courses/2026-06-rmk-aimes.en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/courses/2026-06-rmk-aimes.html"/>
+  </url>
+  <url>
+    <loc>https://sonoinjection.com/courses/2026-06-rmk-aimes.en.html</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/courses/2026-06-rmk-aimes.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/courses/2026-06-rmk-aimes.en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/courses/2026-06-rmk-aimes.html"/>
+  </url>
+
+</urlset>
