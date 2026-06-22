@@ -1,1 +1,14 @@
-{}
+{
+  "redirects": [
+    {
+      "source": "/deneme-kayit/admin",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/deneme-kayit/admin/:path*",
+      "destination": "/",
+      "permanent": false
+    }
+  ]
+}
