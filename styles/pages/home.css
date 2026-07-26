@@ -161,10 +161,17 @@
 .hps-p5 { animation-delay: 24s; }
 .hps-p6 { animation-delay: 30s; }
 
-/* Single looping GIF variant (replaces the 6-photo carousel). Always
-   visible and static — the .hps-root prefix keeps it above the
-   reduced-motion .hps-photo { opacity: 0 } rule below. */
-.hps-root .hps-gif { opacity: 1; animation: none; }
+/* Single looping video (replaces the 6-photo carousel). Fills the
+   right-side stack with the same cover behaviour as the photos; the
+   parent .hps-photos filter still applies. Playback is gated by
+   scripts/hero-video.js so prefers-reduced-motion keeps the poster. */
+.hps-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 @keyframes hps-rotate {
   0%, 13%        { opacity: 1; transform: scale(1.00); }
@@ -230,6 +237,24 @@
 @media (prefers-reduced-motion: reduce) {
   .hps-photo { animation: none; opacity: 0; }
   .hps-p1    { opacity: 1; }
+}
+
+/* ============================================================
+   Hero video band — full-bleed looping clip below the hero.
+   Playback is gated by scripts/hero-video.js (plays in view,
+   respects prefers-reduced-motion; poster shows otherwise).
+   ============================================================ */
+.hero-video-band {
+  background: var(--navy-900);
+  line-height: 0; /* kill the inline-media descender gap */
+}
+
+.hero-video-band__video {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: cover;
 }
 
 /* Hide on narrow viewports — the headline column needs the full width

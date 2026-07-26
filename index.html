@@ -90,10 +90,12 @@
   <div class="wave-bg"></div>
   <div class="glow"></div>
 
-  <!-- Hero photo stack — looping course video (GIF) on the right side. -->
+  <!-- Hero photo stack — looping course video on the right side. -->
   <div class="hps-root" aria-hidden="true">
     <div class="hps-photos">
-      <div class="hps-photo hps-gif" style="background-image: url('assets/hero/sono-hero.gif');"></div>
+      <video class="hps-video" data-loop-video muted loop playsinline preload="metadata" poster="assets/hero/hero-1.jpeg">
+        <source src="assets/hero/sono-hero.mp4" type="video/mp4" />
+      </video>
     </div>
     <div class="hps-tint"></div>
     <div class="hps-duotone"></div>
@@ -132,6 +134,13 @@
       </div>
     </div>
   </div>
+</section>
+
+<!-- ── HERO VIDEO BAND ──────────────────────────── -->
+<section class="hero-video-band">
+  <video class="hero-video-band__video" data-loop-video muted loop playsinline preload="none" poster="assets/hero/sono-clip-04a.jpg">
+    <source src="assets/hero/sono-clip-04a.mp4" type="video/mp4" />
+  </video>
 </section>
 
 <!-- ── STATS BAR ────────────────────────────────── -->
@@ -215,6 +224,7 @@
 
 <script type="module" src="scripts/render-courses.js"></script>
 <script type="module" src="scripts/render-faculty.js"></script>
+<script type="module" src="scripts/hero-video.js"></script>
 <script type="module" src="scripts/nav.js"></script>
 
 </body>
