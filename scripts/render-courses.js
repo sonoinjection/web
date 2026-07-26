@@ -27,7 +27,7 @@ function calIcon() {
 
 function renderCourseCard(c) {
   const detailHref = c.detail[lang];
-  const registerHref = c.registerUrl || '/kayit/';
+  const registerHref = c.registerUrl || 'mailto:kayit@sonoinjection.com';
   const ctaLabel = t.courseCard.register;
 
   return `
