@@ -43,6 +43,7 @@ function renderCourseCard(c) {
         <div class="course-card__body">
           <div class="course-card__tags">
             <span class="badge badge--teal">${escape(c.level[lang])}</span>
+            ${c.closed ? `<span class="badge badge--neutral">${escape(t.courseCard.closed)}</span>` : ''}
           </div>
           <div class="course-card__title">${escape(c.title[lang])}</div>
           <div class="course-card__meta">
@@ -52,7 +53,9 @@ function renderCourseCard(c) {
         </div>
       </a>
       <div class="course-card__footer course-card__footer--cta-only">
-        <a class="btn btn--primary btn--sm" href="${escape(registerHref)}">${escape(ctaLabel)}</a>
+        ${c.closed
+          ? `<span class="btn btn--sm btn--disabled">${escape(t.courseCard.closed)}</span>`
+          : `<a class="btn btn--primary btn--sm" href="${escape(registerHref)}">${escape(ctaLabel)}</a>`}
       </div>
     </article>
   `;

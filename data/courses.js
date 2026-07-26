@@ -8,6 +8,7 @@ export const COURSES = [
   {
     id: '2026-09-rmk-aimes',
     slug: '2026-09-rmk-aimes',
+    closed: true,
     detail: {
       tr: 'courses/2026-09-rmk-aimes.html',
       en: 'courses/2026-09-rmk-aimes.en.html',
@@ -102,6 +103,7 @@ export const COURSES = [
   {
     id: '2026-06-rmk-aimes',
     slug: '2026-06-rmk-aimes',
+    closed: true,
     detail: {
       tr: 'courses/2026-06-rmk-aimes.html',
       en: 'courses/2026-06-rmk-aimes.en.html',

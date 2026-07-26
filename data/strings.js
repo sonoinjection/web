@@ -46,6 +46,7 @@ export const STRINGS = {
     courseCard: {
       enroll: 'Kayıt Ol',
       register: 'Kayıt',
+      closed: 'Kayıtlar Kapalı',
       details: 'Detaylar →',
       comingSoon: 'Yakında',
       back: '← Tüm Kurslar',
@@ -140,6 +141,7 @@ export const STRINGS = {
     courseCard: {
       enroll: 'Enroll',
       register: 'Register',
+      closed: 'Registration Closed',
       details: 'Details →',
       comingSoon: 'Coming Soon',
       back: '← All Courses',
