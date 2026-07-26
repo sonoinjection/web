@@ -348,6 +348,23 @@
     var(--teal-500) 6px
   );
 }
+/* Course photo thumbnail (replaces the stripe pattern) + legibility scrim. */
+.course-card__thumb-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.course-card__thumb-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 27, 51, 0.35),
+    rgba(12, 27, 51, 0.62)
+  );
+}
 .course-card__thumb-label {
   position: relative;
   z-index: 1;
@@ -358,6 +375,7 @@
   letter-spacing: var(--tracking-tight);
   text-align: center;
   padding-inline: var(--space-4);
+  text-shadow: 0 1px 3px rgba(12, 27, 51, 0.55);
 }
 
 .course-card__body { padding: var(--space-6); flex: 1; display: flex; flex-direction: column; gap: var(--space-3); }

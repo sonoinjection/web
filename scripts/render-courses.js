@@ -10,6 +10,7 @@ import { COURSES } from '../data/courses.js';
 import { STRINGS } from '../data/strings.js';
 
 const lang = document.documentElement.dataset.lang || 'en';
+const base = document.documentElement.dataset.base || '';
 const t = STRINGS[lang];
 
 function escape(s) {
@@ -34,7 +35,9 @@ function renderCourseCard(c) {
     <article class="course-card">
       <a class="course-card__main" href="${escape(detailHref)}">
         <div class="course-card__thumb" style="background: ${c.thumbColor};">
-          <div class="course-card__thumb-pattern"></div>
+          ${c.thumbImage
+            ? `<img class="course-card__thumb-photo" src="${escape(base + c.thumbImage)}" alt="" loading="lazy" /><span class="course-card__thumb-scrim"></span>`
+            : '<div class="course-card__thumb-pattern"></div>'}
           <span class="course-card__thumb-label">${escape(c.thumbLabel[lang])}</span>
         </div>
         <div class="course-card__body">

@@ -17,6 +17,7 @@ export const COURSES = [
       en: 'Lower Extremity',
     },
     thumbColor: 'var(--navy-900)',
+    thumbImage: 'assets/courses/2026-09-rmk-aimes.jpg',
     title: {
       tr: 'Kadavrada Ultrasonografi Eşliğinde Alt Ekstremite Enjeksiyon Kursu',
       en: 'Cadaveric Ultrasound-Guided Lower Extremity Injection Course',
@@ -110,6 +111,7 @@ export const COURSES = [
       en: 'Shoulder & Lower Extremity',
     },
     thumbColor: 'var(--navy-900)',
+    thumbImage: 'assets/courses/2026-06-rmk-aimes.jpg',
     title: {
       tr: 'Kadavrada Ultrasonografi Eşliğinde Omuz ve Alt Ekstremite Enjeksiyon Kursu',
       en: 'Cadaveric Ultrasound-Guided Shoulder and Lower Extremity Injection Course',
