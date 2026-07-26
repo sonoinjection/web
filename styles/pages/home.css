@@ -239,24 +239,6 @@
   .hps-p1    { opacity: 1; }
 }
 
-/* ============================================================
-   Hero video band — full-bleed looping clip below the hero.
-   Playback is gated by scripts/hero-video.js (plays in view,
-   respects prefers-reduced-motion; poster shows otherwise).
-   ============================================================ */
-.hero-video-band {
-  background: var(--navy-900);
-  line-height: 0; /* kill the inline-media descender gap */
-}
-
-.hero-video-band__video {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 80vh;
-  object-fit: cover;
-}
-
 /* Hide on narrow viewports — the headline column needs the full width
    and the photos can't carry the layout below ~900px without overlap. */
 @media (max-width: 900px) {
