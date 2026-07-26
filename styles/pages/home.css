@@ -161,6 +161,11 @@
 .hps-p5 { animation-delay: 24s; }
 .hps-p6 { animation-delay: 30s; }
 
+/* Single looping GIF variant (replaces the 6-photo carousel). Always
+   visible and static — the .hps-root prefix keeps it above the
+   reduced-motion .hps-photo { opacity: 0 } rule below. */
+.hps-root .hps-gif { opacity: 1; animation: none; }
+
 @keyframes hps-rotate {
   0%, 13%        { opacity: 1; transform: scale(1.00); }
   16.66%, 96.66% { opacity: 0; transform: scale(1.04); }
