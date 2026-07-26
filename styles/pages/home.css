@@ -135,7 +135,7 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 58%;
+  width: 100%;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
@@ -211,16 +211,18 @@
   mix-blend-mode: screen;
 }
 
-/* Left-edge fade so photos blend seamlessly into the navy text side. */
+/* Left-edge fade so the full-width video blends into the navy text
+   side and keeps the headline readable across the left half. */
 .hps-fade-x {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     90deg,
     var(--navy-900)           0%,
-    rgba(12, 27, 51, 0.85)   16%,
-    rgba(12, 27, 51, 0.25)   40%,
-    rgba(12, 27, 51, 0)      70%
+    rgba(12, 27, 51, 0.92)   22%,
+    rgba(12, 27, 51, 0.55)   48%,
+    rgba(12, 27, 51, 0.12)   78%,
+    rgba(12, 27, 51, 0)     100%
   );
 }
 
