@@ -28,13 +28,13 @@ function calIcon() {
 
 function statusBadge(c) {
   if (c.closed) return `<span class="badge badge--neutral">${escape(t.courseCard.closed)}</span>`;
-  if (c.registrationSoon) return `<span class="badge badge--neutral">${escape(t.courseCard.soon)}</span>`;
+  if (c.registrationSoon) return `<span class="badge badge--amber">${escape(t.courseCard.soon)}</span>`;
   return '';
 }
 
 function footerCta(c) {
   if (c.closed) return `<span class="btn btn--sm btn--disabled">${escape(t.courseCard.closed)}</span>`;
-  if (c.registrationSoon) return `<span class="btn btn--sm btn--disabled">${escape(t.courseCard.soon)}</span>`;
+  if (c.registrationSoon) return `<span class="btn btn--sm btn--soon">${escape(t.courseCard.soon)}</span>`;
   const registerHref = c.registerUrl || 'mailto:kayit@sonoinjection.com';
   return `<a class="btn btn--primary btn--sm" href="${escape(registerHref)}">${escape(t.courseCard.register)}</a>`;
 }
@@ -77,7 +77,9 @@ function renderCourseCard(c) {
 
 function renderInto(el) {
   const limit = parseInt(el.dataset.limit || '0', 10);
-  const list = limit > 0 ? COURSES.slice(0, limit) : COURSES;
+  // Chronological, newest date first.
+  const ordered = [...COURSES].sort((a, b) => (b.iso || '').localeCompare(a.iso || ''));
+  const list = limit > 0 ? ordered.slice(0, limit) : ordered;
   if (list.length === 0) {
     el.innerHTML = `<div class="muted" style="grid-column: 1 / -1; text-align: center; padding: var(--space-12) 0;">${escape(t.listing.empty)}</div>`;
     return;

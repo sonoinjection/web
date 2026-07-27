@@ -86,6 +86,15 @@
   pointer-events: none;
   border-color: transparent;
 }
+/* "Registration soon" — non-actionable, amber-tinted to read as pending
+   (distinct from the gray closed/disabled state). */
+.btn--soon {
+  background: var(--amber-100);
+  color: var(--amber-700);
+  cursor: default;
+  pointer-events: none;
+  border-color: transparent;
+}
 
 /* ── Badge / Pill ── */
 .badge {
