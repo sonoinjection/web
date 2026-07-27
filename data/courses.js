@@ -101,6 +101,60 @@ export const COURSES = [
     facultyIds: ['mahir-topaloglu', 'enes-efe-is', 'mert-zure', 'havvanur-albayrak'],
   },
   {
+    id: '2027-02-rmk-aimes',
+    slug: '2027-02-rmk-aimes',
+    registrationSoon: true,
+    thumbLabel: {
+      tr: 'Alt Ekstremite',
+      en: 'Lower Extremity',
+    },
+    thumbColor: 'var(--navy-900)',
+    thumbImage: 'assets/courses/2027-02-rmk-aimes.jpg',
+    title: {
+      tr: 'Kadavrada Ultrasonografi Eşliğinde Alt Ekstremite Enjeksiyon Kursu',
+      en: 'Cadaveric Ultrasound-Guided Lower Extremity Injection Course',
+    },
+    level: {
+      tr: 'Uygulamalı Kurs',
+      en: 'Hands-on Course',
+    },
+    venue: 'RMK AIMES',
+    city: 'Istanbul, Turkey',
+    date: {
+      tr: '27 Şubat 2027',
+      en: 'February 27, 2027',
+    },
+    iso: '2027-02-27',
+    // Remaining details (programme, faculty, pricing, detail page) to follow.
+  },
+  {
+    id: '2027-03-rmk-aimes',
+    slug: '2027-03-rmk-aimes',
+    registrationSoon: true,
+    thumbLabel: {
+      tr: 'Omurga',
+      en: 'Spine',
+    },
+    thumbColor: 'var(--navy-900)',
+    thumbImage: 'assets/courses/2027-03-rmk-aimes.jpg',
+    title: {
+      tr: 'Kadavrada Ultrasonografi Eşliğinde Omurga Enjeksiyon Kursu',
+      en: 'Cadaveric Ultrasound-Guided Spine Injection Course',
+    },
+    level: {
+      tr: 'Uygulamalı Kurs',
+      en: 'Hands-on Course',
+    },
+    venue: 'RMK AIMES',
+    city: 'Istanbul, Turkey',
+    date: {
+      tr: '27 Mart 2027',
+      en: 'March 27, 2027',
+    },
+    iso: '2027-03-27',
+    // Remaining details (programme, faculty, pricing, detail page) to follow.
+  },
+  {
     id: '2026-06-rmk-aimes',
     slug: '2026-06-rmk-aimes',
     closed: true,

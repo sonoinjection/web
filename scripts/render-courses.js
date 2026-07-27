@@ -26,14 +26,21 @@ function calIcon() {
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
 }
 
-function renderCourseCard(c) {
-  const detailHref = c.detail[lang];
-  const registerHref = c.registerUrl || 'mailto:kayit@sonoinjection.com';
-  const ctaLabel = t.courseCard.register;
+function statusBadge(c) {
+  if (c.closed) return `<span class="badge badge--neutral">${escape(t.courseCard.closed)}</span>`;
+  if (c.registrationSoon) return `<span class="badge badge--neutral">${escape(t.courseCard.soon)}</span>`;
+  return '';
+}
 
-  return `
-    <article class="course-card">
-      <a class="course-card__main" href="${escape(detailHref)}">
+function footerCta(c) {
+  if (c.closed) return `<span class="btn btn--sm btn--disabled">${escape(t.courseCard.closed)}</span>`;
+  if (c.registrationSoon) return `<span class="btn btn--sm btn--disabled">${escape(t.courseCard.soon)}</span>`;
+  const registerHref = c.registerUrl || 'mailto:kayit@sonoinjection.com';
+  return `<a class="btn btn--primary btn--sm" href="${escape(registerHref)}">${escape(t.courseCard.register)}</a>`;
+}
+
+function renderCourseCard(c) {
+  const inner = `
         <div class="course-card__thumb" style="background: ${c.thumbColor};">
           ${c.thumbImage
             ? `<img class="course-card__thumb-photo" src="${escape(base + c.thumbImage)}" alt="" loading="lazy" /><span class="course-card__thumb-scrim"></span>`
@@ -43,19 +50,26 @@ function renderCourseCard(c) {
         <div class="course-card__body">
           <div class="course-card__tags">
             <span class="badge badge--teal">${escape(c.level[lang])}</span>
-            ${c.closed ? `<span class="badge badge--neutral">${escape(t.courseCard.closed)}</span>` : ''}
+            ${statusBadge(c)}
           </div>
           <div class="course-card__title">${escape(c.title[lang])}</div>
           <div class="course-card__meta">
             <span class="course-card__meta-row">${pinIcon()}${escape(c.venue)} · ${escape(c.city)}</span>
             <span class="course-card__meta-row">${calIcon()}${escape(c.date[lang])}</span>
           </div>
-        </div>
-      </a>
+        </div>`;
+
+  // Cards whose detail page isn't published yet are not clickable.
+  const detailHref = c.detail ? c.detail[lang] : null;
+  const main = detailHref
+    ? `<a class="course-card__main" href="${escape(detailHref)}">${inner}</a>`
+    : `<div class="course-card__main">${inner}</div>`;
+
+  return `
+    <article class="course-card">
+      ${main}
       <div class="course-card__footer course-card__footer--cta-only">
-        ${c.closed
-          ? `<span class="btn btn--sm btn--disabled">${escape(t.courseCard.closed)}</span>`
-          : `<a class="btn btn--primary btn--sm" href="${escape(registerHref)}">${escape(ctaLabel)}</a>`}
+        ${footerCta(c)}
       </div>
     </article>
   `;
