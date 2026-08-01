@@ -523,6 +523,9 @@ a.stats-bar__cell:hover {
   margin-bottom: var(--space-12);
   flex-wrap: wrap;
 }
+
+/* Course listing split into upcoming / past groups. */
+.course-group + .course-group { margin-top: var(--space-16); }
 .section-head__title {
   font-family: var(--font-display);
   font-size: var(--text-2xl);

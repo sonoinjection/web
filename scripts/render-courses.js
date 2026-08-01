@@ -79,10 +79,24 @@ function renderCourseCard(c) {
 
 function renderInto(el) {
   const limit = parseInt(el.dataset.limit || '0', 10);
+  const filter = el.dataset.filter; // 'upcoming' | 'past' | undefined
+  const today = new Date().toISOString().slice(0, 10);
+
   // Chronological, newest date first.
-  const ordered = [...COURSES].sort((a, b) => (b.iso || '').localeCompare(a.iso || ''));
+  let ordered = [...COURSES].sort((a, b) => (b.iso || '').localeCompare(a.iso || ''));
+  if (filter === 'upcoming') ordered = ordered.filter((c) => (c.iso || '') >= today);
+  else if (filter === 'past') ordered = ordered.filter((c) => (c.iso || '') < today);
+
   const list = limit > 0 ? ordered.slice(0, limit) : ordered;
+
   if (list.length === 0) {
+    // A filtered section with nothing in it hides itself (heading + grid);
+    // an unfiltered grid shows the empty-state message instead.
+    if (filter) {
+      const group = el.closest('[data-course-group]') || el;
+      group.hidden = true;
+      return;
+    }
     el.innerHTML = `<div class="muted" style="grid-column: 1 / -1; text-align: center; padding: var(--space-12) 0;">${escape(t.listing.empty)}</div>`;
     return;
   }
