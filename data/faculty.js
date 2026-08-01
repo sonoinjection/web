@@ -29,6 +29,25 @@ export const FACULTY = [
     role: 'director',
   },
   {
+    id: 'mert-zure',
+    photo: 'assets/faculty/mert-zure.jpeg',
+    name: 'Doç. Dr. Mert Zure',
+    nameEn: 'Assoc. Prof. Mert Zure',
+    title: {
+      tr: 'Fiziksel Tıp ve Rehabilitasyon',
+      en: 'Physical Medicine & Rehabilitation',
+    },
+    institution: {
+      tr: 'Kanuni Sultan Süleyman Eğitim ve Araştırma Hastanesi',
+      en: 'Kanuni Sultan Süleyman Training & Research Hospital',
+    },
+    city: {
+      tr: 'İstanbul, Türkiye',
+      en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
+  {
     id: 'ergun-mendes',
     photo: 'assets/faculty/ergun-mendes.jpeg',
     name: 'Doç. Dr. Ergün Mendeş',
@@ -94,25 +113,6 @@ export const FACULTY = [
     institution: {
       tr: 'İstanbul Tıp Fakültesi',
       en: 'Istanbul Faculty of Medicine',
-    },
-    city: {
-      tr: 'İstanbul, Türkiye',
-      en: 'Istanbul, Turkey',
-    },
-    role: 'faculty',
-  },
-  {
-    id: 'mert-zure',
-    photo: 'assets/faculty/mert-zure.jpeg',
-    name: 'Doç. Dr. Mert Zure',
-    nameEn: 'Assoc. Prof. Mert Zure',
-    title: {
-      tr: 'Fiziksel Tıp ve Rehabilitasyon',
-      en: 'Physical Medicine & Rehabilitation',
-    },
-    institution: {
-      tr: 'Kanuni Sultan Süleyman Eğitim ve Araştırma Hastanesi',
-      en: 'Kanuni Sultan Süleyman Training & Research Hospital',
     },
     city: {
       tr: 'İstanbul, Türkiye',
