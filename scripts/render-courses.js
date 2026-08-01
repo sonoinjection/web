@@ -27,12 +27,14 @@ function calIcon() {
 }
 
 function statusBadge(c) {
+  if (c.full) return `<span class="badge badge--neutral">${escape(t.courseCard.full)}</span>`;
   if (c.closed) return `<span class="badge badge--neutral">${escape(t.courseCard.closed)}</span>`;
   if (c.registrationSoon) return `<span class="badge badge--amber">${escape(t.courseCard.soon)}</span>`;
   return '';
 }
 
 function footerCta(c) {
+  if (c.full) return `<span class="btn btn--sm btn--disabled">${escape(t.courseCard.full)}</span>`;
   if (c.closed) return `<span class="btn btn--sm btn--disabled">${escape(t.courseCard.closed)}</span>`;
   if (c.registrationSoon) return `<span class="btn btn--sm btn--soon">${escape(t.courseCard.soon)}</span>`;
   const registerHref = c.registerUrl || 'mailto:kayit@sonoinjection.com';

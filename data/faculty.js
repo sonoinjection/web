@@ -104,8 +104,8 @@ export const FACULTY = [
   {
     id: 'mert-zure',
     photo: 'assets/faculty/mert-zure.jpeg',
-    name: 'Dr. Öğr. Üyesi Mert Zure',
-    nameEn: 'Dr. Mert Zure',
+    name: 'Doç. Dr. Mert Zure',
+    nameEn: 'Assoc. Prof. Mert Zure',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
       en: 'Physical Medicine & Rehabilitation',

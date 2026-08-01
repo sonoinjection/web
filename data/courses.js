@@ -8,7 +8,7 @@ export const COURSES = [
   {
     id: '2026-09-rmk-aimes',
     slug: '2026-09-rmk-aimes',
-    closed: true,
+    full: true,
     detail: {
       tr: 'courses/2026-09-rmk-aimes.html',
       en: 'courses/2026-09-rmk-aimes.en.html',
@@ -73,7 +73,7 @@ export const COURSES = [
         { time: '09:00–10:00', type: 'lecture', title: 'Kas-İskelet Sistemi Ultrasonografisine Giriş ve Temel Prensipler', speaker: 'Doç. Dr. Mahir Topaloğlu' },
         { time: '10:00–10:30', type: 'lecture', title: 'Kalça Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Doç. Dr. Enes Efe İş' },
         { time: '10:30–11:00', type: 'admin', title: 'Kahve Arası' },
-        { time: '11:00–11:30', type: 'lecture', title: 'Diz Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Dr. Öğr. Üyesi Mert Zure' },
+        { time: '11:00–11:30', type: 'lecture', title: 'Diz Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Doç. Dr. Mert Zure' },
         { time: '11:30–12:00', type: 'lecture', title: 'Ayak Bileği ve Ayak Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Uzm. Dr. Havvanur Albayrak' },
         { time: '12:00–13:00', type: 'admin', title: 'Öğle Arası' },
         { time: '13:00–16:00', type: 'cadaver', title: 'Kadavra Üzerinde Enjeksiyon Pratikleri', items: [
@@ -87,7 +87,7 @@ export const COURSES = [
         { time: '09:00–10:00', type: 'lecture', title: 'Introduction to Musculoskeletal Ultrasound & Core Principles', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
         { time: '10:00–10:30', type: 'lecture', title: 'Hip Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Enes Efe İş' },
         { time: '10:30–11:00', type: 'admin', title: 'Coffee Break' },
-        { time: '11:00–11:30', type: 'lecture', title: 'Knee Region — Ultrasonography & Injections', speaker: 'Dr. Mert Zure' },
+        { time: '11:00–11:30', type: 'lecture', title: 'Knee Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Mert Zure' },
         { time: '11:30–12:00', type: 'lecture', title: 'Foot & Ankle Region — Ultrasonography & Injections', speaker: 'Dr. Havvanur Albayrak' },
         { time: '12:00–13:00', type: 'admin', title: 'Lunch Break' },
         { time: '13:00–16:00', type: 'cadaver', title: 'Cadaveric Injection Practice', items: [
@@ -223,7 +223,7 @@ export const COURSES = [
         { time: '09:30–10:00', type: 'lecture', title: 'Omuz Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Doç. Dr. Mahir Topaloğlu' },
         { time: '10:00–10:30', type: 'lecture', title: 'Kalça Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Doç. Dr. Enes Efe İş' },
         { time: '10:30–11:00', type: 'admin', title: 'Kahve Arası' },
-        { time: '11:00–11:30', type: 'lecture', title: 'Diz Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Dr. Öğr. Üyesi Mert Zure' },
+        { time: '11:00–11:30', type: 'lecture', title: 'Diz Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Doç. Dr. Mert Zure' },
         { time: '11:30–12:00', type: 'lecture', title: 'Ayak Bileği ve Ayak Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Uzm. Dr. Havvanur Albayrak' },
         { time: '12:00–13:00', type: 'admin', title: 'Öğle Arası' },
         { time: '13:00–16:30', type: 'cadaver', title: 'Kadavra Üzerinde Enjeksiyon Pratikleri', items: [
@@ -239,7 +239,7 @@ export const COURSES = [
         { time: '09:30–10:00', type: 'lecture', title: 'Shoulder Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
         { time: '10:00–10:30', type: 'lecture', title: 'Hip Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Enes Efe İş' },
         { time: '10:30–11:00', type: 'admin', title: 'Coffee Break' },
-        { time: '11:00–11:30', type: 'lecture', title: 'Knee Region — Ultrasonography & Injections', speaker: 'Dr. Mert Zure' },
+        { time: '11:00–11:30', type: 'lecture', title: 'Knee Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Mert Zure' },
         { time: '11:30–12:00', type: 'lecture', title: 'Foot & Ankle Region — Ultrasonography & Injections', speaker: 'Dr. Havvanur Albayrak' },
         { time: '12:00–13:00', type: 'admin', title: 'Lunch Break' },
         { time: '13:00–16:30', type: 'cadaver', title: 'Cadaveric Injection Practice', items: [
