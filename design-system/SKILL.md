@@ -1,6 +1,6 @@
 ---
 name: sonoinjection-design
-description: Use this skill to generate well-branded interfaces and assets for SonoInjection, an ultrasound-guided cadaver injection course for musculoskeletal pathologies targeting physiatrists, orthopedic surgeons, and physiotherapists. Contains essential design guidelines, colors, type, fonts, assets, and UI kit components for prototyping.
+description: Use this skill to generate well-branded interfaces and assets for SonoInjection, an ultrasound-guided cadaver injection course for musculoskeletal pathologies targeting physiatry and orthopedic specialists. Contains essential design guidelines, colors, type, fonts, assets, and UI kit components for prototyping.
 user-invocable: true
 ---
 

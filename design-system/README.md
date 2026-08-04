@@ -4,7 +4,7 @@
 
 **SonoInjection** — *Sono + Injection + Academy*
 
-SonoInjection is a premium hands-on ultrasound cadaver injection course for musculoskeletal pathologies. Targeted at physiatrists (PM&R), orthopedic surgeons, and physiotherapists, the program blends rigorous anatomical precision with real-world procedural confidence. Participants rotate through cadaveric stations guided by expert instructors, mastering ultrasound-guided injection techniques for joints and soft tissues.
+SonoInjection is a premium hands-on ultrasound cadaver injection course for musculoskeletal pathologies. Targeted at physiatry (PM&R) and orthopedic specialists, the program blends rigorous anatomical precision with real-world procedural confidence. Participants rotate through cadaveric stations guided by expert instructors, mastering ultrasound-guided injection techniques for joints and soft tissues.
 
 **Brand name rationale:** Short, 3-syllable name (SO-no-in-JEK-shun) that reads naturally in:
 - 🇹🇷 Turkish: "SO-no-in-JEK-shun" — phonetically natural
