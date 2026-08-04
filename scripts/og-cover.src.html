@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&display=block" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  body {
+    background: #0c1b33;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  /* subtle teal glow, echoes the site's dark hero */
+  .glow {
+    position: absolute;
+    width: 900px; height: 900px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(10,173,168,0.14) 0%, rgba(10,173,168,0) 62%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .logo { position: relative; width: 780px; }
+  .logo svg { width: 100%; display: block; }
+</style>
+</head>
+<body>
+  <div class="glow"></div>
+  <div class="logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 56" fill="none">
+      <g transform="translate(0,4)">
+        <rect x="0"  y="18" width="3" height="12" rx="1.5" fill="#0AADA8"></rect>
+        <rect x="6"  y="10" width="3" height="28" rx="1.5" fill="#0AADA8"></rect>
+        <rect x="12" y="4"  width="3" height="40" rx="1.5" fill="#0AADA8"></rect>
+        <rect x="18" y="10" width="3" height="28" rx="1.5" fill="#0AADA8"></rect>
+        <rect x="24" y="18" width="3" height="12" rx="1.5" fill="#0AADA8"></rect>
+      </g>
+      <text x="44" y="38" font-family="'Space Grotesk', sans-serif" font-weight="700"
+            font-size="26" letter-spacing="-0.5" fill="#ffffff">SonoInjection</text>
+    </svg>
+  </div>
+</body>
+</html>
