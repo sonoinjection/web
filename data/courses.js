@@ -101,6 +101,98 @@ export const COURSES = [
     facultyIds: ['mahir-topaloglu', 'enes-efe-is', 'mert-zure', 'havvanur-albayrak'],
   },
   {
+    id: '2027-01-rmk-aimes',
+    slug: '2027-01-rmk-aimes',
+    registrationSoon: true,
+    detail: {
+      tr: 'courses/2027-01-rmk-aimes.html',
+      en: 'courses/2027-01-rmk-aimes.en.html',
+    },
+    thumbLabel: {
+      tr: 'Lomber Bölge & Fasya Planları',
+      en: 'Lumbar Region & Fascial Planes',
+    },
+    thumbColor: 'var(--navy-900)',
+    title: {
+      tr: 'Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu',
+      en: 'Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course',
+    },
+    level: {
+      tr: 'Uygulamalı Kurs',
+      en: 'Hands-on Course',
+    },
+    venue: 'RMK AIMES',
+    venueFull: {
+      tr: 'RMK AIMES — Rahmi M. Koç Girişimsel Tıp, Eğitim ve Simülasyon Akademisi',
+      en: 'RMK AIMES — Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation',
+    },
+    city: 'Istanbul, Turkey',
+    countryCode: 'TR',
+    date: {
+      tr: '17 Ocak 2027',
+      en: 'January 17, 2027',
+    },
+    iso: '2027-01-17',
+    spots: null,
+    maxSpots: null,
+    priceNetTry: null,
+    kdvRate: 20,
+    registerUrl: 'mailto:kayit@sonoinjection.com',
+    joints: {
+      tr: ['Lomber Bölge', 'Sakroiliak Eklem', 'Piriformis', 'Fasya Planları'],
+      en: ['Lumbar Region', 'Sacroiliac Joint', 'Piriformis', 'Fascial Planes'],
+    },
+    description: {
+      tr: [
+        '<strong>"Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu"</strong>, 17 Ocak tarihinde RMK AIMES\'te (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation) kapılarını açıyor.',
+        'Kas-iskelet sistemi girişimsel uygulamalarındaki güncel yaklaşımlar doğrultusunda hazırlanan kursumuzda; teorik içeriğin ardından kadavra üzerinde gerçekleştirilecek uygulamalı oturumlarla ileri düzey pratik deneyim kazanma fırsatı sunuyoruz. Lomber bölgeye ve fasya planlarına yönelik enjeksiyon teknikleri, ultrasonografi rehberliğinde adım adım ele alınacak ve interaktif bir öğrenme ortamı sağlanacaktır.',
+        'Programımızı; çok açılı demonstrasyonlar, birebir uygulama imkânı ve eğitmenlerle etkileşimli oturumlarla zenginleştirdik. Alanında deneyimli eğitmenler eşliğinde, günlük klinik pratiğinize doğrudan katkı sunacak verimli bir buluşma hazırlamak için tüm hazırlıklarımızı titizlikle sürdürüyoruz.',
+      ],
+      en: [
+        '<strong>"Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course"</strong> opens its doors on January 17 at RMK AIMES (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation).',
+        'Designed in line with current approaches in musculoskeletal interventional practice, our course offers the opportunity to gain advanced practical experience through hands-on cadaveric sessions that follow the theoretical content. Injection techniques targeting the lumbar region and the fascial planes will be addressed step by step under ultrasonographic guidance, in an interactive learning environment.',
+        'We have enriched the program with multi-angle demonstrations, one-on-one practice opportunities, and interactive sessions with the faculty. Alongside experienced instructors in the field, we are meticulously preparing a productive gathering that will directly contribute to your daily clinical practice.',
+      ],
+    },
+    signature: {
+      tr: '17 Ocak\'ta RMK AIMES\'te sizleri aramızda görmekten büyük mutluluk duyacağız.',
+      en: 'We will be delighted to welcome you at RMK AIMES on January 17.',
+    },
+    signatureBy: {
+      tr: 'Düzenleme Kurulu Adına Doç. Dr. Mahir TOPALOĞLU',
+      en: 'On behalf of the Organising Committee, Assoc. Prof. Mahir TOPALOĞLU',
+    },
+    schedule: {
+      tr: [
+        { time: '09:00–10:00', type: 'lecture', title: 'Kas-İskelet Sistemi Ultrasonografisinde Lomber Bölge Prensipleri', speaker: 'Doç. Dr. Mahir Topaloğlu' },
+        { time: '10:00–10:30', type: 'lecture', title: 'Faset Eklem Enjeksiyonu, Medial Dal Bloğu ve Kaudal Epidural Enjeksiyon', speaker: 'Doç. Dr. Enes Efe İş' },
+        { time: '10:30–11:00', type: 'admin', title: 'Kahve Arası' },
+        { time: '11:00–11:30', type: 'lecture', title: 'Sakroiliak Eklem ve Piriformis Enjeksiyonları', speaker: 'Doç. Dr. Mert Zure' },
+        { time: '11:30–12:00', type: 'lecture', title: 'Fasya Plan Blokları ve Enjeksiyonlarda İlk Yardım Kuralları', speaker: 'Doç. Dr. Ergün Mendeş' },
+        { time: '12:00–13:00', type: 'admin', title: 'Öğle Arası' },
+        { time: '13:00–16:30', type: 'cadaver', title: 'Kadavra Üzerinde Enjeksiyon Pratikleri', speaker: 'Doç. Dr. Mahir Topaloğlu, Doç. Dr. Ergün Mendeş, Doç. Dr. Enes Efe İş, Doç. Dr. Mert Zure', items: [
+          'Faset eklem', 'Medial dal bloğu', 'Sakroiliak eklem',
+          'Piriformis kası', 'Kaudal epidural', 'Plan blokları',
+        ] },
+        { time: '16:30–17:00', type: 'admin', title: 'Kapanış ve Değerlendirme' },
+      ],
+      en: [
+        { time: '09:00–10:00', type: 'lecture', title: 'Principles of the Lumbar Region in Musculoskeletal Ultrasound', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
+        { time: '10:00–10:30', type: 'lecture', title: 'Facet Joint Injection, Medial Branch Block & Caudal Epidural Injection', speaker: 'Assoc. Prof. Enes Efe İş' },
+        { time: '10:30–11:00', type: 'admin', title: 'Coffee Break' },
+        { time: '11:00–11:30', type: 'lecture', title: 'Sacroiliac Joint & Piriformis Injections', speaker: 'Assoc. Prof. Mert Zure' },
+        { time: '11:30–12:00', type: 'lecture', title: 'Fascial Plane Blocks & First-Aid Rules in Injection Practice', speaker: 'Assoc. Prof. Ergün Mendeş' },
+        { time: '12:00–13:00', type: 'admin', title: 'Lunch Break' },
+        { time: '13:00–16:30', type: 'cadaver', title: 'Cadaveric Injection Practice', speaker: 'Assoc. Prof. Mahir Topaloğlu, Assoc. Prof. Ergün Mendeş, Assoc. Prof. Enes Efe İş, Assoc. Prof. Mert Zure', items: [
+          'Facet joint', 'Medial branch block', 'Sacroiliac joint',
+          'Piriformis muscle', 'Caudal epidural', 'Plane blocks',
+        ] },
+        { time: '16:30–17:00', type: 'admin', title: 'Closing & Evaluation' },
+      ],
+    },
+    facultyIds: ['mahir-topaloglu', 'ergun-mendes', 'enes-efe-is', 'mert-zure'],
+  },
+  {
     id: '2027-02-rmk-aimes',
     slug: '2027-02-rmk-aimes',
     registrationSoon: true,

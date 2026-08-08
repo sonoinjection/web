@@ -66,6 +66,22 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/about.html"/>
   </url>
 
+  <!-- Course detail: 2027-01 RMK AIMES -->
+  <url>
+    <loc>https://sonoinjection.com/courses/2027-01-rmk-aimes.html</loc>
+    <lastmod>2026-08-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/courses/2027-01-rmk-aimes.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/courses/2027-01-rmk-aimes.en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/courses/2027-01-rmk-aimes.html"/>
+  </url>
+  <url>
+    <loc>https://sonoinjection.com/courses/2027-01-rmk-aimes.en.html</loc>
+    <lastmod>2026-08-08</lastmod>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://sonoinjection.com/courses/2027-01-rmk-aimes.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sonoinjection.com/courses/2027-01-rmk-aimes.en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sonoinjection.com/courses/2027-01-rmk-aimes.html"/>
+  </url>
+
   <!-- Course detail: 2026-09 RMK AIMES -->
   <url>
     <loc>https://sonoinjection.com/courses/2026-09-rmk-aimes.html</loc>
