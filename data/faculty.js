@@ -29,6 +29,25 @@ export const FACULTY = [
     role: 'director',
   },
   {
+    id: 'enes-efe-is',
+    photo: 'assets/faculty/enes-efe-is.jpeg',
+    name: 'Doç. Dr. Enes Efe İş',
+    nameEn: 'Assoc. Prof. Enes Efe İş',
+    title: {
+      tr: 'Fiziksel Tıp ve Rehabilitasyon',
+      en: 'Physical Medicine & Rehabilitation',
+    },
+    institution: {
+      tr: 'Şişli Hamidiye Etfal Eğitim ve Araştırma Hastanesi',
+      en: 'Şişli Hamidiye Etfal Training & Research Hospital',
+    },
+    city: {
+      tr: 'İstanbul, Türkiye',
+      en: 'Istanbul, Turkey',
+    },
+    role: 'faculty',
+  },
+  {
     id: 'mert-zure',
     photo: 'assets/faculty/mert-zure.jpeg',
     name: 'Doç. Dr. Mert Zure',
@@ -59,25 +78,6 @@ export const FACULTY = [
     institution: {
       tr: 'Koç Üniversitesi Hastanesi',
       en: 'Koç University Hospital',
-    },
-    city: {
-      tr: 'İstanbul, Türkiye',
-      en: 'Istanbul, Turkey',
-    },
-    role: 'faculty',
-  },
-  {
-    id: 'enes-efe-is',
-    photo: 'assets/faculty/enes-efe-is.jpeg',
-    name: 'Doç. Dr. Enes Efe İş',
-    nameEn: 'Assoc. Prof. Enes Efe İş',
-    title: {
-      tr: 'Fiziksel Tıp ve Rehabilitasyon',
-      en: 'Physical Medicine & Rehabilitation',
-    },
-    institution: {
-      tr: 'Şişli Hamidiye Etfal Eğitim ve Araştırma Hastanesi',
-      en: 'Şişli Hamidiye Etfal Training & Research Hospital',
     },
     city: {
       tr: 'İstanbul, Türkiye',
