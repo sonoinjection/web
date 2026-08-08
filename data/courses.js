@@ -113,6 +113,7 @@ export const COURSES = [
       en: 'Lumbar Region & Fascial Planes',
     },
     thumbColor: 'var(--navy-900)',
+    thumbImage: 'assets/courses/2027-01-rmk-aimes.jpg',
     title: {
       tr: 'Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu',
       en: 'Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course',
