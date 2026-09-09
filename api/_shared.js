@@ -92,6 +92,18 @@ export function formatEventDateTr(dateValue) {
   }).format(date);
 }
 
+// Calendar date in Europe/Istanbul as 'YYYY-MM-DD', so an instant can be
+// compared against a Postgres `date` column (e.g. an early-bird deadline)
+// without the comparison drifting across the UTC day boundary.
+export function istanbulDateKey(d) {
+  return new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    timeZone: 'Europe/Istanbul',
+  }).format(d);
+}
+
 export function formatRegisteredAtCet(d) {
   const datetime = new Intl.DateTimeFormat('tr-TR', {
     day: '2-digit',

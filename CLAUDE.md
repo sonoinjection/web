@@ -221,6 +221,7 @@ All emails sent via Resend. Each event row has its own `bank_details_tr` so per-
 1. **Registration received** → registrant's email
    *Trigger:* successful `POST /api/register` insert (immediate).
    *Body:* confirms the registration was received, embeds the per-event pricing breakdown (net price, KDV at `kdv_rate`, gross total — formatted per §7's Turkish number conventions) and `bank_details_tr` from the event row, instructs them to email proof of payment to `kayit@sonoinjection.com`.
+   *Two-tier pricing:* when the event carries `early_bird_price_net_try` + `early_bird_deadline`, the email lists **both** tiers and names the one that applies. The tier is chosen by the Istanbul calendar date of `registered_at` (`istanbulDateKey()` in `api/_shared.js`), and the deadline day itself still counts as early bird. The bank-transfer instruction always quotes the applicable gross. Events without an early-bird price render the original single-tier block unchanged.
 
 2. **Admin notification** → `kayit@sonoinjection.com`
    *Trigger:* same insert (immediate).
@@ -292,6 +293,11 @@ create table events (
     round(price_net_try * (1 + kdv_rate / 100), 2)
   ) stored,                                         -- KDV-inclusive gross; auto-computed by Postgres
   price_eur              numeric(10,2),             -- optional EUR equivalent for international participants
+  early_bird_price_net_try   numeric(10,2),         -- optional discounted net price; null = single-tier pricing
+  early_bird_deadline        date,                  -- last day the early-bird price applies (inclusive, Europe/Istanbul)
+  early_bird_price_gross_try numeric(10,2) generated always as (
+    round(early_bird_price_net_try * (1 + kdv_rate / 100), 2)
+  ) stored,
   bank_details_tr        text,
   is_active              boolean not null default false,
   created_at             timestamptz not null default now()
@@ -383,6 +389,14 @@ alter table registrations alter column expires_at drop not null;
 -- 2026-05-18 — specialty: closed enum → open free-text field
 alter table registrations alter column specialty type text using specialty::text;
 drop type if exists specialty_t;
+
+-- 2026-09-09 — PENDING (not yet applied; Supabase project was
+-- deactivated for inactivity and must be restored first).
+-- Two-tier early-bird pricing for the January 2027 course.
+alter table events add column early_bird_price_net_try numeric(10,2);
+alter table events add column early_bird_deadline      date;
+alter table events add column early_bird_price_gross_try numeric(10,2)
+  generated always as (round(early_bird_price_net_try * (1 + kdv_rate / 100), 2)) stored;
 
 -- 2026-05-09 — schema rebuild for Session 1 admin board
 -- registration_status_t enum: pending|confirmed|expired|cancelled  →  applied|paid|cancelled|refunded

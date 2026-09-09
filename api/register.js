@@ -127,7 +127,7 @@ export default async function handler(req, res) {
   const { data: event, error: eventErr } = await supabase
     .from('events')
     .select(
-      'id, title_tr, event_date, location_tr, capacity, reserved_for_external, price_net_try, kdv_rate, price_gross_try, bank_details_tr, is_active',
+      'id, title_tr, event_date, location_tr, capacity, reserved_for_external, price_net_try, kdv_rate, price_gross_try, early_bird_price_net_try, early_bird_price_gross_try, early_bird_deadline, bank_details_tr, is_active',
     )
     .eq('id', data.event_id)
     .maybeSingle();
@@ -234,7 +234,7 @@ export default async function handler(req, res) {
     ? new Date(inserted.registered_at)
     : new Date();
 
-  const email1 = renderEmail1Registration({ data, event });
+  const email1 = renderEmail1Registration({ data, event, registeredAt });
   const email2 = renderEmail2AdminNotification({ data, event, registeredAt });
 
   const email1Result = await sendEmail({

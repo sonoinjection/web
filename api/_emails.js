@@ -16,6 +16,7 @@ import {
   formatRegisteredAtCet,
   formatTRY,
   getResend,
+  istanbulDateKey,
   logServerError,
 } from './_shared.js';
 
@@ -33,8 +34,59 @@ const POSITION_LABELS = {
   asistan: 'Asistan',
 };
 
+// ── Pricing tiers ───────────────────────────────────────────────────
+// An event may carry an early-bird price alongside the standard one. Both
+// tiers are always shown to the registrant; which one they owe is decided
+// by the Istanbul calendar date of their registration, and the deadline
+// day itself still counts as early bird.
+function resolvePricing(event, registeredAt) {
+  if (event.price_net_try === null || event.price_net_try === undefined) return null;
+
+  const deadline = event.early_bird_deadline
+    ? String(event.early_bird_deadline).slice(0, 10)
+    : null;
+  const hasEarlyBird =
+    deadline !== null &&
+    event.early_bird_price_net_try !== null &&
+    event.early_bird_price_net_try !== undefined;
+
+  const tiers = [];
+  if (hasEarlyBird) {
+    tiers.push({
+      name: 'Erken Kayıt',
+      window: `${formatEventDateTr(deadline)} tarihine kadar`,
+      net: event.early_bird_price_net_try,
+      gross: event.early_bird_price_gross_try,
+    });
+  }
+  tiers.push({
+    name: 'Standart Kayıt',
+    window: hasEarlyBird ? `${formatEventDateTr(deadline)} sonrası` : null,
+    net: event.price_net_try,
+    gross: event.price_gross_try,
+  });
+
+  const withinEarlyBird =
+    hasEarlyBird && istanbulDateKey(registeredAt) <= deadline;
+
+  return {
+    tiers,
+    hasEarlyBird,
+    applicable: withinEarlyBird ? tiers[0] : tiers[tiers.length - 1],
+  };
+}
+
+function renderPriceTier(tier, kdvRateInt, indent) {
+  const kdv = formatTRY(Number(tier.gross) - Number(tier.net));
+  return [
+    `${indent}KDV Hariç: ${formatTRY(tier.net)}`,
+    `${indent}KDV (%${kdvRateInt}): ${kdv}`,
+    `${indent}Toplam (KDV Dahil): ${formatTRY(tier.gross)}`,
+  ];
+}
+
 // ── Email 1: registrant on initial registration ─────────────────────
-export function renderEmail1Registration({ data, event }) {
+export function renderEmail1Registration({ data, event, registeredAt }) {
   const fullName = `${data.first_name} ${data.last_name}`;
   const subject = 'SonoInjection Rezervasyonunuz Alındı';
 
@@ -47,25 +99,37 @@ export function renderEmail1Registration({ data, event }) {
   lines.push(`Yer: ${event.location_tr}`);
   lines.push('');
 
-  const hasNetPrice =
-    event.price_net_try !== null && event.price_net_try !== undefined;
+  const pricing = resolvePricing(event, registeredAt);
 
-  if (hasNetPrice) {
-    const net = formatTRY(event.price_net_try);
-    const gross = formatTRY(event.price_gross_try);
-    const kdvAmount = formatTRY(
-      Number(event.price_gross_try) - Number(event.price_net_try),
-    );
+  if (pricing) {
     const kdvRateInt = Math.round(Number(event.kdv_rate));
+    const dueGross = formatTRY(pricing.applicable.gross);
 
-    lines.push(`Kurs Ücreti (KDV Hariç): ${net}`);
-    lines.push(`KDV (%${kdvRateInt}): ${kdvAmount}`);
-    lines.push(`Toplam (KDV Dahil): ${gross}`);
+    if (pricing.hasEarlyBird) {
+      // Both tiers are listed so the registrant can see what they saved —
+      // or what they would have saved by registering earlier.
+      lines.push('Kurs Ücreti');
+      lines.push('');
+      for (const tier of pricing.tiers) {
+        lines.push(`${tier.name} (${tier.window}):`);
+        lines.push(...renderPriceTier(tier, kdvRateInt, '  '));
+        lines.push('');
+      }
+      lines.push(
+        `Kayıt tarihiniz itibarıyla geçerli ücret: ${pricing.applicable.name} — ${dueGross} (KDV Dahil)`,
+      );
+    } else {
+      const tier = pricing.applicable;
+      const kdv = formatTRY(Number(tier.gross) - Number(tier.net));
+      lines.push(`Kurs Ücreti (KDV Hariç): ${formatTRY(tier.net)}`);
+      lines.push(`KDV (%${kdvRateInt}): ${kdv}`);
+      lines.push(`Toplam (KDV Dahil): ${formatTRY(tier.gross)}`);
+    }
     lines.push('');
 
     if (event.bank_details_tr) {
       lines.push(
-        `Rezervasyonunuzu kesinleştirmek için lütfen ${gross} tutarında havale gerçekleştirin:`,
+        `Rezervasyonunuzu kesinleştirmek için lütfen ${dueGross} tutarında havale gerçekleştirin:`,
       );
       lines.push('');
       lines.push(event.bank_details_tr);
