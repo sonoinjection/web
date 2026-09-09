@@ -176,6 +176,42 @@
 .enrol-card__fact { display: flex; gap: var(--space-3); align-items: center; font-family: var(--font-body); font-size: var(--text-base); color: var(--color-fg-secondary); }
 .enrol-card__fact svg { width: 18px; height: 18px; color: var(--color-fg-accent); flex-shrink: 0; }
 .enrol-card__buttons { display: flex; flex-direction: column; gap: var(--space-3); }
+
+/* Registration contact — the phone number is injected by
+   scripts/contact-reveal.js, so it is absent from the markup. */
+.enrol-card__contact {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  background: var(--color-bg-muted);
+  border-radius: var(--radius-md);
+}
+.enrol-card__contact-label {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: var(--space-2);
+}
+.enrol-card__contact-name {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-fg-primary);
+}
+.enrol-card__contact-tel {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-top: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-fg-secondary);
+}
+.enrol-card__contact-tel svg { width: 16px; height: 16px; color: var(--color-fg-accent); flex-shrink: 0; }
+.enrol-card__contact-tel a { color: var(--color-fg-primary); text-decoration: none; }
+.enrol-card__contact-tel a:hover { text-decoration: underline; }
 .enrol-card__note {
   font-family: var(--font-body);
   font-size: var(--text-xs);
