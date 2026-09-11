@@ -225,9 +225,10 @@ All emails sent via Resend. Each event row has its own `bank_details_tr` so per-
    *No bank details.* `bank_details_tr` is deliberately not in this email. The applicant replies to confirm the terms suit them, and the team sends account details in that reply — the one manual step in the chain. Proof of payment still goes to `kayit@sonoinjection.com` afterwards. No turnaround time is promised.
    *Two-tier pricing:* when the event carries `early_bird_price_net_try` + `early_bird_deadline`, the email lists **both** tiers and names the one that applies. The tier is chosen by the Istanbul calendar date of `registered_at` (`istanbulDateKey()` in `api/_shared.js`), and the deadline day itself still counts as early bird. The tier is locked at **application** time, so an applicant who applies before the deadline keeps the early-bird price even if they pay after it. Events without an early-bird price render the single-tier block instead.
 
-2. **Admin notification** → `kayit@sonoinjection.com`
+2. **Application alert** → `kayit@sonoinjection.com`
    *Trigger:* same insert (immediate).
-   *Body:* new pending registration arrived (name, email, phone, specialty, position, institution); deep-link to the admin row.
+   *Body:* the full application (name, email, phone, specialty, position, institution, notes), the event, the application timestamp, the price tier the applicant qualifies for, and a deep-link to the admin board.
+   *Reply-To is the applicant*, so hitting Reply in the `kayit@` inbox opens a message straight to them — this is how the bank-details reply gets sent. The alert is the team's only signal that an application arrived; with Emails 3–6 gone, nothing else notifies them.
 
 **Emails 3–6 were removed on 2026-09-11.** Payment confirmation, the
 pre-course reminder, cancellation and refund notices used to be sent

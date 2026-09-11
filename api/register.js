@@ -249,7 +249,7 @@ export default async function handler(req, res) {
       registration_id: inserted.id,
       email_type: 'email_1_registration',
       to_address: data.email,
-      message: 'Rezervasyon e-postası gönderildi',
+      message: 'Başvuru e-postası gönderildi',
     });
   }
 

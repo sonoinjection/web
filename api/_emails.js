@@ -216,10 +216,10 @@ export function renderEmail1Registration({ data, event, registeredAt }) {
 // ── Email 2: admin notification ─────────────────────────────────────
 export function renderEmail2AdminNotification({ data, event, registeredAt }) {
   const fullName = `${data.first_name} ${data.last_name}`;
-  const subject = `[SonoInjection] Yeni Rezervasyon - ${fullName}`;
+  const subject = `[SonoInjection] Yeni Başvuru - ${fullName}`;
 
   const lines = [];
-  lines.push('Yeni bir rezervasyon alındı:');
+  lines.push('Yeni bir başvuru alındı:');
   lines.push('');
   lines.push(`Ad Soyad: ${fullName}`);
   lines.push(`E-posta: ${data.email}`);
@@ -230,7 +230,19 @@ export function renderEmail2AdminNotification({ data, event, registeredAt }) {
   lines.push(`Notlar: ${data.notes || '—'}`);
   lines.push('');
   lines.push(`Etkinlik: ${event.title_tr}`);
-  lines.push(`Rezervasyon tarihi: ${formatRegisteredAtCet(registeredAt)}`);
+  lines.push(`Başvuru tarihi: ${formatRegisteredAtCet(registeredAt)}`);
+
+  // The tier this applicant qualifies for — the figure to quote when
+  // replying with bank details.
+  const pricing = resolvePricing(event, registeredAt);
+  if (pricing) {
+    const tierName = pricing.hasEarlyBird
+      ? EMAIL1_COPY.tr.tierName[pricing.applicable.key]
+      : 'Kurs ücreti';
+    lines.push(
+      `Geçerli ücret: ${tierName} — ${formatTRY(pricing.applicable.gross)} (KDV Dahil)`,
+    );
+  }
   lines.push('');
   lines.push(`Admin paneli: ${ADMIN_PANEL_URL}`);
 
