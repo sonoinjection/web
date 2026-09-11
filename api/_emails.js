@@ -76,6 +76,8 @@ const EMAIL1_COPY = {
   tr: {
     money: formatTRY,
     date: formatEventDateTr,
+    title: (e) => e.title_tr,
+    venue: (e) => e.location_tr,
     greeting: (name) => `Sayın ${name},`,
     received: (title) => `${title} için başvurunuz alındı.`,
     dateLine: (d) => `Tarih: ${d}`,
@@ -108,6 +110,8 @@ const EMAIL1_COPY = {
   en: {
     money: formatTRYEn,
     date: formatEventDateEn,
+    title: (e) => e.title_en || e.title_tr,
+    venue: (e) => e.location_en || e.location_tr,
     greeting: (name) => `Dear ${name},`,
     received: (title) => `Your application for the ${title} has been received.`,
     dateLine: (d) => `Date: ${d}`,
@@ -143,10 +147,10 @@ function renderEmail1Body(copy, { fullName, event, pricing }) {
   const lines = [];
   lines.push(copy.greeting(fullName));
   lines.push('');
-  lines.push(copy.received(event.title_tr));
+  lines.push(copy.received(copy.title(event)));
   lines.push('');
   lines.push(copy.dateLine(copy.date(event.event_date)));
-  lines.push(copy.venueLine(event.location_tr));
+  lines.push(copy.venueLine(copy.venue(event)));
   lines.push('');
 
   if (pricing) {
@@ -208,6 +212,50 @@ export function renderEmail1Registration({ data, event, registeredAt }) {
     '────────────────────────────────────────────────────────',
     '',
     ...renderEmail1Body(EMAIL1_COPY.en, context),
+  ].join('\n');
+
+  return { subject, text };
+}
+
+// ── Application email (email-only pipeline) ─────────────────────────
+// One message addressed to BOTH the applicant and kayit@, so the whole
+// exchange lives in a single thread: the applicant replies, the team
+// replies-all, bank details follow in that chain. Body is the same
+// bilingual text as Email 1, with the application details appended so
+// the thread is self-contained — there is no database to look them up in.
+export function renderApplicationEmail({ data, event, submittedAt }) {
+  const fullName = `${data.first_name} ${data.last_name}`;
+  const subject =
+    `SonoInjection — Başvurunuz Alındı / Your Application Has Been Received (${fullName})`;
+
+  const pricing = resolvePricing(event, submittedAt);
+  const context = { fullName, event, pricing };
+
+  const details = [
+    'Başvuru Bilgileri / Application Details',
+    '',
+    `Ad Soyad / Name: ${fullName}`,
+    `E-posta / Email: ${data.email}`,
+    `Telefon / Phone: ${data.phone}`,
+    `Uzmanlık / Specialty: ${data.specialty}`,
+    `Pozisyon / Position: ${POSITION_LABELS[data.position] || data.position}`,
+    `Kurum / Institution: ${data.institution}`,
+    `Notlar / Notes: ${data.notes || '—'}`,
+    `Başvuru tarihi / Submitted: ${formatRegisteredAtCet(submittedAt)}`,
+  ];
+
+  const divider = '────────────────────────────────────────────────────────';
+
+  const text = [
+    ...renderEmail1Body(EMAIL1_COPY.tr, context),
+    '',
+    divider,
+    '',
+    ...renderEmail1Body(EMAIL1_COPY.en, context),
+    '',
+    divider,
+    '',
+    ...details,
   ].join('\n');
 
   return { subject, text };

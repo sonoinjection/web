@@ -11,8 +11,19 @@ import {
 } from './shared.js';
 
 // ── Wiring ────────────────────────────────────────────────────
-const REGISTER_ENDPOINT = '/api/register';
-const EVENT_ID = '65675693-d721-47bf-b78d-244db4f3d77e';
+// Two pipelines exist; ENDPOINT and EVENT_ID must be flipped together
+// because they use different event identifiers.
+//
+//   '/api/apply'    — email-only, no database. EVENT_ID is the course
+//                     slug, resolved from api/_events.js.
+//   '/api/register' — Supabase pipeline. EVENT_ID is the events-table
+//                     UUID. Needs a live Supabase project.
+//
+// Supabase values, kept here for the flip back:
+//   const REGISTER_ENDPOINT = '/api/register';
+//   const EVENT_ID = '65675693-d721-47bf-b78d-244db4f3d77e';
+const REGISTER_ENDPOINT = '/api/apply';
+const EVENT_ID = '2027-01-rmk-aimes';
 const USE_MOCK_RESPONSE = false;
 const MOCK_LATENCY_MS = 500;
 // ──────────────────────────────────────────────────────────────

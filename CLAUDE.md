@@ -121,13 +121,30 @@ deneme-kayit/
                                        loads CSS and admin.js from /kayit/.
 ```
 
-### Wiring constants live at the top of register.js
+### Two pipelines — wiring constants at the top of register.js
+
+The same form feeds either of two back ends. `/kayit/` is currently wired to **`/api/apply`**.
 
 ```js
-const REGISTER_ENDPOINT = '/api/register';
-const EVENT_ID = '65675693-d721-47bf-b78d-244db4f3d77e';
+const REGISTER_ENDPOINT = '/api/apply';        // email-only
+const EVENT_ID = '2027-01-rmk-aimes';          // course slug
 const USE_MOCK_RESPONSE = false;
 ```
+
+| | `/api/apply` (email-only) | `/api/register` (Supabase) |
+|---|---|---|
+| Record of the application | the email thread | `registrations` row |
+| `EVENT_ID` is | course slug → `api/_events.js` | `events` table UUID |
+| Emails sent | **one**, to applicant **and** `kayit@` | Email 1 to applicant, Email 2 to `kayit@` |
+| Send failure | **fails the request** (502) | logged; request still succeeds |
+| Capacity enforcement | none | `capacity − reserved_for_external` |
+| Duplicate-email check | none | yes |
+| Admin board | not fed | fed |
+| Infrastructure | Resend only | Resend + a live Supabase project |
+
+**`ENDPOINT` and `EVENT_ID` must be flipped together** — they use different event identifiers, so changing one alone produces `EVENT_NOT_ACTIVE`.
+
+Why the failure modes differ: `/api/register` commits the row before sending, so a Resend outage costs a notification, not an application. On `/api/apply` the email *is* the application, so a silent failure would lose it — hence the 502 and the error banner telling the applicant to write to `kayit@` directly.
 
 The frontend `POST`s the form payload to `REGISTER_ENDPOINT` and reads the JSON `{ error, code }` body on non-2xx to surface the Turkish error message in the form's error banner. `USE_MOCK_RESPONSE = true` is a local-dev fallback that simulates a 500ms-delayed success without hitting the API.
 
@@ -158,6 +175,7 @@ Stack:
 All routes live under `api/` (Vercel auto-detects). Files prefixed with `_` are helpers, not endpoints. Service-role key is required server-side.
 
 **Public**
+- `POST /api/apply` — email-only pipeline. Validates the payload (shared `api/_validate.js`), resolves the event from the static `api/_events.js` catalogue, and sends **one** message to the applicant and `kayit@` in a single Resend call so the exchange lives in one thread. No database. Stable error codes: `VALIDATION_ERROR`, `EVENT_NOT_ACTIVE`, `SEND_FAILED`, `INVALID_BODY`, `METHOD_NOT_ALLOWED`.
 - `POST /api/register` — receives the public form payload. Validates, enforces capacity (`capacity − reserved_for_external`) and duplicate-email checks, inserts a `registrations` row with `status = 'applied'`, dispatches Email 1 (registrant) + Email 2 (admin), and writes the corresponding `email_sent` log entries. Email failures don't fail the request. Stable error codes: `VALIDATION_ERROR`, `EVENT_NOT_ACTIVE`, `CAPACITY_FULL`, `DUPLICATE_REGISTRATION`, `INSERT_FAILED`, `CONFIG_ERROR`, `INVALID_BODY`, `METHOD_NOT_ALLOWED`.
 
 **Admin** — every route runs `requireAdmin(req, res)` first (validates the Bearer JWT, rejects emails not in `ADMIN_ALLOWLIST`). The returned email is stamped as `created_by` on every log write and `confirmed_by` on status changes.
@@ -180,10 +198,13 @@ There is **no automatic expiry** of `applied` registrations. Cancellations are a
 
 ```
 api/
-  register.js                 ← public form handler
+  apply.js                    ← public form handler, email-only pipeline (no DB)
+  register.js                 ← public form handler, Supabase pipeline
   auth-config.js              ← public GET → {supabaseUrl, supabaseAnonKey} for the admin browser
   _shared.js                  ← Supabase + Resend client init, requireAdmin(), formatters, ADMIN_ALLOWLIST
-  _emails.js                  ← email templates (1, 2, 3, 5, 6) + sendEmail()
+  _validate.js                ← payload validation shared by both pipelines
+  _events.js                  ← static event catalogue for /api/apply (mirrors data/courses.js)
+  _emails.js                  ← email templates (1, 2, application) + sendEmail()
   _log.js                     ← registration_log writers
   admin/
     _transitions.js           ← status enum + ALLOWED_TRANSITIONS + TR labels
