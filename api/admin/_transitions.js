@@ -32,16 +32,19 @@ export const TRANSITION_ACTION_LABELS_TR = {
   'refunded→paid':      'Yeniden Aktive Et',
 };
 
-// Email triggered by each transition (key by `${old}→${new}`); null if none.
-//   email_3 — payment confirmation (always; no opt-out)
-//   email_5 — cancellation notice (opt-in via send_email flag)
-//   email_6 — refund notice       (opt-in via send_email flag)
-//   null    — silent transition (reactivations)
-export const TRANSITION_EMAIL = {
-  'applied→paid':      'email_3',
-  'applied→cancelled': 'email_5',
-  'paid→cancelled':    'email_5',
-  'paid→refunded':     'email_6',
+// Kind of notice the admin is expected to deliver by hand for each
+// transition (key by `${old}→${new}`); null if none. Registrants are only
+// emailed automatically once, on application (Email 1) — everything after
+// that is a human reply from kayit@. This map survives only to decide
+// which confirmation flags the admin board asks for.
+//   'cancellation' — admin confirms they informed the registrant
+//   'refund'       — plus confirmation the refund was actually paid out
+//   null           — nothing to confirm (payment, reactivations)
+export const TRANSITION_NOTICE = {
+  'applied→paid':      null,
+  'applied→cancelled': 'cancellation',
+  'paid→cancelled':    'cancellation',
+  'paid→refunded':     'refund',
   'cancelled→applied': null,
   'refunded→paid':     null,
 };
@@ -70,8 +73,8 @@ export function transitionKey(oldStatus, newStatus) {
   return `${oldStatus}→${newStatus}`;
 }
 
-export function transitionEmailType(oldStatus, newStatus) {
-  return TRANSITION_EMAIL[transitionKey(oldStatus, newStatus)] || null;
+export function transitionNoticeType(oldStatus, newStatus) {
+  return TRANSITION_NOTICE[transitionKey(oldStatus, newStatus)] || null;
 }
 
 export function transitionActionLabel(oldStatus, newStatus) {

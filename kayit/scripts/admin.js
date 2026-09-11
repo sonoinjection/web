@@ -827,7 +827,6 @@ const DIALOG_DEFS = {
       await transitionStatus(r.id, 'paid', {
         payment_reference,
         informed_confirmed: true,
-        send_email: true,
       });
     },
   },
@@ -842,10 +841,6 @@ const DIALOG_DEFS = {
         <input type="checkbox" name="informed_confirmed" />
         <span>Katılımcı bu iptalden haberdar edildi.</span>
       </label>
-      <label class="form-checkbox">
-        <input type="checkbox" name="send_email" />
-        <span>Katılımcıya iptal e-postası gönder.</span>
-      </label>
       <div class="form-field">
         <label class="form-label" for="dlg-reason">İptal sebebi (opsiyonel)</label>
         <input class="form-input" id="dlg-reason" name="reason" type="text" />
@@ -856,7 +851,6 @@ const DIALOG_DEFS = {
       await transitionStatus(r.id, 'cancelled', {
         reason: form.elements.reason.value.trim() || null,
         informed_confirmed: true,
-        send_email: form.elements.send_email.checked,
       });
     },
   },
@@ -874,10 +868,6 @@ const DIALOG_DEFS = {
       <label class="form-checkbox">
         <input type="checkbox" name="refund_completed_confirmed" />
         <span>İade işlemi banka tarafında tamamlandı.</span>
-      </label>
-      <label class="form-checkbox">
-        <input type="checkbox" name="send_email" />
-        <span>Katılımcıya iade e-postası gönder.</span>
       </label>
       <div class="form-row">
         <div class="form-field">
@@ -899,7 +889,6 @@ const DIALOG_DEFS = {
         refund_amount: amount === '' ? null : Number(amount),
         informed_confirmed: true,
         refund_completed_confirmed: true,
-        send_email: form.elements.send_email.checked,
       });
     },
   },

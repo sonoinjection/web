@@ -3,11 +3,11 @@
    Body: {
      registration_id, new_status,
      reason?, payment_reference?, refund_amount?,
-     informed_confirmed?, refund_completed_confirmed?,
-     send_email?
+     informed_confirmed?, refund_completed_confirmed?
    }
-   Validates the transition, updates the row, writes a status_change
-   log, and dispatches Email 3 / 5 / 6 if applicable.
+   Validates the transition, updates the row and writes a status_change
+   log. Sends nothing — registrants are emailed automatically only once,
+   on application (Email 1); everything after that is a human reply.
    ============================================================ */
 
 import {
@@ -18,24 +18,14 @@ import {
   requireAdmin,
   logServerError,
   logEvent,
-  ADMIN_REPLY_TO,
   ConfigError,
 } from '../_shared.js';
 import {
   validateTransition,
-  transitionEmailType,
+  transitionNoticeType,
   statusChangeMessageTr,
 } from './_transitions.js';
-import {
-  renderEmail3PaymentConfirmation,
-  renderEmail5Cancellation,
-  renderEmail6Refund,
-  sendEmail,
-} from '../_emails.js';
-import {
-  writeStatusChangeLog,
-  writeEmailSentLog,
-} from '../_log.js';
+import { writeStatusChangeLog } from '../_log.js';
 
 export default async function handler(req, res) {
   if (!requireMethod(req, res, 'POST')) return;
@@ -64,7 +54,6 @@ export default async function handler(req, res) {
       : null;
   const informed_confirmed = !!body.informed_confirmed;
   const refund_completed_confirmed = !!body.refund_completed_confirmed;
-  const send_email = !!body.send_email;
 
   if (refund_amount !== null && Number.isNaN(refund_amount)) {
     return jsonError(res, 400, 'INVALID_REFUND_AMOUNT', 'İade tutarı geçersiz.');
@@ -81,7 +70,7 @@ export default async function handler(req, res) {
     throw err;
   }
 
-  // Fetch current row + event for emails.
+  // Fetch current row.
   const { data: registration, error: regErr } = await supabase
     .from('registrations')
     .select('id, event_id, first_name, last_name, email, status')
@@ -142,53 +131,8 @@ export default async function handler(req, res) {
     return jsonError(res, 500, 'STATUS_UPDATE_FAILED', 'Durum güncellenemedi.');
   }
 
-  // Decide whether an email fires for this transition.
-  const emailType = transitionEmailType(registration.status, new_status);
-  const shouldSendEmail =
-    emailType === 'email_3' ||                                  // always
-    (emailType === 'email_5' && send_email) ||                  // opt-in
-    (emailType === 'email_6' && send_email);                    // opt-in
-
-  // Fetch event details only if we need to send an email.
-  let eventRow = null;
-  if (shouldSendEmail) {
-    const { data: ev, error: evErr } = await supabase
-      .from('events')
-      .select('id, title_tr, event_date, location_tr')
-      .eq('id', updated.event_id)
-      .maybeSingle();
-    if (evErr) {
-      logServerError('events.fetch_for_email', evErr, { event_id: updated.event_id });
-    } else {
-      eventRow = ev;
-    }
-  }
-
-  let emailDispatch = { sent: false, reason: null, type: emailType };
-
-  if (shouldSendEmail && eventRow) {
-    let template = null;
-    if (emailType === 'email_3') {
-      template = renderEmail3PaymentConfirmation({ registration: updated, event: eventRow });
-    } else if (emailType === 'email_5') {
-      template = renderEmail5Cancellation({ registration: updated, event: eventRow, reason });
-    } else if (emailType === 'email_6') {
-      template = renderEmail6Refund({
-        registration: updated, event: eventRow,
-        refundAmount: refund_amount, notes: reason,
-      });
-    }
-    if (template) {
-      const result = await sendEmail({
-        to: updated.email,
-        replyTo: ADMIN_REPLY_TO,
-        subject: template.subject,
-        text: template.text,
-        context: `email.${emailType}`,
-      });
-      emailDispatch = { sent: !!result.sent, reason: result.reason || null, type: emailType };
-    }
-  }
+  // Which confirmations the admin board collects for this transition.
+  const noticeType = transitionNoticeType(registration.status, new_status);
 
   // Write status_change log entry.
   const message = statusChangeMessageTr(registration.status, new_status);
@@ -200,51 +144,27 @@ export default async function handler(req, res) {
     reason,
     payment_reference,
     refund_amount,
-    informed_confirmed: emailType === 'email_5' || emailType === 'email_6'
-      ? informed_confirmed
-      : null,
-    refund_completed_confirmed: emailType === 'email_6'
+    informed_confirmed: noticeType ? informed_confirmed : null,
+    refund_completed_confirmed: noticeType === 'refund'
       ? refund_completed_confirmed
       : null,
-    sent_email: emailDispatch.sent,
+    sent_email: false,
     created_by: adminEmail,
   });
-
-  // Write email_sent log entry if applicable.
-  let emailEntry = null;
-  if (emailDispatch.sent) {
-    const { entry } = await writeEmailSentLog(supabase, {
-      registration_id,
-      email_type: emailType,
-      to_address: updated.email,
-      message: messageForEmailType(emailType),
-    });
-    emailEntry = entry;
-  }
 
   logEvent('info', 'registration.status_changed', {
     registration_id,
     old_status: registration.status,
     new_status,
-    email_sent: emailDispatch.sent,
   });
 
   const newLogEntries = [];
-  if (emailEntry) newLogEntries.push(emailEntry);
   if (statusEntry) newLogEntries.push(statusEntry);
 
   return res.status(200).json({
     registration: updated,
     log_entries: newLogEntries,
-    email: emailDispatch,
   });
 }
 
-function messageForEmailType(type) {
-  switch (type) {
-    case 'email_3': return 'Onay e-postası gönderildi';
-    case 'email_5': return 'İptal e-postası gönderildi';
-    case 'email_6': return 'İade e-postası gönderildi';
-    default: return 'E-posta gönderildi';
-  }
-}
+

@@ -1,11 +1,10 @@
 /* ============================================================
    api/_emails.js — email templates + send orchestrator
-   Email 1: registration received (registrant)
+   Email 1: application received (applicant), bilingual TR + EN
    Email 2: admin notification (kayit@)
-   Email 3: payment confirmation (registrant) — applied → paid
-   Email 4: pre-course reminder (registrant) — cron, future session
-   Email 5: cancellation notice (registrant, opt-in)
-   Email 6: refund notice (registrant, opt-in)
+   These are the only automatic emails. Everything after the initial
+   application — bank details, payment confirmation, cancellations,
+   refunds — is a human reply from kayit@, by deliberate choice.
    ============================================================ */
 
 import {
@@ -234,83 +233,6 @@ export function renderEmail2AdminNotification({ data, event, registeredAt }) {
   lines.push(`Rezervasyon tarihi: ${formatRegisteredAtCet(registeredAt)}`);
   lines.push('');
   lines.push(`Admin paneli: ${ADMIN_PANEL_URL}`);
-
-  return { subject, text: lines.join('\n') };
-}
-
-// ── Email 3: payment confirmation (applied → paid) ──────────────────
-export function renderEmail3PaymentConfirmation({ registration, event }) {
-  const fullName = `${registration.first_name} ${registration.last_name}`;
-  const subject = 'SonoInjection Kaydınız Onaylandı';
-
-  const lines = [];
-  lines.push(`Sayın ${fullName},`);
-  lines.push('');
-  lines.push(
-    `${event.title_tr} etkinliği için ödemeniz alınmıştır. Kaydınız resmi olarak onaylanmıştır.`,
-  );
-  lines.push('');
-  lines.push(`Tarih: ${formatEventDateTr(event.event_date)}`);
-  lines.push(`Yer: ${event.location_tr}`);
-  lines.push('');
-  lines.push('Etkinlikten 1 hafta önce hatırlatma e-postası alacaksınız.');
-  lines.push('');
-  lines.push('Sorularınız için: kayit@sonoinjection.com');
-  lines.push('');
-  lines.push('Saygılarımızla,');
-  lines.push('SonoInjection Ekibi');
-
-  return { subject, text: lines.join('\n') };
-}
-
-// ── Email 5: cancellation notice (opt-in) ───────────────────────────
-export function renderEmail5Cancellation({ registration, event, reason }) {
-  const fullName = `${registration.first_name} ${registration.last_name}`;
-  const subject = 'SonoInjection Kaydınız İptal Edildi';
-
-  const lines = [];
-  lines.push(`Sayın ${fullName},`);
-  lines.push('');
-  lines.push(`${event.title_tr} etkinliği için kaydınız iptal edilmiştir.`);
-  lines.push('');
-  if (reason && String(reason).trim()) {
-    lines.push(`Sebep: ${String(reason).trim()}`);
-    lines.push('');
-  }
-  lines.push('Sorularınız veya yeniden kayıt için: kayit@sonoinjection.com');
-  lines.push('');
-  lines.push('Saygılarımızla,');
-  lines.push('SonoInjection Ekibi');
-
-  return { subject, text: lines.join('\n') };
-}
-
-// ── Email 6: refund notice (opt-in) ─────────────────────────────────
-export function renderEmail6Refund({ registration, event, refundAmount, notes }) {
-  const fullName = `${registration.first_name} ${registration.last_name}`;
-  const subject = 'SonoInjection Ödeme İadesi';
-
-  const lines = [];
-  lines.push(`Sayın ${fullName},`);
-  lines.push('');
-  lines.push(`${event.title_tr} etkinliği için ödemeniz iade edilmiştir.`);
-  lines.push('');
-  if (refundAmount !== null && refundAmount !== undefined && !Number.isNaN(Number(refundAmount))) {
-    lines.push(`İade tutarı: ${formatTRY(refundAmount)}`);
-  }
-  if (notes && String(notes).trim()) {
-    lines.push(`Notlar: ${String(notes).trim()}`);
-  }
-  if (
-    (refundAmount !== null && refundAmount !== undefined && !Number.isNaN(Number(refundAmount))) ||
-    (notes && String(notes).trim())
-  ) {
-    lines.push('');
-  }
-  lines.push('Sorularınız için: kayit@sonoinjection.com');
-  lines.push('');
-  lines.push('Saygılarımızla,');
-  lines.push('SonoInjection Ekibi');
 
   return { subject, text: lines.join('\n') };
 }
