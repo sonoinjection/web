@@ -77,6 +77,16 @@ export function formatTRY(value) {
   return `${TR_NUMBER.format(Number(value))} TL`;
 }
 
+const EN_NUMBER = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export function formatTRYEn(value) {
+  if (value === null || value === undefined) return null;
+  return `${EN_NUMBER.format(Number(value))} TRY`;
+}
+
 export function formatEventDateTr(dateValue) {
   if (!dateValue) return '';
   // Postgres `date` columns return as 'YYYY-MM-DD'. Anchor at noon UTC
@@ -102,6 +112,19 @@ export function istanbulDateKey(d) {
     day: '2-digit',
     timeZone: 'Europe/Istanbul',
   }).format(d);
+}
+
+export function formatEventDateEn(dateValue) {
+  if (!dateValue) return '';
+  const datePart = String(dateValue).slice(0, 10);
+  const [y, m, d] = datePart.split('-').map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  return new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'Europe/Istanbul',
+  }).format(date);
 }
 
 export function formatRegisteredAtCet(d) {
@@ -168,6 +191,11 @@ export const ADMIN_ALLOWLIST = new Set([
   'sarikayad3@gmail.com',
   'mahirtopaloglu87@gmail.com',
 ]);
+
+// Named contact shown to registrants in Email 1. Server-side only — the
+// public site renders this number via scripts/contact-reveal.js instead,
+// which keeps it out of the served HTML.
+export const REGISTRATION_CONTACT = 'Cem Arslan — +90 549 131 70 61';
 
 export const ADMIN_PANEL_URL = 'https://sonoinjection.com/deneme-kayit/admin/';
 

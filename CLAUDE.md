@@ -220,8 +220,10 @@ All emails sent via Resend. Each event row has its own `bank_details_tr` so per-
 
 1. **Registration received** → registrant's email
    *Trigger:* successful `POST /api/register` insert (immediate).
-   *Body:* confirms the registration was received, embeds the per-event pricing breakdown (net price, KDV at `kdv_rate`, gross total — formatted per §7's Turkish number conventions) and `bank_details_tr` from the event row, instructs them to email proof of payment to `kayit@sonoinjection.com`.
-   *Two-tier pricing:* when the event carries `early_bird_price_net_try` + `early_bird_deadline`, the email lists **both** tiers and names the one that applies. The tier is chosen by the Istanbul calendar date of `registered_at` (`istanbulDateKey()` in `api/_shared.js`), and the deadline day itself still counts as early bird. The bank-transfer instruction always quotes the applicable gross. Events without an early-bird price render the original single-tier block unchanged.
+   *Body:* confirms the **application** was received ("başvurunuz alındı", not "rezervasyon") and embeds the per-event pricing breakdown (net price, KDV at `kdv_rate`, gross total).
+   *Bilingual:* sent as one message — Turkish block, a divider rule, then the English block, both built by `renderEmail1Body()` from the `EMAIL1_COPY` table. Numbers and dates are formatted per locale (`formatTRY`/`formatEventDateTr` vs `formatTRYEn`/`formatEventDateEn`). The course title and venue render from `title_tr`/`location_tr` in **both** halves — the `events` table has no English columns yet.
+   *No bank details.* `bank_details_tr` is deliberately not in this email. The applicant replies to confirm the terms suit them, and the team sends account details in that reply — the one manual step in the chain. Proof of payment still goes to `kayit@sonoinjection.com` afterwards. No turnaround time is promised.
+   *Two-tier pricing:* when the event carries `early_bird_price_net_try` + `early_bird_deadline`, the email lists **both** tiers and names the one that applies. The tier is chosen by the Istanbul calendar date of `registered_at` (`istanbulDateKey()` in `api/_shared.js`), and the deadline day itself still counts as early bird. The tier is locked at **application** time, so an applicant who applies before the deadline keeps the early-bird price even if they pay after it. Events without an early-bird price render the single-tier block instead.
 
 2. **Admin notification** → `kayit@sonoinjection.com`
    *Trigger:* same insert (immediate).

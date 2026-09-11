@@ -14,9 +14,12 @@ import {
   ADMIN_PANEL_URL,
   formatEventDateTr,
   formatRegisteredAtCet,
+  formatEventDateEn,
   formatTRY,
+  formatTRYEn,
   getResend,
   istanbulDateKey,
+  REGISTRATION_CONTACT,
   logServerError,
 } from './_shared.js';
 
@@ -36,8 +39,8 @@ const POSITION_LABELS = {
 
 // ── Pricing tiers ───────────────────────────────────────────────────
 // An event may carry an early-bird price alongside the standard one. Both
-// tiers are always shown to the registrant; which one they owe is decided
-// by the Istanbul calendar date of their registration, and the deadline
+// tiers are always shown to the applicant; which one they owe is decided
+// by the Istanbul calendar date of their application, and the deadline
 // day itself still counts as early bird.
 function resolvePricing(event, registeredAt) {
   if (event.price_net_try === null || event.price_net_try === undefined) return null;
@@ -50,109 +53,165 @@ function resolvePricing(event, registeredAt) {
     event.early_bird_price_net_try !== null &&
     event.early_bird_price_net_try !== undefined;
 
-  const tiers = [];
-  if (hasEarlyBird) {
-    tiers.push({
-      name: 'Erken Kayıt',
-      window: `${formatEventDateTr(deadline)} tarihine kadar`,
-      net: event.early_bird_price_net_try,
-      gross: event.early_bird_price_gross_try,
-    });
-  }
-  tiers.push({
-    name: 'Standart Kayıt',
-    window: hasEarlyBird ? `${formatEventDateTr(deadline)} sonrası` : null,
-    net: event.price_net_try,
-    gross: event.price_gross_try,
-  });
+  const early = hasEarlyBird
+    ? { key: 'early', net: event.early_bird_price_net_try, gross: event.early_bird_price_gross_try }
+    : null;
+  const standard = { key: 'standard', net: event.price_net_try, gross: event.price_gross_try };
 
   const withinEarlyBird =
     hasEarlyBird && istanbulDateKey(registeredAt) <= deadline;
 
   return {
-    tiers,
+    tiers: hasEarlyBird ? [early, standard] : [standard],
     hasEarlyBird,
-    applicable: withinEarlyBird ? tiers[0] : tiers[tiers.length - 1],
+    deadline,
+    applicable: withinEarlyBird ? early : standard,
   };
 }
 
-function renderPriceTier(tier, kdvRateInt, indent) {
-  const kdv = formatTRY(Number(tier.gross) - Number(tier.net));
-  return [
-    `${indent}KDV Hariç: ${formatTRY(tier.net)}`,
-    `${indent}KDV (%${kdvRateInt}): ${kdv}`,
-    `${indent}Toplam (KDV Dahil): ${formatTRY(tier.gross)}`,
-  ];
-}
+// ── Email 1: applicant on initial application ───────────────────────
+// Sent bilingually as one message: Turkish first, then English. Bank
+// details are deliberately NOT included — the applicant replies to
+// confirm, and the team sends account details in that reply.
+const EMAIL1_COPY = {
+  tr: {
+    money: formatTRY,
+    date: formatEventDateTr,
+    greeting: (name) => `Sayın ${name},`,
+    received: (title) => `${title} için başvurunuz alındı.`,
+    dateLine: (d) => `Tarih: ${d}`,
+    venueLine: (v) => `Yer: ${v}`,
+    feeHeading: 'KURS ÜCRETİ',
+    tierHeading: {
+      early: (d) => `Erken Kayıt (${formatEventDateTr(d)} tarihine kadar):`,
+      standard: (d) => `Standart Kayıt (${formatEventDateTr(d)} sonrası):`,
+    },
+    tierName: { early: 'Erken Kayıt', standard: 'Standart Kayıt' },
+    netLine: (v) => `  KDV Hariç: ${v}`,
+    kdvLine: (rate, v) => `  KDV (%${rate}): ${v}`,
+    grossLine: (v) => `  Toplam (KDV Dahil): ${v}`,
+    singleNet: (v) => `Kurs Ücreti (KDV Hariç): ${v}`,
+    singleKdv: (rate, v) => `KDV (%${rate}): ${v}`,
+    singleGross: (v) => `Toplam (KDV Dahil): ${v}`,
+    applicable: (name, amount) => [
+      'Başvuru tarihiniz itibarıyla geçerli ücret:',
+      `${name} — ${amount} (KDV Dahil)`,
+    ],
+    reply:
+      'Koşullar sizin için uygunsa, bu e-postayı kısaca yanıtlamanız yeterlidir; banka bilgilerini tarafınıza ileteceğiz.',
+    receipt: (email) =>
+      `Havaleniz sonrasında dekontunuzu ${email} adresine ilettiğinizde, ödemeniz onaylandıktan sonra teyit e-postası göndereceğiz.`,
+    noPrice: 'Kurs ücreti ve sonraki adımlar en kısa sürede tarafınıza iletilecektir.',
+    questions: (email) => `Sorularınız için: ${email}`,
+    contact: (c) => `Kayıt sorumlusu: ${c}`,
+    signoff: ['Saygılarımızla,', 'SonoInjection Ekibi'],
+  },
+  en: {
+    money: formatTRYEn,
+    date: formatEventDateEn,
+    greeting: (name) => `Dear ${name},`,
+    received: (title) => `Your application for the ${title} has been received.`,
+    dateLine: (d) => `Date: ${d}`,
+    venueLine: (v) => `Venue: ${v}`,
+    feeHeading: 'COURSE FEE',
+    tierHeading: {
+      early: (d) => `Early registration (until ${formatEventDateEn(d)}):`,
+      standard: (d) => `Standard registration (from ${formatEventDateEn(d)}):`,
+    },
+    tierName: { early: 'Early registration', standard: 'Standard registration' },
+    netLine: (v) => `  Excl. VAT: ${v}`,
+    kdvLine: (rate, v) => `  VAT (${rate}%): ${v}`,
+    grossLine: (v) => `  Total (incl. VAT): ${v}`,
+    singleNet: (v) => `Course fee (excl. VAT): ${v}`,
+    singleKdv: (rate, v) => `VAT (${rate}%): ${v}`,
+    singleGross: (v) => `Total (incl. VAT): ${v}`,
+    applicable: (name, amount) => [
+      'Applicable to your application date:',
+      `${name} — ${amount} (incl. VAT)`,
+    ],
+    reply:
+      'If these terms suit you, a brief reply to this email is all we need — we will send you the bank details.',
+    receipt: (email) =>
+      `After your transfer, send the receipt to ${email} and we will confirm your payment by email.`,
+    noPrice: 'The course fee and next steps will be sent to you shortly.',
+    questions: (email) => `Questions: ${email}`,
+    contact: (c) => `Registration contact: ${c}`,
+    signoff: ['Kind regards,', 'SonoInjection Team'],
+  },
+};
 
-// ── Email 1: registrant on initial registration ─────────────────────
-export function renderEmail1Registration({ data, event, registeredAt }) {
-  const fullName = `${data.first_name} ${data.last_name}`;
-  const subject = 'SonoInjection Rezervasyonunuz Alındı';
-
+function renderEmail1Body(copy, { fullName, event, pricing }) {
   const lines = [];
-  lines.push(`Sayın ${fullName},`);
+  lines.push(copy.greeting(fullName));
   lines.push('');
-  lines.push(`${event.title_tr} etkinliği için rezervasyonunuz alındı.`);
+  lines.push(copy.received(event.title_tr));
   lines.push('');
-  lines.push(`Tarih: ${formatEventDateTr(event.event_date)}`);
-  lines.push(`Yer: ${event.location_tr}`);
+  lines.push(copy.dateLine(copy.date(event.event_date)));
+  lines.push(copy.venueLine(event.location_tr));
   lines.push('');
-
-  const pricing = resolvePricing(event, registeredAt);
 
   if (pricing) {
     const kdvRateInt = Math.round(Number(event.kdv_rate));
-    const dueGross = formatTRY(pricing.applicable.gross);
 
     if (pricing.hasEarlyBird) {
-      // Both tiers are listed so the registrant can see what they saved —
-      // or what they would have saved by registering earlier.
-      lines.push('Kurs Ücreti');
+      // Both tiers are listed so the applicant can see what they saved —
+      // or what they would have saved by applying earlier.
+      lines.push(copy.feeHeading);
       lines.push('');
       for (const tier of pricing.tiers) {
-        lines.push(`${tier.name} (${tier.window}):`);
-        lines.push(...renderPriceTier(tier, kdvRateInt, '  '));
+        lines.push(copy.tierHeading[tier.key](pricing.deadline));
+        lines.push(copy.netLine(copy.money(tier.net)));
+        lines.push(copy.kdvLine(kdvRateInt, copy.money(Number(tier.gross) - Number(tier.net))));
+        lines.push(copy.grossLine(copy.money(tier.gross)));
         lines.push('');
       }
       lines.push(
-        `Kayıt tarihiniz itibarıyla geçerli ücret: ${pricing.applicable.name} — ${dueGross} (KDV Dahil)`,
+        ...copy.applicable(
+          copy.tierName[pricing.applicable.key],
+          copy.money(pricing.applicable.gross),
+        ),
       );
     } else {
       const tier = pricing.applicable;
-      const kdv = formatTRY(Number(tier.gross) - Number(tier.net));
-      lines.push(`Kurs Ücreti (KDV Hariç): ${formatTRY(tier.net)}`);
-      lines.push(`KDV (%${kdvRateInt}): ${kdv}`);
-      lines.push(`Toplam (KDV Dahil): ${formatTRY(tier.gross)}`);
+      lines.push(copy.singleNet(copy.money(tier.net)));
+      lines.push(copy.singleKdv(kdvRateInt, copy.money(Number(tier.gross) - Number(tier.net))));
+      lines.push(copy.singleGross(copy.money(tier.gross)));
     }
-    lines.push('');
 
-    if (event.bank_details_tr) {
-      lines.push(
-        `Rezervasyonunuzu kesinleştirmek için lütfen ${dueGross} tutarında havale gerçekleştirin:`,
-      );
-      lines.push('');
-      lines.push(event.bank_details_tr);
-      lines.push('');
-      lines.push(`Açıklama: ${fullName} - SonoInjection`);
-    } else {
-      lines.push('Banka bilgileri en kısa sürede iletilecektir.');
-    }
+    lines.push('');
+    lines.push(copy.reply);
+    lines.push('');
+    lines.push(copy.receipt(ADMIN_REPLY_TO));
   } else {
-    lines.push(
-      'Kurs ücreti ve banka bilgileri en kısa sürede tarafınıza iletilecektir.',
-    );
+    lines.push(copy.noPrice);
   }
 
   lines.push('');
-  lines.push('Ödemenizi aldıktan sonra 24 saat içinde onay e-postası göndereceğiz.');
+  lines.push(copy.questions(ADMIN_REPLY_TO));
+  lines.push(copy.contact(REGISTRATION_CONTACT));
   lines.push('');
-  lines.push('Sorularınız için: kayit@sonoinjection.com');
-  lines.push('');
-  lines.push('Saygılarımızla,');
-  lines.push('SonoInjection Ekibi');
+  lines.push(...copy.signoff);
 
-  return { subject, text: lines.join('\n') };
+  return lines;
+}
+
+export function renderEmail1Registration({ data, event, registeredAt }) {
+  const fullName = `${data.first_name} ${data.last_name}`;
+  const subject =
+    'SonoInjection — Başvurunuz Alındı / Your Application Has Been Received';
+
+  const pricing = resolvePricing(event, registeredAt);
+  const context = { fullName, event, pricing };
+
+  const text = [
+    ...renderEmail1Body(EMAIL1_COPY.tr, context),
+    '',
+    '────────────────────────────────────────────────────────',
+    '',
+    ...renderEmail1Body(EMAIL1_COPY.en, context),
+  ].join('\n');
+
+  return { subject, text };
 }
 
 // ── Email 2: admin notification ─────────────────────────────────────
