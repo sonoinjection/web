@@ -103,7 +103,7 @@ export const COURSES = [
   {
     id: '2027-01-rmk-aimes',
     slug: '2027-01-rmk-aimes',
-    registrationSoon: true,
+    registrationOpen: true,
     detail: {
       tr: 'courses/2027-01-rmk-aimes.html',
       en: 'courses/2027-01-rmk-aimes.en.html',
@@ -144,7 +144,7 @@ export const COURSES = [
     earlyBirdPriceNetTry: 40416.67,
     earlyBirdDeadline: '2026-11-15',
     kdvRate: 20,
-    registerUrl: 'mailto:kayit@sonoinjection.com',
+    registerUrl: '/kayit/',
     joints: {
       tr: ['Lomber Bölge', 'Sakroiliak Eklem', 'Piriformis', 'Fasya Planları'],
       en: ['Lumbar Region', 'Sacroiliac Joint', 'Piriformis', 'Fascial Planes'],
