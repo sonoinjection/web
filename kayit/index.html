@@ -23,7 +23,10 @@
       </span>
       <span class="logo__word">SonoInjection</span>
     </a>
-    <a class="site-header__back" href="/">← Ana sayfaya dön</a>
+    <div class="site-header__actions">
+      <a class="site-header__lang" href="?lang=en" data-lang-toggle data-i18n="langToggle" data-i18n-label="langToggleLabel">EN</a>
+      <a class="site-header__back" href="/" data-i18n="back">← Ana sayfaya dön</a>
+    </div>
   </div>
 </header>
 
@@ -34,11 +37,11 @@
   <div class="container event-hero__inner">
     <span class="event-hero__badge">
       <span class="event-hero__badge-dot"></span>
-      17 Ocak 2027
+      <span data-i18n="event.date">17 Ocak 2027</span>
     </span>
-    <h1 class="event-hero__title">Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu</h1>
-    <div class="event-hero__venue">RMK AIMES, İstanbul</div>
-    <div class="event-hero__address">Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010</div>
+    <h1 class="event-hero__title" data-i18n="event.title">Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu</h1>
+    <div class="event-hero__venue" data-i18n="event.venue">RMK AIMES, İstanbul</div>
+    <div class="event-hero__address" data-i18n="event.address">Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010</div>
   </div>
 </section>
 
@@ -49,9 +52,9 @@
     <!-- Form card (hidden after success) -->
     <div class="form-card" data-form-card>
       <div style="margin-bottom: var(--space-8);">
-        <div class="eyebrow">Kayıt Formu</div>
-        <h2 style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: var(--font-weight-semibold); color: var(--navy-900); letter-spacing: var(--tracking-tight); line-height: 1.2; margin-bottom: var(--space-2);">Kursa kayıt olun</h2>
-        <p class="muted" style="font-size: var(--text-sm); line-height: 1.6;">
+        <div class="eyebrow" data-i18n="form.eyebrow">Kayıt Formu</div>
+        <h2 style="font-family: var(--font-display); font-size: var(--text-xl); font-weight: var(--font-weight-semibold); color: var(--navy-900); letter-spacing: var(--tracking-tight); line-height: 1.2; margin-bottom: var(--space-2);" data-i18n="form.heading">Kursa kayıt olun</h2>
+        <p class="muted" style="font-size: var(--text-sm); line-height: 1.6;" data-i18n="form.intro">
           Aşağıdaki formu doldurun. Başvurunuz alındıktan sonra kurs ücreti ve sonraki adımlar e-posta adresinize iletilir.
         </p>
       </div>
@@ -60,61 +63,61 @@
 
         <div class="form-row">
           <div class="form-field" data-field="first_name">
-            <label class="form-label" for="first_name">Ad</label>
+            <label class="form-label" for="first_name" data-i18n="form.firstName">Ad</label>
             <input class="form-input" id="first_name" name="first_name" type="text" autocomplete="given-name" required />
-            <div class="form-error">Lütfen adınızı girin.</div>
+            <div class="form-error"></div>
           </div>
 
           <div class="form-field" data-field="last_name">
-            <label class="form-label" for="last_name">Soyad</label>
+            <label class="form-label" for="last_name" data-i18n="form.lastName">Soyad</label>
             <input class="form-input" id="last_name" name="last_name" type="text" autocomplete="family-name" required />
-            <div class="form-error">Lütfen soyadınızı girin.</div>
+            <div class="form-error"></div>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field" data-field="email">
-            <label class="form-label" for="email">E-posta</label>
+            <label class="form-label" for="email" data-i18n="form.email">E-posta</label>
             <input class="form-input" id="email" name="email" type="email" autocomplete="email" inputmode="email" required />
-            <div class="form-error">Geçerli bir e-posta adresi girin.</div>
+            <div class="form-error"></div>
           </div>
 
           <div class="form-field" data-field="phone">
-            <label class="form-label" for="phone">Telefon</label>
-            <input class="form-input" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+90 555 123 45 67" required />
-            <div class="form-helper">Ülke kodunu da ekleyin.</div>
-            <div class="form-error">Geçerli bir telefon numarası girin (örn. +90 555 123 45 67).</div>
+            <label class="form-label" for="phone" data-i18n="form.phone">Telefon</label>
+            <input class="form-input" id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+90 555 123 45 67" data-i18n-placeholder="form.phonePlaceholder" required />
+            <div class="form-helper" data-i18n="form.phoneHelper">Ülke kodunu da ekleyin.</div>
+            <div class="form-error"></div>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field" data-field="specialty">
-            <label class="form-label" for="specialty">Uzmanlık</label>
+            <label class="form-label" for="specialty" data-i18n="form.specialty">Uzmanlık</label>
             <input class="form-input" id="specialty" name="specialty" type="text" autocomplete="off" required />
-            <div class="form-error">Lütfen uzmanlığınızı girin.</div>
+            <div class="form-error"></div>
           </div>
 
           <div class="form-field" data-field="position">
-            <label class="form-label" for="position">Pozisyon</label>
+            <label class="form-label" for="position" data-i18n="form.position">Pozisyon</label>
             <select class="form-select" id="position" name="position" required>
-              <option value="" disabled selected>Seçiniz</option>
-              <option value="uzman">Uzman</option>
-              <option value="asistan">Asistan</option>
+              <option value="" disabled selected data-i18n="form.positionPlaceholder">Seçiniz</option>
+              <option value="uzman" data-i18n="form.positionUzman">Uzman</option>
+              <option value="asistan" data-i18n="form.positionAsistan">Asistan</option>
             </select>
-            <div class="form-error">Lütfen pozisyonunuzu seçin.</div>
+            <div class="form-error"></div>
           </div>
         </div>
 
         <div class="form-field" data-field="institution">
-          <label class="form-label" for="institution">Kurum</label>
+          <label class="form-label" for="institution" data-i18n="form.institution">Kurum</label>
           <input class="form-input" id="institution" name="institution" type="text" autocomplete="organization" required />
-          <div class="form-helper">Çalıştığınız hastane, üniversite veya kuruluşun adı.</div>
-          <div class="form-error">Lütfen kurum bilginizi girin.</div>
+          <div class="form-helper" data-i18n="form.institutionHelper">Çalıştığınız hastane, üniversite veya kuruluşun adı.</div>
+          <div class="form-error"></div>
         </div>
 
         <div class="form-field form-field--optional" data-field="notes">
-          <label class="form-label" for="notes">Notlar</label>
-          <textarea class="form-textarea" id="notes" name="notes" rows="4" placeholder="Diyet tercihi, fatura bilgisi gibi özel notlarınızı buraya yazabilirsiniz."></textarea>
+          <label class="form-label" for="notes" data-i18n="form.notes">Notlar</label>
+          <textarea class="form-textarea" id="notes" name="notes" rows="4" data-i18n-placeholder="form.notesPlaceholder" placeholder="Diyet tercihi, fatura bilgisi gibi özel notlarınızı buraya yazabilirsiniz."></textarea>
         </div>
 
         <div class="form-status-banner form-status-banner--error" data-form-error role="alert"></div>
@@ -122,7 +125,7 @@
         <div class="form-actions">
           <button class="btn btn--primary btn--lg" type="submit" data-register-submit>
             <span class="btn__spinner" data-register-submit-spinner style="display:none;"></span>
-            <span data-register-submit-label>Kayıt Ol</span>
+            <span data-register-submit-label data-i18n="form.submit">Kayıt Ol</span>
           </button>
         </div>
 
@@ -134,9 +137,9 @@
       <div class="success-card__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
       </div>
-      <h2>Başvurunuz alındı</h2>
-      <p>Kurs ücreti ve sonraki adımlar e-posta adresinize gönderildi. Koşullar sizin için uygunsa e-postayı kısaca yanıtlamanız yeterlidir; banka bilgilerini tarafınıza ileteceğiz.</p>
-      <p>
+      <h2 data-i18n="success.heading">Başvurunuz alındı</h2>
+      <p data-i18n="success.body">Kurs ücreti ve sonraki adımlar e-posta adresinize gönderildi. Koşullar sizin için uygunsa e-postayı kısaca yanıtlamanız yeterlidir; banka bilgilerini tarafınıza ileteceğiz.</p>
+      <p data-i18n-html="success.contact">
         Sorularınız için
         <a href="mailto:kayit@sonoinjection.com">kayit@sonoinjection.com</a>
         adresinden bize ulaşabilirsiniz.
@@ -149,7 +152,7 @@
 <!-- ── FOOTER ──────────────────────────────────── -->
 <footer class="site-footer">
   <div class="site-footer__inner">
-    <span>© 2026 SonoInjection — Tüm hakları saklıdır.</span>
+    <span data-i18n="footer">© 2026 SonoInjection — Tüm hakları saklıdır.</span>
     <a href="https://sonoinjection.com">sonoinjection.com</a>
   </div>
 </footer>

@@ -14,8 +14,9 @@
    Trade-offs vs the Supabase pipeline: no capacity enforcement, no
    duplicate-email detection, no admin board, no audit log.
 
-   Stable error codes: VALIDATION_ERROR, EVENT_NOT_ACTIVE, SEND_FAILED,
-   INVALID_BODY, METHOD_NOT_ALLOWED.
+   Error messages are returned in the language the form posts as `lang`
+   (tr | en, defaulting to tr). Stable error codes: VALIDATION_ERROR,
+   EVENT_NOT_ACTIVE, SEND_FAILED, INVALID_BODY, METHOD_NOT_ALLOWED.
    ============================================================ */
 
 import {
@@ -30,18 +31,46 @@ import { validatePayload } from './_validate.js';
 import { getEvent } from './_events.js';
 import { renderApplicationEmail, sendEmail } from './_emails.js';
 
+// The form posts `lang` so failures come back in the language the
+// applicant is reading. Unknown or missing values fall back to Turkish.
+const MESSAGES = {
+  tr: {
+    INVALID_BODY: 'Geçersiz istek gövdesi.',
+    VALIDATION_ERROR: 'Lütfen form alanlarını kontrol edin.',
+    EVENT_NOT_ACTIVE: 'Bu etkinlik için başvuru şu anda mümkün değil.',
+    SEND_FAILED: (email) =>
+      `Başvurunuz gönderilemedi. Lütfen ${email} adresine doğrudan e-posta gönderin.`,
+  },
+  en: {
+    INVALID_BODY: 'Invalid request body.',
+    VALIDATION_ERROR: 'Please check the form fields.',
+    EVENT_NOT_ACTIVE: 'Applications for this event are not open at the moment.',
+    SEND_FAILED: (email) =>
+      `We could not send your application. Please email ${email} directly.`,
+  },
+};
+
+function messagesFor(body) {
+  const lang = body && typeof body.lang === 'string' ? body.lang : null;
+  return MESSAGES[lang] || MESSAGES.tr;
+}
+
 export default async function handler(req, res) {
   if (!requireMethod(req, res, 'POST')) return;
 
   const body = parseBody(req);
   if (!body) {
-    return jsonError(res, 400, 'INVALID_BODY', 'Geçersiz istek gövdesi.');
+    return jsonError(res, 400, 'INVALID_BODY', MESSAGES.tr.INVALID_BODY);
   }
+
+  const m = messagesFor(body);
 
   const validation = validatePayload(body);
   if (!validation.ok) {
+    // `details` stay Turkish — they are diagnostic. The form surfaces
+    // its own per-field messages in the reader's language.
     return res.status(400).json({
-      error: `Form geçersiz: ${validation.errors.join('; ')}`,
+      error: m.VALIDATION_ERROR,
       code: 'VALIDATION_ERROR',
       details: validation.errors,
     });
@@ -50,10 +79,7 @@ export default async function handler(req, res) {
 
   const event = getEvent(data.event_id);
   if (!event || !event.is_active) {
-    return jsonError(
-      res, 400, 'EVENT_NOT_ACTIVE',
-      'Bu etkinlik için başvuru şu anda mümkün değil.',
-    );
+    return jsonError(res, 400, 'EVENT_NOT_ACTIVE', m.EVENT_NOT_ACTIVE);
   }
 
   const submittedAt = new Date();
@@ -74,10 +100,7 @@ export default async function handler(req, res) {
       event_id: data.event_id,
       to: data.email,
     });
-    return jsonError(
-      res, 502, 'SEND_FAILED',
-      `Başvurunuz gönderilemedi. Lütfen ${ADMIN_REPLY_TO} adresine doğrudan e-posta gönderin.`,
-    );
+    return jsonError(res, 502, 'SEND_FAILED', m.SEND_FAILED(ADMIN_REPLY_TO));
   }
 
   logEvent('info', 'application.sent', {

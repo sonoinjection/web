@@ -103,12 +103,13 @@ Public registration page is served from `/kayit/`; the admin board stays at `/de
 
 ```
 kayit/
-  index.html                         ← public registration page (TR)
+  index.html                         ← public registration page (bilingual, TR + EN)
   styles/
     tokens.css                       ← thin re-export of design-system/colors_and_type.css
     base.css                         ← reset + element defaults
     components.css                   ← form, button, table, status pills, auth overlay
   scripts/
+    i18n.js                          ← TR/EN strings + applyTranslations() for the public form
     shared.js                        ← validators, label dictionaries (incl. STATUS_LABELS_TR), formatters
     register.js                      ← public form handler; constants on top
     auth.js                          ← Supabase Auth browser wrapper (magic link)
@@ -120,6 +121,25 @@ deneme-kayit/
     index.html                       ← admin protected page (TR, magic-link auth);
                                        loads CSS and admin.js from /kayit/.
 ```
+
+### The public form is bilingual
+
+`/kayit/` serves both languages from **one** HTML file rather than a TR and an EN copy — the page had already drifted onto a stale course once, and a second copy doubles that risk. Language comes from `?lang=en`; anything else falls back to Turkish. `/kayit/?lang=en` is linkable and is what the English course page points at.
+
+Strings live in `kayit/scripts/i18n.js`. Markup carries hooks rather than text:
+
+```html
+<label data-i18n="form.firstName">Ad</label>
+<input data-i18n-placeholder="form.phonePlaceholder" />
+<p data-i18n-html="success.contact"></p>   <!-- value contains markup -->
+<a data-i18n-label="langToggleLabel">      <!-- sets aria-label -->
+```
+
+The Turkish text stays in the HTML as the no-JS fallback; `applyTranslations()` overwrites it on load. Field-level validation messages are keyed (`errorKey`) rather than hardcoded, so switching language re-renders any errors already on screen.
+
+`api/apply.js` returns its error messages in whatever the form posts as `lang`, so an English applicant hitting `SEND_FAILED` reads English. `details` on a `VALIDATION_ERROR` stay Turkish — they are diagnostic, and the form shows its own per-field messages.
+
+**Adding a string:** add it to *both* `STRINGS.tr` and `STRINGS.en`, then reference it from the markup. Both dictionaries must carry identical key sets.
 
 ### Two pipelines — wiring constants at the top of register.js
 
