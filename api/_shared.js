@@ -87,6 +87,27 @@ export function formatTRYEn(value) {
   return `${EN_NUMBER.format(Number(value))} TRY`;
 }
 
+const TR_USD = new Intl.NumberFormat('tr-TR', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+const EN_USD = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+
+// Whole-dollar course fees read better without trailing zeros:
+// 1000 → "1.000 USD" (tr) / "1,000 USD" (en).
+export function formatUSD(value) {
+  if (value === null || value === undefined) return null;
+  return `${TR_USD.format(Number(value))} USD`;
+}
+
+export function formatUSDEn(value) {
+  if (value === null || value === undefined) return null;
+  return `${EN_USD.format(Number(value))} USD`;
+}
+
 export function formatEventDateTr(dateValue) {
   if (!dateValue) return '';
   // Postgres `date` columns return as 'YYYY-MM-DD'. Anchor at noon UTC

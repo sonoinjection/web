@@ -16,6 +16,8 @@ import {
   formatEventDateEn,
   formatTRY,
   formatTRYEn,
+  formatUSD,
+  formatUSDEn,
   getResend,
   istanbulDateKey,
   REGISTRATION_CONTACT,
@@ -42,25 +44,43 @@ const POSITION_LABELS = {
 // by the Istanbul calendar date of their application, and the deadline
 // day itself still counts as early bird.
 function resolvePricing(event, registeredAt) {
-  if (event.price_net_try === null || event.price_net_try === undefined) return null;
-
   const deadline = event.early_bird_deadline
     ? String(event.early_bird_deadline).slice(0, 10)
     : null;
-  const hasEarlyBird =
-    deadline !== null &&
-    event.early_bird_price_net_try !== null &&
-    event.early_bird_price_net_try !== undefined;
 
-  const early = hasEarlyBird
-    ? { key: 'early', net: event.early_bird_price_net_try, gross: event.early_bird_price_gross_try }
-    : null;
-  const standard = { key: 'standard', net: event.price_net_try, gross: event.price_gross_try };
+  // Two shapes. USD events (api/_events.js) quote a KDV-inclusive total
+  // only — the lira equivalent is worked out by hand at confirmation and
+  // sent with the bank details. TRY events (the Supabase `events` table)
+  // store a net price and get the full net / KDV / total breakdown.
+  const hasUsd = event.price_gross_usd !== null && event.price_gross_usd !== undefined;
+  const hasTry = event.price_net_try !== null && event.price_net_try !== undefined;
+  if (!hasUsd && !hasTry) return null;
 
+  const currency = hasUsd ? 'USD' : 'TRY';
+
+  const standard = hasUsd
+    ? { key: 'standard', gross: event.price_gross_usd, net: null }
+    : { key: 'standard', gross: event.price_gross_try, net: event.price_net_try };
+
+  let early = null;
+  if (deadline) {
+    if (hasUsd && event.early_bird_price_gross_usd !== null && event.early_bird_price_gross_usd !== undefined) {
+      early = { key: 'early', gross: event.early_bird_price_gross_usd, net: null };
+    } else if (hasTry && event.early_bird_price_net_try !== null && event.early_bird_price_net_try !== undefined) {
+      early = {
+        key: 'early',
+        gross: event.early_bird_price_gross_try,
+        net: event.early_bird_price_net_try,
+      };
+    }
+  }
+
+  const hasEarlyBird = early !== null;
   const withinEarlyBird =
     hasEarlyBird && istanbulDateKey(registeredAt) <= deadline;
 
   return {
+    currency,
     tiers: hasEarlyBird ? [early, standard] : [standard],
     hasEarlyBird,
     deadline,
@@ -74,7 +94,7 @@ function resolvePricing(event, registeredAt) {
 // confirm, and the team sends account details in that reply.
 const EMAIL1_COPY = {
   tr: {
-    money: formatTRY,
+    money: { TRY: formatTRY, USD: formatUSD },
     date: formatEventDateTr,
     title: (e) => e.title_tr,
     venue: (e) => e.location_tr,
@@ -83,6 +103,8 @@ const EMAIL1_COPY = {
     dateLine: (d) => `Tarih: ${d}`,
     venueLine: (v) => `Yer: ${v}`,
     feeHeading: 'KURS ÜCRETİ',
+    feeHeadingInclusive: (rate) => `KURS ÜCRETİ (hekim başı, %${rate} KDV dahil)`,
+    singleTierLabel: 'Kurs Ücreti:',
     tierHeading: {
       early: (d) => `Erken Kayıt (${formatEventDateTr(d)} tarihine kadar):`,
       standard: (d) => `Standart Kayıt (${formatEventDateTr(d)} sonrası):`,
@@ -91,15 +113,14 @@ const EMAIL1_COPY = {
     netLine: (v) => `  KDV Hariç: ${v}`,
     kdvLine: (rate, v) => `  KDV (%${rate}): ${v}`,
     grossLine: (v) => `  Toplam (KDV Dahil): ${v}`,
-    singleNet: (v) => `Kurs Ücreti (KDV Hariç): ${v}`,
-    singleKdv: (rate, v) => `KDV (%${rate}): ${v}`,
-    singleGross: (v) => `Toplam (KDV Dahil): ${v}`,
     applicable: (name, amount) => [
       'Başvuru tarihiniz itibarıyla geçerli ücret:',
       `${name} — ${amount} (KDV Dahil)`,
     ],
     reply:
       'Koşullar sizin için uygunsa, bu e-postayı kısaca yanıtlamanız yeterlidir; banka bilgilerini tarafınıza ileteceğiz.',
+    replyWithConversion:
+      'Koşullar sizin için uygunsa, bu e-postayı kısaca yanıtlamanız yeterlidir; tutarın güncel TL karşılığını ve banka bilgilerini tarafınıza ileteceğiz.',
     receipt: (email) =>
       `Havaleniz sonrasında dekontunuzu ${email} adresine ilettiğinizde, ödemeniz onaylandıktan sonra teyit e-postası göndereceğiz.`,
     noPrice: 'Kurs ücreti ve sonraki adımlar en kısa sürede tarafınıza iletilecektir.',
@@ -108,7 +129,7 @@ const EMAIL1_COPY = {
     signoff: ['Saygılarımızla,', 'SonoInjection Ekibi'],
   },
   en: {
-    money: formatTRYEn,
+    money: { TRY: formatTRYEn, USD: formatUSDEn },
     date: formatEventDateEn,
     title: (e) => e.title_en || e.title_tr,
     venue: (e) => e.location_en || e.location_tr,
@@ -117,6 +138,8 @@ const EMAIL1_COPY = {
     dateLine: (d) => `Date: ${d}`,
     venueLine: (v) => `Venue: ${v}`,
     feeHeading: 'COURSE FEE',
+    feeHeadingInclusive: (rate) => `COURSE FEE (per physician, incl. ${rate}% VAT)`,
+    singleTierLabel: 'Course fee:',
     tierHeading: {
       early: (d) => `Early registration (until ${formatEventDateEn(d)}):`,
       standard: (d) => `Standard registration (from ${formatEventDateEn(d)}):`,
@@ -125,15 +148,14 @@ const EMAIL1_COPY = {
     netLine: (v) => `  Excl. VAT: ${v}`,
     kdvLine: (rate, v) => `  VAT (${rate}%): ${v}`,
     grossLine: (v) => `  Total (incl. VAT): ${v}`,
-    singleNet: (v) => `Course fee (excl. VAT): ${v}`,
-    singleKdv: (rate, v) => `VAT (${rate}%): ${v}`,
-    singleGross: (v) => `Total (incl. VAT): ${v}`,
     applicable: (name, amount) => [
       'Applicable to your application date:',
       `${name} — ${amount} (incl. VAT)`,
     ],
     reply:
       'If these terms suit you, a brief reply to this email is all we need — we will send you the bank details.',
+    replyWithConversion:
+      'If these terms suit you, a brief reply to this email is all we need — we will then send you the current equivalent in Turkish lira together with the bank details.',
     receipt: (email) =>
       `After your transfer, send the receipt to ${email} and we will confirm your payment by email.`,
     noPrice: 'The course fee and next steps will be sent to you shortly.',
@@ -155,34 +177,43 @@ function renderEmail1Body(copy, { fullName, event, pricing }) {
 
   if (pricing) {
     const kdvRateInt = Math.round(Number(event.kdv_rate));
+    const money = copy.money[pricing.currency];
+    // A tier with no net price is quoted as a KDV-inclusive total, so the
+    // rate moves into the heading instead of getting its own line.
+    const breakdown = pricing.applicable.net !== null;
+
+    lines.push(breakdown ? copy.feeHeading : copy.feeHeadingInclusive(kdvRateInt));
+    lines.push('');
+
+    // Both tiers are listed so the applicant can see what they saved —
+    // or what they would have saved by applying earlier.
+    for (const tier of pricing.tiers) {
+      const label = pricing.hasEarlyBird
+        ? copy.tierHeading[tier.key](pricing.deadline)
+        : copy.singleTierLabel;
+      if (breakdown) {
+        lines.push(label);
+        lines.push(copy.netLine(money(tier.net)));
+        lines.push(copy.kdvLine(kdvRateInt, money(Number(tier.gross) - Number(tier.net))));
+        lines.push(copy.grossLine(money(tier.gross)));
+        lines.push('');
+      } else {
+        lines.push(`${label} ${money(tier.gross)}`);
+      }
+    }
+    if (!breakdown) lines.push('');
 
     if (pricing.hasEarlyBird) {
-      // Both tiers are listed so the applicant can see what they saved —
-      // or what they would have saved by applying earlier.
-      lines.push(copy.feeHeading);
-      lines.push('');
-      for (const tier of pricing.tiers) {
-        lines.push(copy.tierHeading[tier.key](pricing.deadline));
-        lines.push(copy.netLine(copy.money(tier.net)));
-        lines.push(copy.kdvLine(kdvRateInt, copy.money(Number(tier.gross) - Number(tier.net))));
-        lines.push(copy.grossLine(copy.money(tier.gross)));
-        lines.push('');
-      }
       lines.push(
         ...copy.applicable(
           copy.tierName[pricing.applicable.key],
-          copy.money(pricing.applicable.gross),
+          money(pricing.applicable.gross),
         ),
       );
-    } else {
-      const tier = pricing.applicable;
-      lines.push(copy.singleNet(copy.money(tier.net)));
-      lines.push(copy.singleKdv(kdvRateInt, copy.money(Number(tier.gross) - Number(tier.net))));
-      lines.push(copy.singleGross(copy.money(tier.gross)));
+      lines.push('');
     }
 
-    lines.push('');
-    lines.push(copy.reply);
+    lines.push(pricing.currency === 'USD' ? copy.replyWithConversion : copy.reply);
     lines.push('');
     lines.push(copy.receipt(ADMIN_REPLY_TO));
   } else {
@@ -287,8 +318,9 @@ export function renderEmail2AdminNotification({ data, event, registeredAt }) {
     const tierName = pricing.hasEarlyBird
       ? EMAIL1_COPY.tr.tierName[pricing.applicable.key]
       : 'Kurs ücreti';
+    const money = EMAIL1_COPY.tr.money[pricing.currency];
     lines.push(
-      `Geçerli ücret: ${tierName} — ${formatTRY(pricing.applicable.gross)} (KDV Dahil)`,
+      `Geçerli ücret: ${tierName} — ${money(pricing.applicable.gross)} (KDV Dahil)`,
     );
   }
   lines.push('');

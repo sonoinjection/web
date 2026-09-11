@@ -136,12 +136,10 @@ export const COURSES = [
     iso: '2027-01-17',
     spots: null,
     maxSpots: null,
-    // Quoted in USD (1.000 / 1.125 USD KDV dahil), frozen to TRY at
-    // USD/TRY 48,4688 on 2026-09-09 and rounded to the nearest 500 TL
-    // gross. Net figures are the gross ÷ 1,20 so Postgres regenerates
-    // exactly 48.500,00 / 54.500,00 TL.
-    priceNetTry: 45416.67,
-    earlyBirdPriceNetTry: 40416.67,
+    // Quoted per physician in USD, KDV included. The lira equivalent is
+    // worked out at confirmation time and sent with the bank details.
+    priceGrossUsd: 1125,
+    earlyBirdPriceGrossUsd: 1000,
     earlyBirdDeadline: '2026-11-15',
     kdvRate: 20,
     registerUrl: '/kayit/',

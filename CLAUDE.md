@@ -156,6 +156,7 @@ const USE_MOCK_RESPONSE = false;
 | Record of the application | the email thread | `registrations` row |
 | `EVENT_ID` is | course slug → `api/_events.js` | `events` table UUID |
 | Emails sent | **one**, to applicant **and** `kayit@` | Email 1 to applicant, Email 2 to `kayit@` |
+| Price quoted in | USD, KDV-inclusive total | TRY, net + KDV + total |
 | Send failure | **fails the request** (502) | logged; request still succeeds |
 | Capacity enforcement | none | `capacity − reserved_for_external` |
 | Duplicate-email check | none | yes |
@@ -264,7 +265,10 @@ All emails sent via Resend. Each event row has its own `bank_details_tr` so per-
    *Body:* confirms the **application** was received ("başvurunuz alındı", not "rezervasyon") and embeds the per-event pricing breakdown (net price, KDV at `kdv_rate`, gross total).
    *Bilingual:* sent as one message — Turkish block, a divider rule, then the English block, both built by `renderEmail1Body()` from the `EMAIL1_COPY` table. Numbers and dates are formatted per locale (`formatTRY`/`formatEventDateTr` vs `formatTRYEn`/`formatEventDateEn`). The course title and venue render from `title_tr`/`location_tr` in **both** halves — the `events` table has no English columns yet.
    *No bank details.* `bank_details_tr` is deliberately not in this email. The applicant replies to confirm the terms suit them, and the team sends account details in that reply — the one manual step in the chain. Proof of payment still goes to `kayit@sonoinjection.com` afterwards. No turnaround time is promised.
-   *Two-tier pricing:* when the event carries `early_bird_price_net_try` + `early_bird_deadline`, the email lists **both** tiers and names the one that applies. The tier is chosen by the Istanbul calendar date of `registered_at` (`istanbulDateKey()` in `api/_shared.js`), and the deadline day itself still counts as early bird. The tier is locked at **application** time, so an applicant who applies before the deadline keeps the early-bird price even if they pay after it. Events without an early-bird price render the single-tier block instead.
+   *Two-tier pricing:* when the event carries an early-bird price + `early_bird_deadline`, the email lists **both** tiers and names the one that applies. The tier is chosen by the Istanbul calendar date of `registered_at` (`istanbulDateKey()` in `api/_shared.js`), and the deadline day itself still counts as early bird. The tier is locked at **application** time, so an applicant who applies before the deadline keeps the early-bird price even if they pay after it.
+   *Currency — two shapes.* `resolvePricing()` handles either:
+   - **USD** (`price_gross_usd` / `early_bird_price_gross_usd`, used by `api/_events.js`): a KDV-**inclusive** total per tier, one line each, with the rate moved into the heading — *"KURS ÜCRETİ (hekim başı, %20 KDV dahil)"*. No exchange rate is stored; the lira equivalent is worked out by hand at confirmation and sent with the bank details, which is what the reply line promises.
+   - **TRY** (`price_net_try`, used by the Supabase `events` table): a net price, with net / KDV / total broken out per tier and the gross derived by Postgres.
 
 2. **Application alert** → `kayit@sonoinjection.com`
    *Trigger:* same insert (immediate).
