@@ -229,14 +229,14 @@ export const COURSES = [
     slug: '2027-03-rmk-aimes',
     registrationSoon: true,
     thumbLabel: {
-      tr: 'Omurga',
-      en: 'Spine',
+      tr: 'Lomber Bölge & Fasya Planları',
+      en: 'Lumbar Region & Fascial Planes',
     },
     thumbColor: 'var(--navy-900)',
     thumbImage: 'assets/courses/2027-03-rmk-aimes.jpg',
     title: {
-      tr: 'Kadavrada Ultrasonografi Eşliğinde Omurga Enjeksiyon Kursu',
-      en: 'Cadaveric Ultrasound-Guided Spine Injection Course',
+      tr: 'Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu',
+      en: 'Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course',
     },
     level: {
       tr: 'Uygulamalı Kurs',
