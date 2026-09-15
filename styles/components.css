@@ -42,6 +42,7 @@
   text-decoration: none;
 }
 .btn:active { transform: scale(0.97); transition-duration: 100ms; }
+.btn__icon { width: 18px; height: 18px; flex-shrink: 0; }
 
 .btn--primary {
   background: var(--color-interactive-bg);
