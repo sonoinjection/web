@@ -10,25 +10,26 @@
    history.replaceState so /kayit/?lang=en stays linkable — the English
    course page points straight at it.
 
+   The strings that differ per course — the document title and the
+   event hero block — are NOT here: they live in events.js, keyed by the
+   slug the page declares as <html data-event="…">, and are merged in
+   below. Everything in this file is the same on every course's form.
+
    Usage:
      <span data-i18n="form.submit"></span>
      <input data-i18n-placeholder="form.phonePlaceholder" />
      <p data-i18n-html="success.contact"></p>   ← value may contain markup
    ============================================================ */
 
+import { getEventConfig } from './events.js';
+
 export const STRINGS = {
   tr: {
     htmlLang: 'tr',
-    docTitle: 'Kayıt — Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu — SonoInjection',
     back: '← Ana sayfaya dön',
     langToggle: 'EN',
     langToggleLabel: 'Switch to English',
-    event: {
-      date: '17 Ocak 2027',
-      title: 'Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu',
-      venue: 'RMK AIMES, İstanbul',
-      address: 'Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010',
-    },
+    // docTitle + event: merged in from events.js below.
     form: {
       eyebrow: 'Kayıt Formu',
       heading: 'Kursa kayıt olun',
@@ -72,16 +73,10 @@ export const STRINGS = {
 
   en: {
     htmlLang: 'en',
-    docTitle: 'Registration — Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course — SonoInjection',
     back: '← Back to home',
     langToggle: 'TR',
     langToggleLabel: "Türkçe'ye geç",
-    event: {
-      date: 'January 17, 2027',
-      title: 'Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course',
-      venue: 'RMK AIMES, Istanbul',
-      address: 'Koç University Hospital, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010, Türkiye',
-    },
+    // docTitle + event: merged in from events.js below.
     form: {
       eyebrow: 'Registration Form',
       heading: 'Register for the course',
@@ -123,6 +118,13 @@ export const STRINGS = {
     footer: '© 2026 SonoInjection — All rights reserved.',
   },
 };
+
+// The course this page is for supplies docTitle and the event hero block.
+// Merged once at module load, so t() and applyTranslations() below see one
+// flat dictionary per language and neither needs to know about courses.
+const eventStrings = getEventConfig().strings;
+STRINGS.tr = { ...STRINGS.tr, ...eventStrings.tr };
+STRINGS.en = { ...STRINGS.en, ...eventStrings.en };
 
 export const DEFAULT_LANG = 'tr';
 

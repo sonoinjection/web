@@ -25,7 +25,10 @@ Notes for future Claude sessions working on this repo. Read this before making c
   courses/                 ← per-course detail pages (TR + EN)
   styles/  data/  assets/  ← marketing CSS, data, photos. See §3.
   scripts/                 ← browser render scripts AND Node-only diagnostics. See §3 / §11.
-  kayit/                   ← public registration form (TR) + shared CSS/JS. See §4.
+  kayit/                   ← registration form for the January 2027 course + the
+                             CSS/JS every registration page shares. See §4.
+  kayit-mart/              ← registration form for the March 2027 course; loads its
+                             CSS and scripts from /kayit/. See §4.
   deneme-kayit/
     admin/                 ← admin board (TR, magic-link auth). URL deliberately kept
                              off /kayit/ as soft gating. Internal CSS/JS load from
@@ -97,24 +100,32 @@ Render scripts find target containers by attribute:
 
 **A language (e.g. German).** Add a `de` key to every multilingual field in `data/*.js`. Create the German page variants (`index-de.html`, `courses-de.html`, etc.). Update the `nav__lang` switcher on every page.
 
-## 4. /kayit/ structure (registration form) and /deneme-kayit/admin/ (admin board)
+## 4. Registration forms (/kayit/, /kayit-mart/) and /deneme-kayit/admin/ (admin board)
 
-Public registration page is served from `/kayit/`; the admin board stays at `/deneme-kayit/admin/` as soft URL gating, layered with magic-link auth (see below). Both pages share the same CSS and the same `scripts/` directory under `/kayit/` — the admin HTML at `/deneme-kayit/admin/index.html` loads its stylesheets and `admin.js` via absolute paths under `/kayit/`.
+One public registration page per open course — `/kayit/` for the January 2027 course, `/kayit-mart/` for the March 2027 one. The admin board stays at `/deneme-kayit/admin/` as soft URL gating, layered with magic-link auth (see below). Every one of these pages shares the same CSS and the same `scripts/` directory under `/kayit/`, loaded via absolute paths — `/kayit-mart/index.html` and `/deneme-kayit/admin/index.html` hold markup and nothing else.
 
 ```
 kayit/
-  index.html                         ← public registration page (bilingual, TR + EN)
+  index.html                         ← registration page for 2027-01 (bilingual, TR + EN)
   styles/
     tokens.css                       ← thin re-export of design-system/colors_and_type.css
     base.css                         ← reset + element defaults
     components.css                   ← form, button, table, status pills, auth overlay
   scripts/
-    i18n.js                          ← TR/EN strings + applyTranslations() for the public form
+    events.js                        ← per-course wiring (endpoint, event id) + the hero
+                                       strings that differ per course; see below
+    i18n.js                          ← TR/EN strings shared by every course's form +
+                                       applyTranslations(); merges in events.js strings
     shared.js                        ← validators, label dictionaries (incl. STATUS_LABELS_TR), formatters
     register.js                      ← public form handler; constants on top
     auth.js                          ← Supabase Auth browser wrapper (magic link)
     admin.js                         ← admin board: state, render, dialogs, optimistic updates, auth gate
     admin-api.js                     ← thin fetch() wrappers for the 7 admin routes; attaches Bearer token
+
+kayit-mart/
+  index.html                         ← registration page for 2027-03. Same markup as
+                                       /kayit/index.html with a different
+                                       <html data-event="…">; no CSS or JS of its own.
 
 deneme-kayit/
   admin/
@@ -141,14 +152,49 @@ The Turkish text stays in the HTML as the no-JS fallback; `applyTranslations()` 
 
 **Adding a string:** add it to *both* `STRINGS.tr` and `STRINGS.en`, then reference it from the markup. Both dictionaries must carry identical key sets.
 
-### Two pipelines — wiring constants at the top of register.js
+### One page per open course — kayit/scripts/events.js
 
-The same form feeds either of two back ends. `/kayit/` is currently wired to **`/api/apply`**.
+Two courses can take applications at once, and the form handles exactly one
+course at a time, so each gets its own page. What differs between them is not
+in the pages: it is one entry in `kayit/scripts/events.js`, keyed by course
+slug, holding the endpoint, the event id and the hero strings (document title,
+date, title, venue, address) in both languages.
+
+A page says which course it is on its root element, and nothing else:
+
+```html
+<html lang="tr" data-event="2027-03-rmk-aimes">
+```
+
+`getEventConfig()` reads that attribute; an unknown or missing value falls back
+to `DEFAULT_EVENT` (the January course) rather than returning nothing — a form
+on the wrong course is visible on screen, a form on no course is not.
+`register.js` takes its endpoint and event id from it; `i18n.js` merges its
+strings over the shared dictionaries at module load, so `t()` and
+`applyTranslations()` never learn that courses exist.
+
+**Adding a course page** is three steps, all required — skip the second and the
+endpoint answers `EVENT_NOT_ACTIVE`:
+
+1. Add an entry to `kayit/scripts/events.js` keyed by the course slug.
+2. Add the same slug to `api/_events.js` with `is_active: true` (§5).
+3. Copy an existing registration page, change its `data-event`, its `<title>`,
+   its `<meta name="description">` and the no-JS fallback date in the hero.
+   Everything else on the page is course-independent.
+
+Point the course's `registerUrl` in `data/courses.js` at the new page.
+
+### Two pipelines — endpoint and event id, per course in events.js
+
+The same form feeds either of two back ends. Both courses are currently wired
+to **`/api/apply`**.
 
 ```js
-const REGISTER_ENDPOINT = '/api/apply';        // email-only
-const EVENT_ID = '2027-01-rmk-aimes';          // course slug
-const USE_MOCK_RESPONSE = false;
+'2027-03-rmk-aimes': {
+  endpoint: '/api/apply',              // email-only
+  eventId: '2027-03-rmk-aimes',        // course slug
+  strings: { tr: {…}, en: {…} },
+},
 ```
 
 | | `/api/apply` (email-only) | `/api/register` (Supabase) |
@@ -163,11 +209,11 @@ const USE_MOCK_RESPONSE = false;
 | Admin board | not fed | fed |
 | Infrastructure | Resend only | Resend + a live Supabase project |
 
-**`ENDPOINT` and `EVENT_ID` must be flipped together** — they use different event identifiers, so changing one alone produces `EVENT_NOT_ACTIVE`.
+**`endpoint` and `eventId` must be changed together** — they use different event identifiers, so changing one alone produces `EVENT_NOT_ACTIVE`. Both live in the same entry in `events.js`, which is what keeps them from drifting apart.
 
 Why the failure modes differ: `/api/register` commits the row before sending, so a Resend outage costs a notification, not an application. On `/api/apply` the email *is* the application, so a silent failure would lose it — hence the 502 and the error banner telling the applicant to write to `kayit@` directly.
 
-The frontend `POST`s the form payload to `REGISTER_ENDPOINT` and reads the JSON `{ error, code }` body on non-2xx to surface the Turkish error message in the form's error banner. `USE_MOCK_RESPONSE = true` is a local-dev fallback that simulates a 500ms-delayed success without hitting the API.
+The frontend `POST`s the form payload to `REGISTER_ENDPOINT` and reads the JSON `{ error, code }` body on non-2xx to surface the Turkish error message in the form's error banner. `USE_MOCK_RESPONSE = true` (in `events.js`, and shared by every course's form) is a local-dev fallback that simulates a 500ms-delayed success without hitting the API.
 
 ### Admin authentication (magic link)
 
@@ -179,7 +225,7 @@ Adding an admin = append the email to `ADMIN_ALLOWLIST` in `api/_shared.js` and 
 
 ### Adding things to /kayit/
 
-**A new event.** Append a row to the Supabase `events` table with `is_active = true`. Set `EVENT_ID` in `kayit/scripts/register.js` to its `id`, or — once we support multiple active events — extend the public page to a small picker.
+**A new event.** On the email-only pipeline: add it to `api/_events.js` and to `kayit/scripts/events.js`, then give it a page — see "One page per open course" above. On the Supabase pipeline: append a row to the `events` table with `is_active = true` and use its UUID as the entry's `eventId`.
 
 **A new admin email.** Append it to `ADMIN_ALLOWLIST` in `api/_shared.js` (also documented in §5). Any email type works — Workspace, personal Gmail, anything — since magic links go via Supabase Auth's SMTP, not Google OAuth.
 
@@ -224,8 +270,10 @@ api/
   auth-config.js              ← public GET → {supabaseUrl, supabaseAnonKey} for the admin browser
   _shared.js                  ← Supabase + Resend client init, requireAdmin(), formatters, ADMIN_ALLOWLIST
   _validate.js                ← payload validation shared by both pipelines
-  _events.js                  ← static event catalogue for /api/apply (mirrors data/courses.js)
-  _emails.js                  ← email templates (1, 2, application) + sendEmail()
+  _events.js                  ← static event catalogue for /api/apply (mirrors data/courses.js);
+                                one entry per course accepting applications
+  _emails.js                  ← email templates (1, 2, application) + per-course mail
+                                profiles + sendEmail()
   _log.js                     ← registration_log writers
   admin/
     _transitions.js           ← status enum + ALLOWED_TRANSITIONS + TR labels
@@ -259,6 +307,36 @@ To add an admin: append the email to `ADMIN_ALLOWLIST` in `api/_shared.js` and r
 ## 6. Email pipeline
 
 All emails sent via Resend. Each event row has its own `bank_details_tr` so per-event details (price, IBAN, account holder, reference number rule) can vary. Templates live in `api/_emails.js` and are dispatched via `sendEmail()`.
+
+### Mail profiles — one per concurrently open course
+
+Every course's applications arrive in the same `kayit@` inbox, so each one
+sends under its own subject line and opens each language block with its own
+course tag:
+
+| | Subject (application email) | Body opens with |
+|---|---|---|
+| January 2027 (default) | `SonoInjection — Başvurunuz Alındı / Your Application Has Been Received (‹name›)` | the greeting |
+| March 2027 | `SonoInjection Mart 2027 — Başvurunuz Alındı / … (‹name›)` | `SonoInjection · 27 Mart 2027 · Lomber Bölge ve Fasya Plan Enjeksiyonları` |
+
+`MAIL_PROFILES` in `api/_emails.js` is keyed by event id and falls back to
+`DEFAULT_MAIL_PROFILE`, which is the wording the January course has sent since
+launch — left untouched deliberately, so replies on live threads keep matching
+their earlier messages. Supabase-pipeline events are keyed by UUID and so
+always take the default.
+
+To give a new course its own profile, add an entry keyed by its event id with
+`banner` (`{ tr, en }`, or `null`), `applicationSubject(fullName)` and
+`adminSubject(fullName)`. Everything else about the email — the pricing block,
+the reply instruction, the receipt line, the signature — is shared, so a
+profile stays three fields wide.
+
+Render either course's email without sending anything:
+
+```sh
+node scripts/preview-application-email.js --event 2027-03-rmk-aimes
+node scripts/preview-application-email.js --event 2027-01-rmk-aimes --date 2026-11-20
+```
 
 1. **Registration received** → registrant's email
    *Trigger:* successful `POST /api/register` insert (immediate).
@@ -515,7 +593,7 @@ Admin status changes write a single `status_change` entry. `email_sent` entries 
 ```sh
 cd /Users/denizsarikaya/SonoInjection/web
 python3 -m http.server 8000
-# open http://localhost:8000/  or  http://localhost:8000/kayit/  or  http://localhost:8000/deneme-kayit/admin/
+# open http://localhost:8000/  or  /kayit/  or  /kayit-mart/  or  /deneme-kayit/admin/
 ```
 
 ES module imports require a server (won't work via `file://`).
@@ -526,8 +604,9 @@ Pre-commit checklist for the marketing site:
 - Faculty photos load on homepage, faculty page, and course detail
 - DevTools console is clean
 
-Pre-commit checklist for `/kayit/` and `/deneme-kayit/admin/`:
-- Public form submits and shows the success state (against the real API or with `USE_MOCK_RESPONSE = true`)
+Pre-commit checklist for the registration forms and `/deneme-kayit/admin/`:
+- **Each** registration page shows its own course in the hero — `/kayit/` says 17 Ocak 2027, `/kayit-mart/` says 27 Mart 2027 — in both languages, and still does after the TR/EN toggle
+- Both forms submit and show the success state (against the real API or with `USE_MOCK_RESPONSE = true`)
 - All required fields enforce validation; `Seçiniz` placeholders cannot be left selected
 - Admin page renders Supabase data, filters work, and per-row actions update the row in place
 - Mock-mode banner is visible on `/deneme-kayit/admin/`
@@ -557,7 +636,8 @@ GitHub Pages is decommissioned (`Settings → Pages → Source: None`).
 
 Live URLs:
 - `sonoinjection.com` — marketing site (TR + EN), served directly from `/`
-- `sonoinjection.com/kayit/` — public registration form
+- `sonoinjection.com/kayit/` — registration form, January 2027 course
+- `sonoinjection.com/kayit-mart/` — registration form, March 2027 course
 - `sonoinjection.com/deneme-kayit/admin/` — admin board (magic-link auth via Supabase + `ADMIN_ALLOWLIST`; URL deliberately kept off `/kayit/` as soft gating)
 - `sonoinjection.com/api/*` — serverless functions (`register`, `admin/*`)
 

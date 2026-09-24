@@ -29,6 +29,20 @@ export const EVENTS = {
     early_bird_price_gross_usd: 1000,
     early_bird_deadline: '2026-11-15',
   },
+  '2027-03-rmk-aimes': {
+    id: '2027-03-rmk-aimes',
+    is_active: true,
+    title_tr: 'Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu',
+    title_en: 'Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course',
+    event_date: '2027-03-27',
+    location_tr: 'RMK AIMES — Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul',
+    location_en: 'RMK AIMES — Koç University Hospital, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul, Türkiye',
+    kdv_rate: 20,
+    // Same programme as the January course, so the same fee. Single tier:
+    // no early bird, so no early_bird_* fields and no deadline — the email
+    // renders one "Kurs Ücreti" line instead of two.
+    price_gross_usd: 1125,
+  },
 };
 
 // null if unknown. Returned as-is: the prices here are already the

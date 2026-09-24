@@ -1,7 +1,10 @@
 /* ============================================================
    register.js — public registration form handler
-   Wiring constants are at the top so the path from mock → real
-   API is a one-line flip per constant.
+
+   Serves every course's registration page. Which course a page is for
+   is declared on its <html data-event="…"> and resolved by events.js,
+   which is also where the endpoint, the event id and the mock switch
+   live — this file holds only the behaviour they share.
    ============================================================ */
 
 import {
@@ -15,23 +18,16 @@ import {
   t,
   wireLangToggle,
 } from './i18n.js';
+import {
+  getEventConfig,
+  USE_MOCK_RESPONSE,
+  MOCK_LATENCY_MS,
+} from './events.js';
 
 // ── Wiring ────────────────────────────────────────────────────
-// Two pipelines exist; ENDPOINT and EVENT_ID must be flipped together
-// because they use different event identifiers.
-//
-//   '/api/apply'    — email-only, no database. EVENT_ID is the course
-//                     slug, resolved from api/_events.js.
-//   '/api/register' — Supabase pipeline. EVENT_ID is the events-table
-//                     UUID. Needs a live Supabase project.
-//
-// Supabase values, kept here for the flip back:
-//   const REGISTER_ENDPOINT = '/api/register';
-//   const EVENT_ID = '65675693-d721-47bf-b78d-244db4f3d77e';
-const REGISTER_ENDPOINT = '/api/apply';
-const EVENT_ID = '2027-01-rmk-aimes';
-const USE_MOCK_RESPONSE = false;
-const MOCK_LATENCY_MS = 500;
+// Per course, from events.js — see that file for the two pipelines and
+// why the endpoint and the event id have to be changed together.
+const { endpoint: REGISTER_ENDPOINT, eventId: EVENT_ID } = getEventConfig();
 // ──────────────────────────────────────────────────────────────
 
 const form = document.querySelector('[data-register-form]');

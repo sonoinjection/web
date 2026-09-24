@@ -247,7 +247,11 @@ export const COURSES = [
   {
     id: '2027-03-rmk-aimes',
     slug: '2027-03-rmk-aimes',
-    registrationSoon: true,
+    registrationOpen: true,
+    detail: {
+      tr: 'courses/2027-03-rmk-aimes.html',
+      en: 'courses/2027-03-rmk-aimes.en.html',
+    },
     thumbLabel: {
       tr: 'Lomber Bölge & Fasya Planları',
       en: 'Lumbar Region & Fascial Planes',
@@ -263,13 +267,99 @@ export const COURSES = [
       en: 'Hands-on Course',
     },
     venue: 'RMK AIMES',
+    venueFull: {
+      tr: 'RMK AIMES — Rahmi M. Koç Girişimsel Tıp, Eğitim ve Simülasyon Akademisi',
+      en: 'RMK AIMES — Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation',
+    },
     city: 'Istanbul, Turkey',
+    countryCode: 'TR',
     date: {
       tr: '27 Mart 2027',
       en: 'March 27, 2027',
     },
     iso: '2027-03-27',
-    // Remaining details (programme, faculty, pricing, detail page) to follow.
+    spots: null,
+    // 40 places, 8 participants per cadaver table — same format as January.
+    maxSpots: 40,
+    // Same programme as the January course, so the same fee: quoted per
+    // physician in USD, KDV included. Single tier — no early bird.
+    priceGrossUsd: 1125,
+    kdvRate: 20,
+    // Its own registration page: /kayit/ stays wired to the January course,
+    // and each course's applications keep their own e-mail thread.
+    registerUrl: '/kayit-mart/',
+    joints: {
+      tr: ['Lomber Bölge', 'Sakroiliak Eklem', 'Piriformis', 'Fasya Planları'],
+      en: ['Lumbar Region', 'Sacroiliac Joint', 'Piriformis', 'Fascial Planes'],
+    },
+    description: {
+      tr: [
+        '<strong>"Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu"</strong>, 27 Mart tarihinde RMK AIMES\'te (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation) kapılarını açıyor.',
+        'Kas-iskelet sistemi girişimsel uygulamalarındaki güncel yaklaşımlar doğrultusunda hazırlanan kursumuzda; teorik içeriğin ardından kadavra üzerinde gerçekleştirilecek uygulamalı oturumlarla ileri düzey pratik deneyim kazanma fırsatı sunuyoruz. Lomber bölgeye ve fasya planlarına yönelik enjeksiyon teknikleri, ultrasonografi rehberliğinde adım adım ele alınacak ve interaktif bir öğrenme ortamı sağlanacaktır.',
+        'Programımızı; çok açılı demonstrasyonlar, birebir uygulama imkânı ve eğitmenlerle etkileşimli oturumlarla zenginleştirdik. Alanında deneyimli eğitmenler eşliğinde, günlük klinik pratiğinize doğrudan katkı sunacak verimli bir buluşma hazırlamak için tüm hazırlıklarımızı titizlikle sürdürüyoruz.',
+      ],
+      en: [
+        '<strong>"Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course"</strong> opens its doors on March 27 at RMK AIMES (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation).',
+        'Designed in line with current approaches in musculoskeletal interventional practice, our course offers the opportunity to gain advanced practical experience through hands-on cadaveric sessions that follow the theoretical content. Injection techniques targeting the lumbar region and the fascial planes will be addressed step by step under ultrasonographic guidance, in an interactive learning environment.',
+        'We have enriched the program with multi-angle demonstrations, one-on-one practice opportunities, and interactive sessions with the faculty. Alongside experienced instructors in the field, we are meticulously preparing a productive gathering that will directly contribute to your daily clinical practice.',
+      ],
+    },
+    signature: {
+      tr: '27 Mart\'ta RMK AIMES\'te sizleri aramızda görmekten büyük mutluluk duyacağız.',
+      en: 'We will be delighted to welcome you at RMK AIMES on March 27.',
+    },
+    signatureBy: {
+      tr: 'Düzenleme Kurulu Adına Doç. Dr. Mahir TOPALOĞLU',
+      en: 'On behalf of the Organising Committee, Assoc. Prof. Mahir TOPALOĞLU',
+    },
+    // Identical to the January course — same programme, same faculty.
+    schedule: {
+      tr: [
+        { time: '08:30–08:45', type: 'admin', title: 'Açılış, kurs tanıtımı ve grup dağılımı', speaker: 'Düzenleme Kurulu' },
+        { time: '08:45–09:15', type: 'lecture', title: 'Lomber Bölge Sonoanatomi Prensipleri ve Prob-İğne Seçimi', speaker: 'Doç. Dr. Mahir Topaloğlu' },
+        { time: '09:15–09:45', type: 'lecture', title: 'Faset Eklem Enjeksiyonu ve Medial Dal Bloğu', speaker: 'Doç. Dr. Enes Efe İş' },
+        { time: '09:45–10:15', type: 'lecture', title: 'Sakroiliak Eklem ve Piriformis Enjeksiyonları', speaker: 'Doç. Dr. Mahir Topaloğlu' },
+        { time: '10:15–10:30', type: 'admin', title: 'Kahve Arası' },
+        { time: '10:30–10:50', type: 'lecture', title: 'Kaudal Epidural Enjeksiyon ve Superior Kluneal Sinir Bloğu', speaker: 'Dr. Öğr. Üyesi Havvanur Albayrak' },
+        { time: '10:50–11:20', type: 'lecture', title: 'Kasın İçindeki Düğüm: Miyofasyal Ağrı Sendromunda Fasyanın Rolü — Enjeksiyondan Rehabilitasyona', speaker: 'Doç. Dr. Mert Zure' },
+        { time: '11:20–12:00', type: 'lecture', title: 'Fasya Plan Blokları (ESP, QL, TLIP, multifidus hidrodiseksiyonu); Komplikasyonlar ve İlk Yardım Kuralları', speaker: 'Doç. Dr. Ergün Mendeş' },
+        { time: '12:00–13:00', type: 'admin', title: 'Öğle Arası' },
+        { time: '13:00–16:45', type: 'cadaver', title: 'Kadavra Üzerinde Enjeksiyon Pratikleri', speaker: 'Tüm eğitmenler', note: 'Beş istasyon, rotasyonlu — her istasyon 45 dakika' },
+        { time: '16:45–17:00', type: 'admin', title: 'Kapanış, değerlendirme ve sertifika töreni' },
+      ],
+      en: [
+        { time: '08:30–08:45', type: 'admin', title: 'Welcome, course introduction & group allocation', speaker: 'Organising Committee' },
+        { time: '08:45–09:15', type: 'lecture', title: 'Lumbar Sonoanatomy Principles & Probe–Needle Selection', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
+        { time: '09:15–09:45', type: 'lecture', title: 'Facet Joint Injection & Medial Branch Block', speaker: 'Assoc. Prof. Enes Efe İş' },
+        { time: '09:45–10:15', type: 'lecture', title: 'Sacroiliac Joint & Piriformis Injections', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
+        { time: '10:15–10:30', type: 'admin', title: 'Coffee Break' },
+        { time: '10:30–10:50', type: 'lecture', title: 'Caudal Epidural Injection & Superior Cluneal Nerve Block', speaker: 'Assist. Prof. Havvanur Albayrak' },
+        { time: '10:50–11:20', type: 'lecture', title: 'The Knot Within the Muscle: The Role of Fascia in Myofascial Pain Syndrome — From Injection to Rehabilitation', speaker: 'Assoc. Prof. Mert Zure' },
+        { time: '11:20–12:00', type: 'lecture', title: 'Fascial Plane Blocks (ESP, QL, TLIP, multifidus hydrodissection); Complications & First-Aid Rules', speaker: 'Assoc. Prof. Ergün Mendeş' },
+        { time: '12:00–13:00', type: 'admin', title: 'Lunch Break' },
+        { time: '13:00–16:45', type: 'cadaver', title: 'Cadaveric Injection Practice', speaker: 'All faculty', note: 'Five stations, rotational — 45 minutes per station' },
+        { time: '16:45–17:00', type: 'admin', title: 'Closing, evaluation & certificate ceremony' },
+      ],
+    },
+    // Afternoon stations run simultaneously; groups rotate through all five.
+    // Rotation: 13:00–13:45 · 13:45–14:30 · 14:30–15:15 · 15:15–16:00 · 16:00–16:45
+    stations: {
+      tr: [
+        { no: 'İstasyon 1', title: 'Faset eklem + medial dal bloğu', speaker: 'Doç. Dr. Enes Efe İş' },
+        { no: 'İstasyon 2', title: 'Sakroiliak eklem + piriformis', speaker: 'Doç. Dr. Mahir Topaloğlu' },
+        { no: 'İstasyon 3', title: 'Kaudal epidural + superior kluneal sinir bloğu', speaker: 'Dr. Öğr. Üyesi Havvanur Albayrak' },
+        { no: 'İstasyon 4', title: 'Torakolomber fasya ve multifidus hidrodiseksiyonu + TLIP bloğu', speaker: 'Doç. Dr. Mert Zure' },
+        { no: 'İstasyon 5', title: 'Erektör spina plan (ESP) + quadratus lumborum (QL1-2-3)', speaker: 'Doç. Dr. Ergün Mendeş' },
+      ],
+      en: [
+        { no: 'Station 1', title: 'Facet joint + medial branch block', speaker: 'Assoc. Prof. Enes Efe İş' },
+        { no: 'Station 2', title: 'Sacroiliac joint + piriformis', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
+        { no: 'Station 3', title: 'Caudal epidural + superior cluneal nerve block', speaker: 'Assist. Prof. Havvanur Albayrak' },
+        { no: 'Station 4', title: 'Thoracolumbar fascia and multifidus hydrodissection + TLIP block', speaker: 'Assoc. Prof. Mert Zure' },
+        { no: 'Station 5', title: 'Erector spinae plane (ESP) + quadratus lumborum (QL1-2-3)', speaker: 'Assoc. Prof. Ergün Mendeş' },
+      ],
+    },
+    facultyIds: ['mahir-topaloglu', 'ergun-mendes', 'enes-efe-is', 'mert-zure', 'havvanur-albayrak'],
   },
   {
     id: '2026-06-rmk-aimes',

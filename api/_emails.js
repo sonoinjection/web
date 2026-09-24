@@ -94,6 +94,7 @@ function resolvePricing(event, registeredAt) {
 // confirm, and the team sends account details in that reply.
 const EMAIL1_COPY = {
   tr: {
+    lang: 'tr',
     money: { TRY: formatTRY, USD: formatUSD },
     date: formatEventDateTr,
     title: (e) => e.title_tr,
@@ -129,6 +130,7 @@ const EMAIL1_COPY = {
     signoff: ['Saygılarımızla,', 'SonoInjection Ekibi'],
   },
   en: {
+    lang: 'en',
     money: { TRY: formatTRYEn, USD: formatUSDEn },
     date: formatEventDateEn,
     title: (e) => e.title_en || e.title_tr,
@@ -165,8 +167,43 @@ const EMAIL1_COPY = {
   },
 };
 
-function renderEmail1Body(copy, { fullName, event, pricing }) {
+// ── Mail profiles (one per concurrently open course) ──────────────
+// Two courses can take applications at the same time and both land in the
+// same kayit@ inbox, so each one gets its own subject line and its own
+// course tag at the top of the body — that is what keeps the two threads
+// apart at a glance and on a search. Keyed by event id; an event with no
+// entry falls back to DEFAULT_MAIL_PROFILE, which is the wording the
+// January course has been sending since launch (left untouched so live
+// threads keep matching their earlier messages).
+const DEFAULT_MAIL_PROFILE = {
+  banner: null,
+  applicationSubject: (fullName) =>
+    `SonoInjection — Başvurunuz Alındı / Your Application Has Been Received (${fullName})`,
+  adminSubject: (fullName) => `[SonoInjection] Yeni Başvuru - ${fullName}`,
+};
+
+const MAIL_PROFILES = {
+  '2027-03-rmk-aimes': {
+    banner: {
+      tr: 'SonoInjection · 27 Mart 2027 · Lomber Bölge ve Fasya Plan Enjeksiyonları',
+      en: 'SonoInjection · March 27, 2027 · Lumbar Region and Fascial Plane Injections',
+    },
+    applicationSubject: (fullName) =>
+      `SonoInjection Mart 2027 — Başvurunuz Alındı / Your Application Has Been Received (${fullName})`,
+    adminSubject: (fullName) => `[SonoInjection · Mart 2027] Yeni Başvuru - ${fullName}`,
+  },
+};
+
+function mailProfile(event) {
+  return MAIL_PROFILES[event && event.id] || DEFAULT_MAIL_PROFILE;
+}
+
+function renderEmail1Body(copy, { fullName, event, pricing, banner }) {
   const lines = [];
+  if (banner) {
+    lines.push(banner[copy.lang]);
+    lines.push('');
+  }
   lines.push(copy.greeting(fullName));
   lines.push('');
   lines.push(copy.received(copy.title(event)));
@@ -235,7 +272,7 @@ export function renderEmail1Registration({ data, event, registeredAt }) {
     'SonoInjection — Başvurunuz Alındı / Your Application Has Been Received';
 
   const pricing = resolvePricing(event, registeredAt);
-  const context = { fullName, event, pricing };
+  const context = { fullName, event, pricing, banner: mailProfile(event).banner };
 
   const text = [
     ...renderEmail1Body(EMAIL1_COPY.tr, context),
@@ -256,11 +293,11 @@ export function renderEmail1Registration({ data, event, registeredAt }) {
 // the thread is self-contained — there is no database to look them up in.
 export function renderApplicationEmail({ data, event, submittedAt }) {
   const fullName = `${data.first_name} ${data.last_name}`;
-  const subject =
-    `SonoInjection — Başvurunuz Alındı / Your Application Has Been Received (${fullName})`;
+  const profile = mailProfile(event);
+  const subject = profile.applicationSubject(fullName);
 
   const pricing = resolvePricing(event, submittedAt);
-  const context = { fullName, event, pricing };
+  const context = { fullName, event, pricing, banner: profile.banner };
 
   const details = [
     'Başvuru Bilgileri / Application Details',
@@ -295,7 +332,7 @@ export function renderApplicationEmail({ data, event, submittedAt }) {
 // ── Email 2: admin notification ─────────────────────────────────────
 export function renderEmail2AdminNotification({ data, event, registeredAt }) {
   const fullName = `${data.first_name} ${data.last_name}`;
-  const subject = `[SonoInjection] Yeni Başvuru - ${fullName}`;
+  const subject = mailProfile(event).adminSubject(fullName);
 
   const lines = [];
   lines.push('Yeni bir başvuru alındı:');
