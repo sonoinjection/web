@@ -55,6 +55,31 @@ export const EVENTS = {
     },
   },
 
+  '2027-02-rmk-aimes': {
+    endpoint: '/api/apply',
+    eventId: '2027-02-rmk-aimes',
+    strings: {
+      tr: {
+        docTitle: 'Kayıt — 27 Şubat 2027 — Kadavrada Ultrasonografi Eşliğinde Alt Ekstremite Enjeksiyon Kursu — SonoInjection',
+        event: {
+          date: '27 Şubat 2027',
+          title: 'Kadavrada Ultrasonografi Eşliğinde Alt Ekstremite Enjeksiyon Kursu',
+          venue: 'RMK AIMES, İstanbul',
+          address: 'Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010',
+        },
+      },
+      en: {
+        docTitle: 'Registration — February 27, 2027 — Cadaveric Ultrasound-Guided Lower Extremity Injection Course — SonoInjection',
+        event: {
+          date: 'February 27, 2027',
+          title: 'Cadaveric Ultrasound-Guided Lower Extremity Injection Course',
+          venue: 'RMK AIMES, Istanbul',
+          address: 'Koç University Hospital, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010, Türkiye',
+        },
+      },
+    },
+  },
+
   '2027-03-rmk-aimes': {
     endpoint: '/api/apply',
     eventId: '2027-03-rmk-aimes',

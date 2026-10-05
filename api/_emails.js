@@ -183,6 +183,15 @@ const DEFAULT_MAIL_PROFILE = {
 };
 
 const MAIL_PROFILES = {
+  '2027-02-rmk-aimes': {
+    banner: {
+      tr: 'SonoInjection · 27 Şubat 2027 · Alt Ekstremite Enjeksiyonları',
+      en: 'SonoInjection · February 27, 2027 · Lower Extremity Injections',
+    },
+    applicationSubject: (fullName) =>
+      `SonoInjection Şubat 2027 — Başvurunuz Alındı / Your Application Has Been Received (${fullName})`,
+    adminSubject: (fullName) => `[SonoInjection · Şubat 2027] Yeni Başvuru - ${fullName}`,
+  },
   '2027-03-rmk-aimes': {
     banner: {
       tr: 'SonoInjection · 27 Mart 2027 · Lomber Bölge ve Fasya Plan Enjeksiyonları',

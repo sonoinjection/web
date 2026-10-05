@@ -220,7 +220,11 @@ export const COURSES = [
   {
     id: '2027-02-rmk-aimes',
     slug: '2027-02-rmk-aimes',
-    registrationSoon: true,
+    registrationOpen: true,
+    detail: {
+      tr: 'courses/2027-02-rmk-aimes.html',
+      en: 'courses/2027-02-rmk-aimes.en.html',
+    },
     thumbLabel: {
       tr: 'Alt Ekstremite',
       en: 'Lower Extremity',
@@ -236,13 +240,98 @@ export const COURSES = [
       en: 'Hands-on Course',
     },
     venue: 'RMK AIMES',
+    venueFull: {
+      tr: 'RMK AIMES — Rahmi M. Koç Girişimsel Tıp, Eğitim ve Simülasyon Akademisi',
+      en: 'RMK AIMES — Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation',
+    },
     city: 'Istanbul, Turkey',
+    countryCode: 'TR',
     date: {
       tr: '27 Şubat 2027',
       en: 'February 27, 2027',
     },
     iso: '2027-02-27',
-    // Remaining details (programme, faculty, pricing, detail page) to follow.
+    spots: null,
+    // 40 places, 8 participants per cadaver table — same format as the
+    // other RMK AIMES courses.
+    maxSpots: 40,
+    // Quoted per physician in USD, KDV included — same shape as January.
+    // Two tiers: early bird until 15 Dec 2026, standard afterwards. The lira
+    // equivalent is worked out at confirmation time and sent with the bank
+    // details, so no exchange rate is frozen here.
+    priceGrossUsd: 875,
+    earlyBirdPriceGrossUsd: 800,
+    earlyBirdDeadline: '2026-12-15',
+    kdvRate: 20,
+    // Its own registration page — each course keeps its own e-mail thread.
+    registerUrl: '/kayit-subat/',
+    joints: {
+      tr: ['Kalça', 'Diz', 'Ayak Bileği'],
+      en: ['Hip', 'Knee', 'Ankle'],
+    },
+    description: {
+      tr: [
+        '<strong>"Kadavrada Ultrasonografi Eşliğinde Alt Ekstremite Enjeksiyon Kursu"</strong>, 27 Şubat tarihinde RMK AIMES\'te (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation) kapılarını açıyor.',
+        'Kas-iskelet sistemi girişimsel uygulamalarındaki güncel yaklaşımlar doğrultusunda hazırlanan kursumuzda; teorik içeriğin ardından taze donmuş kadavra üzerinde gerçekleştirilecek uygulamalı oturumlarla ileri düzey pratik deneyim kazanma fırsatı sunuyoruz. Alt ekstremiteye yönelik enjeksiyon teknikleri, ultrasonografi rehberliğinde adım adım ele alınacak ve interaktif bir öğrenme ortamı sağlanacaktır.',
+        'Programımızı; çok açılı demonstrasyonlar, birebir uygulama imkânı ve eğitmenlerle etkileşimli oturumlarla zenginleştirdik. Alanında deneyimli eğitmenler eşliğinde, günlük klinik pratiğinize doğrudan katkı sunacak verimli bir buluşma hazırlamak için tüm hazırlıklarımızı titizlikle sürdürüyoruz.',
+      ],
+      en: [
+        '<strong>"Cadaveric Ultrasound-Guided Lower Extremity Injection Course"</strong> opens its doors on February 27 at RMK AIMES (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation).',
+        'Designed in line with current approaches in musculoskeletal interventional practice, our course offers the opportunity to gain advanced practical experience through hands-on sessions performed on fresh-frozen cadavers that follow the theoretical content. Injection techniques targeting the lower extremity will be addressed step by step under ultrasonographic guidance, in an interactive learning environment.',
+        'We have enriched the program with multi-angle demonstrations, one-on-one practice opportunities, and interactive sessions with the faculty. Alongside experienced instructors in the field, we are meticulously preparing a productive gathering that will directly contribute to your daily clinical practice.',
+      ],
+    },
+    signature: {
+      tr: '27 Şubat\'ta RMK AIMES\'te sizleri aramızda görmekten büyük mutluluk duyacağız.',
+      en: 'We will be delighted to welcome you at RMK AIMES on February 27.',
+    },
+    signatureBy: {
+      tr: 'Düzenleme Kurulu Adına Doç. Dr. Mahir TOPALOĞLU',
+      en: 'On behalf of the Organising Committee, Assoc. Prof. Mahir TOPALOĞLU',
+    },
+    schedule: {
+      tr: [
+        { time: '08:30–08:45', type: 'admin', title: 'Açılış, kurs tanıtımı ve grup dağılımı', speaker: 'Düzenleme Kurulu' },
+        { time: '08:45–09:30', type: 'lecture', title: 'Kas-İskelet Sistemi Ultrasonografisine Giriş ve Temel Prensipler', speaker: 'Doç. Dr. Mahir Topaloğlu' },
+        { time: '09:30–10:15', type: 'lecture', title: 'Kalça Bölgesinin Ultrasonografisi ve Enjeksiyonları (PENG ve ANK bloğu dahil)', speaker: 'Doç. Dr. Enes Efe İş' },
+        { time: '10:15–10:30', type: 'admin', title: 'Kahve Arası' },
+        { time: '10:30–11:15', type: 'lecture', title: 'Diz Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Doç. Dr. Mert Zure' },
+        { time: '11:15–12:00', type: 'lecture', title: 'Ayak Bileği ve Ayak Bölgesinin Ultrasonografisi ve Enjeksiyonları', speaker: 'Dr. Öğr. Üyesi Sergen Devran' },
+        { time: '12:00–13:00', type: 'admin', title: 'Öğle Arası' },
+        { time: '13:00–16:45', type: 'cadaver', title: 'Kadavra Üzerinde Enjeksiyon Pratikleri', speaker: 'Tüm eğitmenler', note: 'Beş istasyon, rotasyonlu — her istasyon 45 dakika' },
+        { time: '16:45–17:00', type: 'admin', title: 'Kapanış ve Değerlendirme' },
+      ],
+      en: [
+        { time: '08:30–08:45', type: 'admin', title: 'Welcome, course introduction & group allocation', speaker: 'Organising Committee' },
+        { time: '08:45–09:30', type: 'lecture', title: 'Introduction to Musculoskeletal Ultrasound & Core Principles', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
+        { time: '09:30–10:15', type: 'lecture', title: 'Hip Region — Ultrasonography & Injections (incl. PENG & ANK block)', speaker: 'Assoc. Prof. Enes Efe İş' },
+        { time: '10:15–10:30', type: 'admin', title: 'Coffee Break' },
+        { time: '10:30–11:15', type: 'lecture', title: 'Knee Region — Ultrasonography & Injections', speaker: 'Assoc. Prof. Mert Zure' },
+        { time: '11:15–12:00', type: 'lecture', title: 'Foot & Ankle Region — Ultrasonography & Injections', speaker: 'Assist. Prof. Sergen Devran' },
+        { time: '12:00–13:00', type: 'admin', title: 'Lunch Break' },
+        { time: '13:00–16:45', type: 'cadaver', title: 'Cadaveric Injection Practice', speaker: 'All faculty', note: 'Five stations, rotational — 45 minutes per station' },
+        { time: '16:45–17:00', type: 'admin', title: 'Closing & Evaluation' },
+      ],
+    },
+    // Afternoon stations run simultaneously; groups rotate through all five.
+    // Rotation: 13:00–13:45 · 13:45–14:30 · 14:30–15:15 · 15:15–16:00 · 16:00–16:45
+    stations: {
+      tr: [
+        { no: 'İstasyon 1', title: 'Piriformis + Aşil tendonu + plantar fasya', speaker: 'Doç. Dr. Mahir Topaloğlu' },
+        { no: 'İstasyon 2', title: 'Kalça eklemi + PENG bloğu + ANK bloğu', speaker: 'Doç. Dr. Enes Efe İş' },
+        { no: 'İstasyon 3', title: 'Diz eklemi + pes anserin + geniküler sinir', speaker: 'Doç. Dr. Mert Zure' },
+        { no: 'İstasyon 4', title: 'Tibiotalar eklem + 1. MTF eklem + tarsal tünel', speaker: 'Dr. Öğr. Üyesi Sergen Devran' },
+        { no: 'İstasyon 5', title: 'Trokanterik bölge + iliotibial bant', speaker: 'Dr. Öğr. Üyesi Havvanur Albayrak' },
+      ],
+      en: [
+        { no: 'Station 1', title: 'Piriformis + Achilles tendon + plantar fascia', speaker: 'Assoc. Prof. Mahir Topaloğlu' },
+        { no: 'Station 2', title: 'Hip joint + PENG block + ANK block', speaker: 'Assoc. Prof. Enes Efe İş' },
+        { no: 'Station 3', title: 'Knee joint + pes anserine + genicular nerve', speaker: 'Assoc. Prof. Mert Zure' },
+        { no: 'Station 4', title: 'Tibiotalar joint + 1st MTP joint + tarsal tunnel', speaker: 'Assist. Prof. Sergen Devran' },
+        { no: 'Station 5', title: 'Trochanteric region + iliotibial band', speaker: 'Assist. Prof. Havvanur Albayrak' },
+      ],
+    },
+    facultyIds: ['mahir-topaloglu', 'enes-efe-is', 'mert-zure', 'sergen-devran', 'havvanur-albayrak'],
   },
   {
     id: '2027-03-rmk-aimes',
@@ -282,8 +371,11 @@ export const COURSES = [
     // 40 places, 8 participants per cadaver table — same format as January.
     maxSpots: 40,
     // Same programme as the January course, so the same fee: quoted per
-    // physician in USD, KDV included. Single tier — no early bird.
+    // physician in USD, KDV included. Two tiers: early bird until 15 Jan 2027,
+    // standard afterwards.
     priceGrossUsd: 1125,
+    earlyBirdPriceGrossUsd: 1000,
+    earlyBirdDeadline: '2027-01-15',
     kdvRate: 20,
     // Its own registration page: /kayit/ stays wired to the January course,
     // and each course's applications keep their own e-mail thread.

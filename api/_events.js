@@ -29,6 +29,22 @@ export const EVENTS = {
     early_bird_price_gross_usd: 1000,
     early_bird_deadline: '2026-11-15',
   },
+  '2027-02-rmk-aimes': {
+    id: '2027-02-rmk-aimes',
+    is_active: true,
+    title_tr: 'Kadavrada Ultrasonografi Eşliğinde Alt Ekstremite Enjeksiyon Kursu',
+    title_en: 'Cadaveric Ultrasound-Guided Lower Extremity Injection Course',
+    event_date: '2027-02-27',
+    location_tr: 'RMK AIMES — Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul',
+    location_en: 'RMK AIMES — Koç University Hospital, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul, Türkiye',
+    kdv_rate: 20,
+    // Quoted per physician in USD, KDV included. Two tiers: early bird until
+    // 15 Dec 2026, standard afterwards — the email renders both lines and
+    // names the one that applies.
+    price_gross_usd: 875,
+    early_bird_price_gross_usd: 800,
+    early_bird_deadline: '2026-12-15',
+  },
   '2027-03-rmk-aimes': {
     id: '2027-03-rmk-aimes',
     is_active: true,
@@ -38,10 +54,12 @@ export const EVENTS = {
     location_tr: 'RMK AIMES — Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul',
     location_en: 'RMK AIMES — Koç University Hospital, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul, Türkiye',
     kdv_rate: 20,
-    // Same programme as the January course, so the same fee. Single tier:
-    // no early bird, so no early_bird_* fields and no deadline — the email
-    // renders one "Kurs Ücreti" line instead of two.
+    // Same programme as the January course, so the same fee. Two tiers: early
+    // bird until 15 Jan 2027, standard afterwards — the email renders both
+    // lines and names the one that applies.
     price_gross_usd: 1125,
+    early_bird_price_gross_usd: 1000,
+    early_bird_deadline: '2027-01-15',
   },
 };
 

@@ -123,7 +123,7 @@ export const FACULTY = [
   {
     id: 'havvanur-albayrak',
     photo: 'assets/faculty/havvanur-albayrak.jpeg',
-    name: 'Uzm. Dr. Havvanur Albayrak',
+    name: 'Dr. Öğr. Üyesi Havvanur Albayrak',
     nameEn: 'Dr. Havvanur Albayrak',
     title: {
       tr: 'Fiziksel Tıp ve Rehabilitasyon',
