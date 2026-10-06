@@ -234,6 +234,10 @@
   display: flex;
   gap: var(--space-8);
 }
+/* Wrapper around the links + actions. On desktop it is transparent
+   (display:contents) so the bar lays out exactly as before; on mobile it
+   becomes the dropdown panel that the hamburger opens. */
+.nav__collapse { display: contents; }
 .nav__link {
   font-family: var(--font-body);
   font-size: 14px;
@@ -294,32 +298,41 @@
 .nav__toggle svg { width: 22px; height: 22px; }
 
 @media (max-width: 880px) {
-  /* Tighter gutters on phones: the full-width 48px inline padding plus the
-     language switch + CTA + hamburger used to overflow the bar on narrow
-     screens, pushing the hamburger past the right edge (hidden). */
-  .nav__inner { padding-inline: var(--space-4); gap: var(--space-4); }
-  /* The control cluster and the hamburger never shrink or clip; the logo
-     yields space first (and truncates) so the toggle is always reachable. */
-  .logo { min-width: 0; overflow: hidden; }
-  .logo__word, .logo__url { white-space: nowrap; }
-  .nav__actions { gap: var(--space-2); flex-shrink: 0; }
-  .nav__links, .nav__actions .nav__cta-secondary { display: none; }
+  /* On phones the bar shows only the logo + hamburger. The links, language
+     switch and CTA collapse into the hamburger menu, so the bar can never
+     overflow (which used to push the hamburger — then the logo — off-screen). */
+  .nav__inner { padding-inline: var(--space-4); }
   .nav__toggle { display: inline-flex; flex-shrink: 0; }
-  .nav.is-open .nav__links {
+  .nav__collapse { display: none; }
+
+  /* Open: the collapse becomes a full-width dropdown panel below the bar. */
+  .nav.is-open .nav__collapse {
     display: flex;
+    flex-direction: column;
+    align-items: stretch;
     position: absolute;
     top: 64px; left: 0; right: 0;
-    flex-direction: column;
     background: var(--color-bg-surface);
     border-bottom: 1px solid var(--color-border-default);
-    padding: var(--space-6) var(--space-4);
-    gap: var(--space-4);
     box-shadow: var(--shadow-2);
+    padding: var(--space-6) var(--space-4);
   }
-  .nav--dark.is-open .nav__links {
+  .nav.is-open .nav__links {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .nav.is-open .nav__actions {
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border-default);
+  }
+  .nav--dark.is-open .nav__collapse {
     background: var(--navy-900);
     border-bottom-color: rgba(255, 255, 255, 0.08);
   }
+  .nav--dark.is-open .nav__actions { border-top-color: rgba(255, 255, 255, 0.08); }
 }
 
 /* ── Course card ── */
