@@ -294,8 +294,17 @@
 .nav__toggle svg { width: 22px; height: 22px; }
 
 @media (max-width: 880px) {
+  /* Tighter gutters on phones: the full-width 48px inline padding plus the
+     language switch + CTA + hamburger used to overflow the bar on narrow
+     screens, pushing the hamburger past the right edge (hidden). */
+  .nav__inner { padding-inline: var(--space-4); gap: var(--space-4); }
+  /* The control cluster and the hamburger never shrink or clip; the logo
+     yields space first (and truncates) so the toggle is always reachable. */
+  .logo { min-width: 0; overflow: hidden; }
+  .logo__word, .logo__url { white-space: nowrap; }
+  .nav__actions { gap: var(--space-2); flex-shrink: 0; }
   .nav__links, .nav__actions .nav__cta-secondary { display: none; }
-  .nav__toggle { display: inline-flex; }
+  .nav__toggle { display: inline-flex; flex-shrink: 0; }
   .nav.is-open .nav__links {
     display: flex;
     position: absolute;
@@ -303,7 +312,7 @@
     flex-direction: column;
     background: var(--color-bg-surface);
     border-bottom: 1px solid var(--color-border-default);
-    padding: var(--space-6) var(--space-12);
+    padding: var(--space-6) var(--space-4);
     gap: var(--space-4);
     box-shadow: var(--shadow-2);
   }
