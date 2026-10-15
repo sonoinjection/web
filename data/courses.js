@@ -363,10 +363,10 @@ export const COURSES = [
     city: 'Istanbul, Turkey',
     countryCode: 'TR',
     date: {
-      tr: '27 Mart 2027',
-      en: 'March 27, 2027',
+      tr: '3 Nisan 2027',
+      en: 'April 3, 2027',
     },
-    iso: '2027-03-27',
+    iso: '2027-04-03',
     spots: null,
     // 40 places, 8 participants per cadaver table — same format as January.
     maxSpots: 40,
@@ -386,19 +386,19 @@ export const COURSES = [
     },
     description: {
       tr: [
-        '<strong>"Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu"</strong>, 27 Mart tarihinde RMK AIMES\'te (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation) kapılarını açıyor.',
+        '<strong>"Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu"</strong>, 3 Nisan tarihinde RMK AIMES\'te (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation) kapılarını açıyor.',
         'Kas-iskelet sistemi girişimsel uygulamalarındaki güncel yaklaşımlar doğrultusunda hazırlanan kursumuzda; teorik içeriğin ardından kadavra üzerinde gerçekleştirilecek uygulamalı oturumlarla ileri düzey pratik deneyim kazanma fırsatı sunuyoruz. Lomber bölgeye ve fasya planlarına yönelik enjeksiyon teknikleri, ultrasonografi rehberliğinde adım adım ele alınacak ve interaktif bir öğrenme ortamı sağlanacaktır.',
         'Programımızı; çok açılı demonstrasyonlar, birebir uygulama imkânı ve eğitmenlerle etkileşimli oturumlarla zenginleştirdik. Alanında deneyimli eğitmenler eşliğinde, günlük klinik pratiğinize doğrudan katkı sunacak verimli bir buluşma hazırlamak için tüm hazırlıklarımızı titizlikle sürdürüyoruz.',
       ],
       en: [
-        '<strong>"Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course"</strong> opens its doors on March 27 at RMK AIMES (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation).',
+        '<strong>"Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course"</strong> opens its doors on April 3 at RMK AIMES (Rahmi M. Koç Academy of Interventional Medicine, Education, and Simulation).',
         'Designed in line with current approaches in musculoskeletal interventional practice, our course offers the opportunity to gain advanced practical experience through hands-on cadaveric sessions that follow the theoretical content. Injection techniques targeting the lumbar region and the fascial planes will be addressed step by step under ultrasonographic guidance, in an interactive learning environment.',
         'We have enriched the program with multi-angle demonstrations, one-on-one practice opportunities, and interactive sessions with the faculty. Alongside experienced instructors in the field, we are meticulously preparing a productive gathering that will directly contribute to your daily clinical practice.',
       ],
     },
     signature: {
-      tr: '27 Mart\'ta RMK AIMES\'te sizleri aramızda görmekten büyük mutluluk duyacağız.',
-      en: 'We will be delighted to welcome you at RMK AIMES on March 27.',
+      tr: '3 Nisan\'da RMK AIMES\'te sizleri aramızda görmekten büyük mutluluk duyacağız.',
+      en: 'We will be delighted to welcome you at RMK AIMES on April 3.',
     },
     signatureBy: {
       tr: 'Düzenleme Kurulu Adına Doç. Dr. Mahir TOPALOĞLU',

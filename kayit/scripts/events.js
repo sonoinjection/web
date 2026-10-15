@@ -85,18 +85,18 @@ export const EVENTS = {
     eventId: '2027-03-rmk-aimes',
     strings: {
       tr: {
-        docTitle: 'Kayıt — 27 Mart 2027 — Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu — SonoInjection',
+        docTitle: 'Kayıt — 3 Nisan 2027 — Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu — SonoInjection',
         event: {
-          date: '27 Mart 2027',
+          date: '3 Nisan 2027',
           title: 'Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu',
           venue: 'RMK AIMES, İstanbul',
           address: 'Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010',
         },
       },
       en: {
-        docTitle: 'Registration — March 27, 2027 — Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course — SonoInjection',
+        docTitle: 'Registration — April 3, 2027 — Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course — SonoInjection',
         event: {
-          date: 'March 27, 2027',
+          date: 'April 3, 2027',
           title: 'Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course',
           venue: 'RMK AIMES, Istanbul',
           address: 'Koç University Hospital, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010, Türkiye',

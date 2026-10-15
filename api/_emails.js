@@ -194,12 +194,12 @@ const MAIL_PROFILES = {
   },
   '2027-03-rmk-aimes': {
     banner: {
-      tr: 'SonoInjection · 27 Mart 2027 · Lomber Bölge ve Fasya Plan Enjeksiyonları',
-      en: 'SonoInjection · March 27, 2027 · Lumbar Region and Fascial Plane Injections',
+      tr: 'SonoInjection · 3 Nisan 2027 · Lomber Bölge ve Fasya Plan Enjeksiyonları',
+      en: 'SonoInjection · April 3, 2027 · Lumbar Region and Fascial Plane Injections',
     },
     applicationSubject: (fullName) =>
-      `SonoInjection Mart 2027 — Başvurunuz Alındı / Your Application Has Been Received (${fullName})`,
-    adminSubject: (fullName) => `[SonoInjection · Mart 2027] Yeni Başvuru - ${fullName}`,
+      `SonoInjection Nisan 2027 — Başvurunuz Alındı / Your Application Has Been Received (${fullName})`,
+    adminSubject: (fullName) => `[SonoInjection · Nisan 2027] Yeni Başvuru - ${fullName}`,
   },
 };
 

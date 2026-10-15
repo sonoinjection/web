@@ -27,7 +27,7 @@ Notes for future Claude sessions working on this repo. Read this before making c
   scripts/                 ← browser render scripts AND Node-only diagnostics. See §3 / §11.
   kayit/                   ← registration form for the January 2027 course + the
                              CSS/JS every registration page shares. See §4.
-  kayit-mart/              ← registration form for the March 2027 course; loads its
+  kayit-mart/              ← registration form for the April 2027 course; loads its
                              CSS and scripts from /kayit/. See §4.
   deneme-kayit/
     admin/                 ← admin board (TR, magic-link auth). URL deliberately kept
@@ -102,7 +102,7 @@ Render scripts find target containers by attribute:
 
 ## 4. Registration forms (/kayit/, /kayit-mart/) and /deneme-kayit/admin/ (admin board)
 
-One public registration page per open course — `/kayit/` for the January 2027 course, `/kayit-mart/` for the March 2027 one. The admin board stays at `/deneme-kayit/admin/` as soft URL gating, layered with magic-link auth (see below). Every one of these pages shares the same CSS and the same `scripts/` directory under `/kayit/`, loaded via absolute paths — `/kayit-mart/index.html` and `/deneme-kayit/admin/index.html` hold markup and nothing else.
+One public registration page per open course — `/kayit/` for the January 2027 course, `/kayit-mart/` for the April 2027 one (slug and URL still say "mart"/"03"). The admin board stays at `/deneme-kayit/admin/` as soft URL gating, layered with magic-link auth (see below). Every one of these pages shares the same CSS and the same `scripts/` directory under `/kayit/`, loaded via absolute paths — `/kayit-mart/index.html` and `/deneme-kayit/admin/index.html` hold markup and nothing else.
 
 ```
 kayit/
@@ -317,7 +317,7 @@ course tag:
 | | Subject (application email) | Body opens with |
 |---|---|---|
 | January 2027 (default) | `SonoInjection — Başvurunuz Alındı / Your Application Has Been Received (‹name›)` | the greeting |
-| March 2027 | `SonoInjection Mart 2027 — Başvurunuz Alındı / … (‹name›)` | `SonoInjection · 27 Mart 2027 · Lomber Bölge ve Fasya Plan Enjeksiyonları` |
+| April 2027 | `SonoInjection Nisan 2027 — Başvurunuz Alındı / … (‹name›)` | `SonoInjection · 3 Nisan 2027 · Lomber Bölge ve Fasya Plan Enjeksiyonları` |
 
 `MAIL_PROFILES` in `api/_emails.js` is keyed by event id and falls back to
 `DEFAULT_MAIL_PROFILE`, which is the wording the January course has sent since
@@ -605,7 +605,7 @@ Pre-commit checklist for the marketing site:
 - DevTools console is clean
 
 Pre-commit checklist for the registration forms and `/deneme-kayit/admin/`:
-- **Each** registration page shows its own course in the hero — `/kayit/` says 17 Ocak 2027, `/kayit-mart/` says 27 Mart 2027 — in both languages, and still does after the TR/EN toggle
+- **Each** registration page shows its own course in the hero — `/kayit/` says 17 Ocak 2027, `/kayit-mart/` says 3 Nisan 2027 — in both languages, and still does after the TR/EN toggle
 - Both forms submit and show the success state (against the real API or with `USE_MOCK_RESPONSE = true`)
 - All required fields enforce validation; `Seçiniz` placeholders cannot be left selected
 - Admin page renders Supabase data, filters work, and per-row actions update the row in place
@@ -637,7 +637,7 @@ GitHub Pages is decommissioned (`Settings → Pages → Source: None`).
 Live URLs:
 - `sonoinjection.com` — marketing site (TR + EN), served directly from `/`
 - `sonoinjection.com/kayit/` — registration form, January 2027 course
-- `sonoinjection.com/kayit-mart/` — registration form, March 2027 course
+- `sonoinjection.com/kayit-mart/` — registration form, April 2027 course
 - `sonoinjection.com/deneme-kayit/admin/` — admin board (magic-link auth via Supabase + `ADMIN_ALLOWLIST`; URL deliberately kept off `/kayit/` as soft gating)
 - `sonoinjection.com/api/*` — serverless functions (`register`, `admin/*`)
 

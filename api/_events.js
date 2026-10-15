@@ -50,7 +50,7 @@ export const EVENTS = {
     is_active: true,
     title_tr: 'Kadavrada Ultrasonografi Eşliğinde Lomber Bölge ve Fasya Plan Enjeksiyonları Kursu',
     title_en: 'Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course',
-    event_date: '2027-03-27',
+    event_date: '2027-04-03',
     location_tr: 'RMK AIMES — Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul',
     location_en: 'RMK AIMES — Koç University Hospital, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul, Türkiye',
     kdv_rate: 20,
