@@ -22,12 +22,23 @@ export const EVENTS = {
     location_tr: 'RMK AIMES — Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul',
     location_en: 'RMK AIMES — Koç University Hospital, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul, Türkiye',
     kdv_rate: 20,
-    // Quoted per physician in USD, KDV included. The lira equivalent is
-    // worked out at confirmation time and sent with the bank details, so
+    // Quoted per physician in USD, KDV included. The applicant works out
+    // the lira equivalent at the TCMB selling rate on the payment date, so
     // no exchange rate is frozen here.
     price_gross_usd: 1125,
     early_bird_price_gross_usd: 1000,
     early_bird_deadline: '2026-11-15',
+    // Presence of this block puts the payment methods in the application
+    // email; a course without it keeps the reply-for-bank-details flow.
+    payment: {
+      card_url: 'https://aimes.org/event/kadavrada-ultrasonografi-esliginde-lomber-bolge-ve-fasya-plan-enjeksiyonlari-kursu/',
+      account_name: 'Moment Eğitim Araş. Sağ. Hiz. Ve Tic. A.Ş.',
+      bank_name: 'Yapı Kredi Bankası',
+      iban_try: 'TR76 0006 7010 0000 0000 1699 35',
+      iban_usd: 'TR97 0006 7010 0000 0000 4085 65',
+      swift: 'YAPITRIS',
+      reference_label: 'RMK AIMES',
+    },
   },
   '2027-02-rmk-aimes': {
     id: '2027-02-rmk-aimes',

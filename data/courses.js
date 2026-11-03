@@ -137,8 +137,8 @@ export const COURSES = [
     spots: null,
     // 40 places, 8 participants per cadaver table (day-programme PDF).
     maxSpots: 40,
-    // Quoted per physician in USD, KDV included. The lira equivalent is
-    // worked out at confirmation time and sent with the bank details.
+    // Quoted per physician in USD, KDV included. The applicant works out
+    // the lira equivalent at the TCMB selling rate on the payment date.
     priceGrossUsd: 1125,
     earlyBirdPriceGrossUsd: 1000,
     earlyBirdDeadline: '2026-11-15',

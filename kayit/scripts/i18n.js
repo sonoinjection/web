@@ -119,12 +119,18 @@ export const STRINGS = {
   },
 };
 
-// The course this page is for supplies docTitle and the event hero block.
-// Merged once at module load, so t() and applyTranslations() below see one
-// flat dictionary per language and neither needs to know about courses.
+// The course this page is for supplies docTitle and the event hero block,
+// and may override individual success strings. Merged once at module load,
+// so t() and applyTranslations() below see one flat dictionary per language
+// and neither needs to know about courses.
 const eventStrings = getEventConfig().strings;
-STRINGS.tr = { ...STRINGS.tr, ...eventStrings.tr };
-STRINGS.en = { ...STRINGS.en, ...eventStrings.en };
+for (const lang of ['tr', 'en']) {
+  STRINGS[lang] = {
+    ...STRINGS[lang],
+    ...eventStrings[lang],
+    success: { ...STRINGS[lang].success, ...eventStrings[lang].success },
+  };
+}
 
 export const DEFAULT_LANG = 'tr';
 

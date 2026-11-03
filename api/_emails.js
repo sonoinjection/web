@@ -3,8 +3,9 @@
    Email 1: application received (applicant), bilingual TR + EN
    Email 2: admin notification (kayit@)
    These are the only automatic emails. Everything after the initial
-   application — bank details, payment confirmation, cancellations,
-   refunds — is a human reply from kayit@, by deliberate choice.
+   application — payment confirmation, cancellations, refunds, and bank
+   details for any course without `payment` in api/_events.js — is a
+   human reply from kayit@, by deliberate choice.
    ============================================================ */
 
 import {
@@ -89,9 +90,10 @@ function resolvePricing(event, registeredAt) {
 }
 
 // ── Email 1: applicant on initial application ───────────────────────
-// Sent bilingually as one message: Turkish first, then English. Bank
-// details are deliberately NOT included — the applicant replies to
-// confirm, and the team sends account details in that reply.
+// Sent bilingually as one message: Turkish first, then English. A course
+// with `payment` in api/_events.js gets its payment methods right here;
+// for any other course the applicant replies to confirm, and the team
+// sends account details in that reply.
 const EMAIL1_COPY = {
   tr: {
     lang: 'tr',
@@ -126,6 +128,24 @@ const EMAIL1_COPY = {
       `Havaleniz sonrasında dekontunuzu ${email} adresine ilettiğinizde, ödemeniz onaylandıktan sonra teyit e-postası göndereceğiz.`,
     noPrice: 'Kurs ücreti ve sonraki adımlar en kısa sürede tarafınıza iletilecektir.',
     questions: (email) => `Sorularınız için: ${email}`,
+    payment: {
+      intro: 'Kaydınızı kesinleştirmek için kurs ücretini aşağıdaki iki yöntemden biriyle ödeyebilirsiniz.',
+      cardHeading: '1. KREDİ KARTI İLE ONLINE ÖDEME',
+      cardBody: 'Kurs sayfası üzerinden kredi kartınızla hızlı ve güvenli bir şekilde ödeme yapabilirsiniz:',
+      cardNoReceipt: 'Kredi kartıyla yapılan ödemelerde ayrıca dekont göndermenize gerek yoktur.',
+      transferHeading: '2. BANKA HAVALESİ / EFT',
+      accountLine: (v) => `Hesap Adı: ${v}`,
+      bankLine: (v) => `Banka: ${v}`,
+      ibanTryLine: (v) => `IBAN (TL): ${v}`,
+      ibanUsdLine: (v) => `IBAN (USD): ${v}`,
+      swiftLine: (v) => `SWIFT Kodu: ${v}`,
+      tryRate: 'TL ödemelerinde tutarı ödeme günü TCMB döviz satış kuru üzerinden hesaplayınız.',
+      referenceIntro: 'Ödeme açıklamasına mutlaka ödediğiniz USD tutarını yazınız:',
+      referenceTier: { early: 'Erken kayıt için', standard: 'Standart kayıt için' },
+      receipt: (email) =>
+        `Havale/EFT ile ödeme yaptıktan sonra dekontunuzu ${email} adresine iletmeniz yeterlidir.`,
+      questions: 'Sorularınız için bu e-postayı yanıtlayabilirsiniz.',
+    },
     contact: (c) => `Kayıt sorumlusu: ${c}`,
     signoff: ['Saygılarımızla,', 'SonoInjection Ekibi'],
   },
@@ -162,6 +182,24 @@ const EMAIL1_COPY = {
       `After your transfer, send the receipt to ${email} and we will confirm your payment by email.`,
     noPrice: 'The course fee and next steps will be sent to you shortly.',
     questions: (email) => `Questions: ${email}`,
+    payment: {
+      intro: 'To finalize your registration, you can pay the course fee using either of the two methods below.',
+      cardHeading: '1. ONLINE PAYMENT BY CREDIT CARD',
+      cardBody: 'You can pay quickly and securely by credit card on the course page:',
+      cardNoReceipt: 'There is no need to send a receipt for credit card payments.',
+      transferHeading: '2. BANK TRANSFER / EFT',
+      accountLine: (v) => `Account Name: ${v}`,
+      bankLine: (v) => `Bank: ${v}`,
+      ibanTryLine: (v) => `IBAN (TRY): ${v}`,
+      ibanUsdLine: (v) => `IBAN (USD): ${v}`,
+      swiftLine: (v) => `SWIFT Code: ${v}`,
+      tryRate: 'For payments in Turkish lira, please calculate the amount using the Central Bank of Türkiye (TCMB) foreign exchange selling rate on the payment date.',
+      referenceIntro: 'You must state the USD amount you are paying in the payment description, exactly as follows:',
+      referenceTier: { early: 'Early registration', standard: 'Standard registration' },
+      receipt: (email) =>
+        `After paying by bank transfer/EFT, simply send your receipt to ${email}.`,
+      questions: 'For questions, you can reply to this email.',
+    },
     contact: (c) => `Registration contact: ${c}`,
     signoff: ['Kind regards,', 'SonoInjection Team'],
   },
@@ -207,7 +245,44 @@ function mailProfile(event) {
   return MAIL_PROFILES[event && event.id] || DEFAULT_MAIL_PROFILE;
 }
 
+// The two ways to pay, for a course that lists them. The reference strings
+// stay Turkish with Turkish number formatting in both language blocks, so
+// every transfer description reads the same on the bank statement.
+function renderPaymentBlock(copy, payment, pricing) {
+  const p = copy.payment;
+  return [
+    p.intro,
+    '',
+    p.cardHeading,
+    '',
+    p.cardBody,
+    payment.card_url,
+    '',
+    p.cardNoReceipt,
+    '',
+    p.transferHeading,
+    '',
+    p.accountLine(payment.account_name),
+    p.bankLine(payment.bank_name),
+    p.ibanTryLine(payment.iban_try),
+    p.ibanUsdLine(payment.iban_usd),
+    p.swiftLine(payment.swift),
+    '',
+    p.tryRate,
+    '',
+    p.referenceIntro,
+    '',
+    ...pricing.tiers.map(
+      (tier) =>
+        `${p.referenceTier[tier.key]}: "${payment.reference_label} - ${formatUSD(tier.gross)} Kurs Kayıt Bedeli"`,
+    ),
+    '',
+    p.receipt(ADMIN_REPLY_TO),
+  ];
+}
+
 function renderEmail1Body(copy, { fullName, event, pricing, banner }) {
+  const payment = pricing ? event.payment : null;
   const lines = [];
   if (banner) {
     lines.push(banner[copy.lang]);
@@ -259,15 +334,19 @@ function renderEmail1Body(copy, { fullName, event, pricing, banner }) {
       lines.push('');
     }
 
-    lines.push(pricing.currency === 'USD' ? copy.replyWithConversion : copy.reply);
-    lines.push('');
-    lines.push(copy.receipt(ADMIN_REPLY_TO));
+    if (payment) {
+      lines.push(...renderPaymentBlock(copy, payment, pricing));
+    } else {
+      lines.push(pricing.currency === 'USD' ? copy.replyWithConversion : copy.reply);
+      lines.push('');
+      lines.push(copy.receipt(ADMIN_REPLY_TO));
+    }
   } else {
     lines.push(copy.noPrice);
   }
 
   lines.push('');
-  lines.push(copy.questions(ADMIN_REPLY_TO));
+  lines.push(payment ? copy.payment.questions : copy.questions(ADMIN_REPLY_TO));
   lines.push(copy.contact(REGISTRATION_CONTACT));
   lines.push('');
   lines.push(...copy.signoff);
@@ -297,7 +376,8 @@ export function renderEmail1Registration({ data, event, registeredAt }) {
 // ── Application email (email-only pipeline) ─────────────────────────
 // One message addressed to BOTH the applicant and kayit@, so the whole
 // exchange lives in a single thread: the applicant replies, the team
-// replies-all, bank details follow in that chain. Body is the same
+// replies-all, and any bank details not already in the email follow in
+// that chain. Body is the same
 // bilingual text as Email 1, with the application details appended so
 // the thread is self-contained — there is no database to look them up in.
 export function renderApplicationEmail({ data, event, submittedAt }) {

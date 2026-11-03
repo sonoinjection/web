@@ -42,6 +42,10 @@ export const EVENTS = {
           venue: 'RMK AIMES, İstanbul',
           address: 'Koç Üniversitesi Hastanesi, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010',
         },
+        // The application email carries the payment methods for this course.
+        success: {
+          body: 'Kurs ücreti ve ödeme bilgileri e-posta adresinize gönderildi. Kaydınızı kesinleştirmek için e-postadaki iki ödeme yönteminden birini kullanabilirsiniz.',
+        },
       },
       en: {
         docTitle: 'Registration — Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course — SonoInjection',
@@ -50,6 +54,9 @@ export const EVENTS = {
           title: 'Cadaveric Ultrasound-Guided Lumbar Region and Fascial Plane Injection Course',
           venue: 'RMK AIMES, Istanbul',
           address: 'Koç University Hospital, Davutpaşa Cd. No:4, Zeytinburnu/İstanbul 34010, Türkiye',
+        },
+        success: {
+          body: 'The course fee and payment details have been sent to your email address. To finalize your registration, you can use either of the two payment methods in that email.',
         },
       },
     },
