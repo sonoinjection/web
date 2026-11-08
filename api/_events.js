@@ -27,7 +27,7 @@ export const EVENTS = {
     // no exchange rate is frozen here.
     price_gross_usd: 1125,
     early_bird_price_gross_usd: 1000,
-    early_bird_deadline: '2026-11-15',
+    early_bird_deadline: '2026-12-15',
     // Presence of this block puts the payment methods in the application
     // email; a course without it keeps the reply-for-bank-details flow.
     payment: {

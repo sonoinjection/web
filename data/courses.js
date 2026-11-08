@@ -141,7 +141,7 @@ export const COURSES = [
     // the lira equivalent at the TCMB selling rate on the payment date.
     priceGrossUsd: 1125,
     earlyBirdPriceGrossUsd: 1000,
-    earlyBirdDeadline: '2026-11-15',
+    earlyBirdDeadline: '2026-12-15',
     kdvRate: 20,
     registerUrl: '/kayit/',
     programPdf: 'assets/courses/SonoInjection-Gun-Programi-17-Ocak-2027.pdf',
