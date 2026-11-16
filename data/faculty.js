@@ -179,6 +179,15 @@ export const FACULTY = [
     // Course-page only: kept off the /faculty roster and homepage teaser.
     roster: false,
   },
+  {
+    id: 'aksel-seyahi',
+    name: 'Prof. Dr. Aksel Seyahi',
+    nameEn: 'Prof. Aksel Seyahi',
+    initials: 'AS',
+    role: 'faculty',
+    // Course-page only: kept off the /faculty roster and homepage teaser.
+    roster: false,
+  },
 ];
 
 export function getFaculty(id) {
