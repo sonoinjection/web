@@ -61,7 +61,9 @@ function renderFacultyCard(f) {
 }
 
 function renderInto(el) {
-  let list = FACULTY;
+  // Unfiltered grids (faculty page, homepage) skip `roster: false` entries;
+  // a data-ids grid lists whoever it names.
+  let list = FACULTY.filter((f) => f.roster !== false);
   if (el.dataset.ids) {
     const ids = el.dataset.ids.split(',').map((s) => s.trim()).filter(Boolean);
     list = ids.map((id) => FACULTY.find((f) => f.id === id)).filter(Boolean);

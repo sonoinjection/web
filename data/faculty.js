@@ -167,6 +167,8 @@ export const FACULTY = [
     nameEn: 'Prof. Özge Keniş Coşkun',
     initials: 'ÖK',
     role: 'faculty',
+    // Course-page only: kept off the /faculty roster and homepage teaser.
+    roster: false,
   },
   {
     id: 'serdar-kesikburun',
@@ -174,6 +176,8 @@ export const FACULTY = [
     nameEn: 'Prof. Serdar Kesikburun',
     initials: 'SK',
     role: 'faculty',
+    // Course-page only: kept off the /faculty roster and homepage teaser.
+    roster: false,
   },
 ];
 
