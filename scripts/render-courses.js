@@ -86,7 +86,8 @@ function renderInto(el) {
 
   // Chronological, newest date first.
   let ordered = [...COURSES].sort((a, b) => (b.iso || '').localeCompare(a.iso || ''));
-  if (filter === 'upcoming') ordered = ordered.filter((c) => (c.iso || '') >= today);
+  // Upcoming courses read the other way: soonest first.
+  if (filter === 'upcoming') ordered = ordered.filter((c) => (c.iso || '') >= today).reverse();
   else if (filter === 'past') ordered = ordered.filter((c) => (c.iso || '') < today);
 
   const list = limit > 0 ? ordered.slice(0, limit) : ordered;
