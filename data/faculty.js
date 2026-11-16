@@ -158,6 +158,23 @@ export const FACULTY = [
     },
     role: 'faculty',
   },
+  // Temporary profiles (Nov 2026): no photo, specialty or institution yet.
+  // render-faculty.js shows initials when `photo` is missing. Fill in the
+  // remaining fields and add assets/faculty/<id>.jpeg when they arrive.
+  {
+    id: 'ozge-kenis-coskun',
+    name: 'Prof. Dr. Özge Keniş Coşkun',
+    nameEn: 'Prof. Özge Keniş Coşkun',
+    initials: 'ÖK',
+    role: 'faculty',
+  },
+  {
+    id: 'serdar-kesikburun',
+    name: 'Prof. Dr. Serdar Kesikburun',
+    nameEn: 'Prof. Serdar Kesikburun',
+    initials: 'SK',
+    role: 'faculty',
+  },
 ];
 
 export function getFaculty(id) {

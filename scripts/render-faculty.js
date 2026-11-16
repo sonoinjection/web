@@ -50,7 +50,9 @@ function renderFacultyCard(f) {
   if (city) lines.push(escape(city));
   return `
     <div class="faculty-card">
-      <img class="faculty-card__photo" src="${escape(base + f.photo)}" alt="${escape(nameFor(f))}" loading="lazy" />
+      ${f.photo
+        ? `<img class="faculty-card__photo" src="${escape(base + f.photo)}" alt="${escape(nameFor(f))}" loading="lazy" />`
+        : `<div class="faculty-card__photo faculty-card__photo--initials" aria-hidden="true">${escape(f.initials || '')}</div>`}
       <div class="faculty-card__name">${escape(nameFor(f))}</div>
       <div class="faculty-card__title">${lines.join('<br/>')}</div>
       <span class="badge ${roleBadgeClass(f)}">${escape(roleLabel(f))}</span>
